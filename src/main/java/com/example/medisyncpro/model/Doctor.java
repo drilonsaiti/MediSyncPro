@@ -27,9 +27,6 @@ public class Doctor {
     @Column(name = "working_days")
     private String workingDays;
 
-    @Column(name = "category_id")
-    private Long categoryId;
-
     @ManyToOne
     @JoinColumn(name = "clinic_id")
     private Clinic clinic;

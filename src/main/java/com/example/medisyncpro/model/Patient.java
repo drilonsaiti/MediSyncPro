@@ -28,6 +28,9 @@ public class Patient {
     @Column(name = "contact_number")
     private String contactNumber;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "age")
     private Integer age;
 

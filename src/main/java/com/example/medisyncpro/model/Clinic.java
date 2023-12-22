@@ -21,8 +21,8 @@ public class Clinic {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "specialization_list")
-    private String specializationList;
+    @Column(name = "specialization")
+    private List<Specialization> specializations;
 
     @OneToMany(mappedBy = "clinic")
     private List<Doctor> doctors;

@@ -35,7 +35,7 @@ public class Appointment {
     private Long serviceId;
 
     @Column(name = "attended", nullable = false)
-    private boolean attended = false;
+    private boolean attended;
 
     public Appointment(Long patientId, Long doctorId, Long clinicId, Date date, String timeSlot, Long serviceId) {
         this.patientId = patientId;

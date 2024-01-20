@@ -1,5 +1,6 @@
 package com.example.medisyncpro.service;
 
+import com.example.medisyncpro.dto.CreateReceptionistDto;
 import com.example.medisyncpro.model.Receptionist;
 
 import java.util.List;
@@ -10,7 +11,8 @@ public interface ReceptionistService {
 
     List<Receptionist> getAll();
 
-    Receptionist save(Receptionist receptionist);
+    Receptionist save(CreateReceptionistDto dto);
+    Receptionist update(Receptionist receptionist);
 
     void delete(Long id);
 }

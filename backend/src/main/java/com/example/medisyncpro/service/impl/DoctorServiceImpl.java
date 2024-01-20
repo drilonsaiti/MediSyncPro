@@ -1,17 +1,28 @@
 package com.example.medisyncpro.service.impl;
 
+import com.example.medisyncpro.dto.CreateDoctorDto;
+import com.example.medisyncpro.mapper.DoctorMapper;
+import com.example.medisyncpro.model.Clinic;
 import com.example.medisyncpro.model.Doctor;
+import com.example.medisyncpro.model.Specializations;
+import com.example.medisyncpro.repository.ClinicRepository;
 import com.example.medisyncpro.repository.DoctorRepository;
+import com.example.medisyncpro.repository.SpecializationRepository;
 import com.example.medisyncpro.service.DoctorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
 
-    @Autowired
-    private DoctorRepository doctorRepository;
+
+    private final DoctorRepository doctorRepository;
+    private final SpecializationRepository specializationRepository;
+    private final ClinicRepository clinicRepository;
+    private final DoctorMapper doctorMapper;
 
     @Override
     public Doctor getById(Long id) {
@@ -24,8 +35,16 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Doctor save(Doctor doctor) {
-        return doctorRepository.save(doctor);
+    public Doctor save(CreateDoctorDto doctor) {
+        Specializations specializations = specializationRepository.getById(doctor.getSpecializationId());
+        Clinic clinic = clinicRepository.getById(doctor.getClinicId());
+        return doctorRepository.save(doctorMapper.createDoctor(doctor,specializations,clinic));
+    }
+
+    @Override
+    public Doctor update(Doctor doctor) {
+        Doctor old = this.getById(doctor.getDoctorId());
+        return doctorRepository.save(doctorMapper.updateDoctor(old,doctor));
     }
 
     @Override

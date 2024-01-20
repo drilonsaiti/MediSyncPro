@@ -1,5 +1,6 @@
 package com.example.medisyncpro.service;
 
+import com.example.medisyncpro.dto.CreatePatientDto;
 import com.example.medisyncpro.model.Patient;
 
 import java.util.List;
@@ -10,7 +11,8 @@ public interface PatientService {
 
     List<Patient> getAll();
 
-    Patient save(Patient patient);
+    Patient save(CreatePatientDto patient);
+    Patient update(Patient patient);
 
     void delete(Long id);
 }

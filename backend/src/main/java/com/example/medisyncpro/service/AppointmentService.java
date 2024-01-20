@@ -1,5 +1,6 @@
 package com.example.medisyncpro.service;
 
+import com.example.medisyncpro.dto.CreateAppointmentDto;
 import com.example.medisyncpro.model.Appointment;
 
 import java.util.List;
@@ -10,7 +11,8 @@ public interface AppointmentService {
 
     List<Appointment> getAll();
 
-    Appointment save(Appointment appointment);
+    Appointment save(CreateAppointmentDto appointment);
+    Appointment update(Appointment appointment);
 
     void delete(Long id);
 }

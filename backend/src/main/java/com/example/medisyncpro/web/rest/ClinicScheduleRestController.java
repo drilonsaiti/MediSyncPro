@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/clinicSchedules")
+@CrossOrigin
 public class ClinicScheduleRestController {
 
     private final ClinicScheduleService clinicScheduleService;

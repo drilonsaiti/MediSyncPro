@@ -4,6 +4,9 @@ import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 public class CreatePatientDto {
@@ -17,5 +20,5 @@ public class CreatePatientDto {
 
     private String email;
 
-    private Integer age;
+    private LocalDate birthDay;
 }

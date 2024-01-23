@@ -1,15 +1,56 @@
 import GlobalStyles from "./styles/GlobalStyles.js";
+import AppLayout from "./ui/AppLayout.jsx";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import Appointment from "./pages/Appointment.jsx";
+import Clinic from "./pages/Clinic.jsx";
+import ClinicSchedule from "./pages/ClinicSchedule.jsx";
+import ClinicServices from "./pages/ClinicServices.jsx";
+import Doctor from "./pages/Doctor.jsx";
+import MedicalReport from "./pages/MedicalReport.jsx";
+import Patient from "./pages/Patient.jsx";
+import Receptionist from "./pages/Receptionist.jsx";
+import Specializations from "./pages/Specializations.jsx";
+import PageNotFound from "./pages/PageNotFound.jsx";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
+
+
+const queryClient = new QueryClient({
+    defaultOptions:{
+        queries:{
+            staleTime: 0
+        }
+
+    }
+});
 
 function App() {
 
   return (
-    <>
-      <GlobalStyles />
-      <div style={{backgroundColor: "var(--color-grey-50)"}}>
-    <h1 style={{color: "var(--color-grey-600)"}}>The work begin...</h1>
-          <button style={{backgroundColor: "var(--color-primary-1700)"}}>Click it</button>
-      </div>
-    </>
+      <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false}/>
+      <GlobalStyles/>
+
+          <BrowserRouter>
+              <Routes>
+                  <Route element={<AppLayout/>}>
+
+                      <Route index element={<Navigate replace to={"/appointment"}/>}/>
+                  <Route index path="appointment" element={<Appointment/>} />
+                  <Route path="clinics" element={<Clinic/>} />
+                  <Route path="clinic-schedule" element={<ClinicSchedule/>} />
+                  <Route path="clinicService" element={<ClinicServices/>} />
+                  <Route path="doctors" element={<Doctor/>} />
+                  <Route path="medicalReports" element={<MedicalReport/>} />
+                  <Route path="patient" element={<Patient/>} />
+                  <Route path="receptionist" element={<Receptionist/>} />
+                  <Route path="specializations" element={<Specializations/>} />
+
+                  </Route>
+                  <Route path="*" element={<PageNotFound />} />
+              </Routes>
+          </BrowserRouter>
+      </QueryClientProvider>
   )
 }
 

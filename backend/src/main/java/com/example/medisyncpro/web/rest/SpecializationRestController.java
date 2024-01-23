@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/specializations")
+@CrossOrigin
 public class SpecializationRestController {
 
     private final SpecializationService specializationService;
@@ -34,8 +35,9 @@ public class SpecializationRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<Void> updateSpecialization(@RequestBody Specializations specializations) {
+        System.out.println("ITS CALLED");
         specializationService.update(specializations);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

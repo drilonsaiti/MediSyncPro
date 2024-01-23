@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateSpecializationDto {
 
-    String name;
+    String specializationName;
 }

@@ -1,5 +1,6 @@
 package com.example.medisyncpro.web.rest;
 
+import com.example.medisyncpro.dto.AppointmentDateDto;
 import com.example.medisyncpro.dto.CreateAppointmentDto;
 import com.example.medisyncpro.dto.CreateClinicServicesDto;
 import com.example.medisyncpro.model.Appointment;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/appointments")
+@CrossOrigin
 public class AppointmentRestController {
 
     private final AppointmentService appointmentService;
@@ -47,6 +49,13 @@ public class AppointmentRestController {
         appointmentService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/dates")
+    public ResponseEntity<Iterable<AppointmentDateDto>> getAppointmentDates() {
+        Iterable<AppointmentDateDto> appointments = appointmentService.getAppointmentDates();
+        System.out.println(appointments);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
 }

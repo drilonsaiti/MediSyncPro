@@ -9,7 +9,7 @@ public class PatientMapper {
 
     public Patient createPatient(CreatePatientDto dto){
         return new Patient(dto.getPatientName(), dto.getGender(), dto.getAddress(),
-                dto.getContactNumber(), dto.getEmail(), dto.getAge());
+                dto.getContactNumber(), dto.getEmail(), dto.getBirthDay());
     }
 
     public Patient updatePatient(Patient old,Patient newP){
@@ -18,7 +18,7 @@ public class PatientMapper {
         old.setAddress(newP.getAddress());
         old.setContactNumber(newP.getContactNumber());
         old.setEmail(newP.getEmail());
-        old.setAge(newP.getAge());
+        old.setBirthDay(newP.getBirthDay());
 
         return old;
     }

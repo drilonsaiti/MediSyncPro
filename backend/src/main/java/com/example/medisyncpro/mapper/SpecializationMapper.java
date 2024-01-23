@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public class SpecializationMapper {
 
     public Specializations createSpecialization(CreateSpecializationDto dto){
-        return new Specializations(dto.getName());
+        return new Specializations(dto.getSpecializationName());
     }
 }

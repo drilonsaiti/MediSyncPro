@@ -4,6 +4,7 @@ const GlobalStyles = createGlobalStyle`
     :root {
         &, &.light-mode {
             /* Grey */
+            --color-greys-50: #333;
             --color-grey-0: #fff;
             --color-grey-50: #f9fafb;
             --color-grey-100: #f3f4f6;
@@ -33,7 +34,7 @@ const GlobalStyles = createGlobalStyle`
             --color-red-800: #991b1b;
 
             --backdrop-color: rgba(255, 255, 255, 0.1);
-
+            --backdrop-color-black: rgba(0, 0, 0, 0.5);
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
@@ -80,7 +81,8 @@ const GlobalStyles = createGlobalStyle`
             --image-grayscale: 10%;
             --image-opacity: 90%;
         }
-        
+
+        --color-brand-50: #eefff6;
         --color-primary-50: #AAEAD3;
         --color-primary-100: #9CE7CB;
         --color-primary-200: #8FE3C4;
@@ -97,8 +99,8 @@ const GlobalStyles = createGlobalStyle`
         --color-primary-1300: #1D7856;
         --color-primary-1400: #1A6A4D;
         --color-primary-1500: #175C43;
-        --color-primary-1600: #134F39;
-        --color-primary-1700: #10412F;
+        --color-brand-600: #134F39;
+        --color-brand-700: #10412F;
 
         --border-radius-tiny: 3px;
         --border-radius-sm: 5px;
@@ -125,7 +127,7 @@ const GlobalStyles = createGlobalStyle`
 
     body {
         font-family: "Poppins", sans-serif;
-        color: var(--color-grey-700);
+        color: var(--color-grey-600);
 
         transition: color 0.3s, background-color 0.3s;
         min-height: 100vh;

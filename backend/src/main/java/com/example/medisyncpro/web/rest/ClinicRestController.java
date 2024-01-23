@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/clinics")
+@CrossOrigin
 public class ClinicRestController {
 
     private final ClinicService clinicService;

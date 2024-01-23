@@ -1,5 +1,6 @@
 package com.example.medisyncpro.service;
 
+import com.example.medisyncpro.dto.AppointmentDateDto;
 import com.example.medisyncpro.dto.CreateAppointmentDto;
 import com.example.medisyncpro.model.Appointment;
 
@@ -15,5 +16,7 @@ public interface AppointmentService {
     Appointment update(Appointment appointment);
 
     void delete(Long id);
+
+    List<AppointmentDateDto> getAppointmentDates();
 }
 

@@ -13,18 +13,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/medicalReports")
+@CrossOrigin
 public class MedicalReportRestController {
 
     private final MedicalReportService medicalReportService;
-    private final PatientService patientService;
-    private final DoctorService doctorService;
 
     @GetMapping
-    public ResponseEntity<Iterable<MedicalReport>> listMedicalReports() {
-        Iterable<MedicalReport> medicalReports = medicalReportService.getAll();
+    public ResponseEntity<List<MedicalReport>> listMedicalReports() {
+        System.out.println("ITS HERE REST CONTROLLER");
+        List<MedicalReport> medicalReports = medicalReportService.getAll();
         return new ResponseEntity<>(medicalReports, HttpStatus.OK);
     }
 

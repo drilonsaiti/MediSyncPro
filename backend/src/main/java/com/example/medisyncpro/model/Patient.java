@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,15 +36,16 @@ public class Patient {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "age")
-    private Integer age;
+    @Column(name = "birthDay")
+    private LocalDate birthDay;
 
-    public Patient(String patientName, String gender, String address, String contactNumber, String email, Integer age) {
+    public Patient(String patientName, String gender, String address,
+                   String contactNumber, String email, LocalDate birthDay) {
         this.patientName = patientName;
         this.gender = gender;
         this.address = address;
         this.contactNumber = contactNumber;
         this.email = email;
-        this.age = age;
+        this.birthDay = birthDay;
     }
 }

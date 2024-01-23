@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/clinic-services")
+@CrossOrigin
 public class ClinicServiceRestController {
 
     private final ClinicServicesService clinicServicesService;

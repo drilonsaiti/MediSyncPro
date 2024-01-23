@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/patients")
+@CrossOrigin
 public class PatientRestController {
 
     private final PatientService patientService;

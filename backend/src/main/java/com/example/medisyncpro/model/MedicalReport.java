@@ -1,9 +1,11 @@
 package com.example.medisyncpro.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -38,15 +40,15 @@ public class MedicalReport {
     private String analyses;
 
     @Column(name = "next_appointment_date")
-    private Date nextAppointmentDate;
+    private LocalDateTime nextAppointmentDate;
 
     @Column(name = "no_of_days")
     private Integer noOfDays;
 
     @Column(name = "appointment_date")
-    private Date appointmentDate;
+    private LocalDateTime appointmentDate;
 
-    public MedicalReport(Long patientId, Doctor doctor, String medicineName, Integer quantity, String disease, String analyses, Date nextAppointmentDate, Integer noOfDays, Date appointmentDate) {
+    public MedicalReport(Long patientId, Doctor doctor, String medicineName, Integer quantity, String disease, String analyses, LocalDateTime nextAppointmentDate, Integer noOfDays, LocalDateTime appointmentDate) {
         this.patientId = patientId;
         this.doctor = doctor;
         this.medicineName = medicineName;

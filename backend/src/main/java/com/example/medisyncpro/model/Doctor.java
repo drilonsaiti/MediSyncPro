@@ -1,5 +1,6 @@
 package com.example.medisyncpro.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,7 @@ public class Doctor {
     private Clinic clinic;
 
     @OneToMany(mappedBy = "doctor")
+    @JsonIgnore
     private List<MedicalReport> medicalReports;
 
     public Doctor(String doctorName, Specializations specialization, String education, String workingDays, Clinic clinic) {
@@ -47,5 +49,14 @@ public class Doctor {
         this.workingDays = workingDays;
         this.clinic = clinic;
         this.medicalReports = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "id=" + doctorId +
+                ", name='" + doctorName + '\'' +
+                // other fields excluding those causing circular references
+                '}';
     }
 }

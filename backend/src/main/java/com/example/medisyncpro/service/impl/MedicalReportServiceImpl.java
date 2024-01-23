@@ -28,6 +28,8 @@ public class MedicalReportServiceImpl implements MedicalReportService {
 
     @Override
     public List<MedicalReport> getAll() {
+        System.out.println("ITS HERE IMPL");
+        System.out.println(medicalReportRepository.findAll());
         return medicalReportRepository.findAll();
     }
 

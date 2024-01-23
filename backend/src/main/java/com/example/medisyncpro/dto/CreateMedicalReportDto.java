@@ -7,6 +7,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -25,9 +26,9 @@ public class CreateMedicalReportDto {
 
     private String analyses;
 
-    private Date nextAppointmentDate;
+    private LocalDateTime nextAppointmentDate;
 
     private Integer noOfDays;
 
-    private Date appointmentDate;
+    private LocalDateTime appointmentDate;
 }

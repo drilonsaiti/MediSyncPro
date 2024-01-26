@@ -13,7 +13,7 @@ const Img = styled.img`
 function Logo() {
   return (
     <StyledLogo>
-      <Img src="/logo.png" alt="Logo" />
+      <Img src="http://localhost:5173/logo.png" alt="Logo" />
         <Heading type="h3">Eclectic retreat heaven</Heading>
     </StyledLogo>
   );

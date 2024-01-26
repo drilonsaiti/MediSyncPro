@@ -1,12 +1,11 @@
 package com.example.medisyncpro.service.impl;
 
-import com.example.medisyncpro.dto.CreatePatientDto;
-import com.example.medisyncpro.mapper.PatientMapper;
+import com.example.medisyncpro.model.dto.CreatePatientDto;
+import com.example.medisyncpro.model.mapper.PatientMapper;
 import com.example.medisyncpro.model.Patient;
 import com.example.medisyncpro.repository.PatientRepository;
 import com.example.medisyncpro.service.PatientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -30,7 +29,10 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Patient save(CreatePatientDto patient) {
+    public Patient save(CreatePatientDto patient) throws Exception {
+        if (patientRepository.existsPatientByEmail(patient.getEmail())){
+            throw new Exception("The patient already exist by this email");
+        }
         return patientRepository.save(patientMapper.createPatient(patient));
     }
 

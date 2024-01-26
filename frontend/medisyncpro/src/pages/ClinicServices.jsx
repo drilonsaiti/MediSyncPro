@@ -7,7 +7,7 @@ const ClinicServices = () => {
     return (
         <>
             <Row type="horizontal" change="yes">
-                <Heading as="h1">All appointments</Heading>
+                <Heading as="h1">All services</Heading>
                 <p>Test</p>
 
             </Row>

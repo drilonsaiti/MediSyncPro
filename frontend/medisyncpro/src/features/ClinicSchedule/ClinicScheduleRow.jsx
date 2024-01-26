@@ -2,13 +2,14 @@ import Menus from "../../ui/Menus.jsx";
 import Table from "../../ui/Table.jsx";
 import Modal from "../../ui/Modal.jsx";
 import ButtonGroup from "../../ui/ButtonGroup.jsx";
-import Button from "../../ui/Button.jsx";
 import {HiPencil, HiTrash} from "react-icons/hi";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import styled from "styled-components";
 import CreateClinicScheduleForm from "./CreateClinicScheduleForm.jsx";
 import {useCreateClinicSchedule} from "./useCreateClinicSchedule.js";
 import {useDeleteClinicSchedule} from "./useDeleteClinicSchedule.js";
+import {formatDateMonth} from "../../utils/helpers.js";
+
 const Title = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -23,7 +24,7 @@ const ClinicScheduleRow = ({clinicSchedule}) => {
     return (
         <Table.Row role="row">
             <Title>{scheduleId}</Title>
-            <Title>{date}</Title>
+            <Title>{formatDateMonth(date)}</Title>
 
             <Modal>
                 <ButtonGroup>

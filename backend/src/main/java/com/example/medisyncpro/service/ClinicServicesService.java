@@ -1,6 +1,6 @@
 package com.example.medisyncpro.service;
 
-import com.example.medisyncpro.dto.CreateClinicServicesDto;
+import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
 import com.example.medisyncpro.model.ClinicServices;
 
 import java.util.List;

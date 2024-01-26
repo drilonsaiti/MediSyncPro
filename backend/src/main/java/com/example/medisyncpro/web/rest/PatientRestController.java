@@ -1,7 +1,7 @@
 package com.example.medisyncpro.web.rest;
 
 
-import com.example.medisyncpro.dto.CreatePatientDto;
+import com.example.medisyncpro.model.dto.CreatePatientDto;
 import com.example.medisyncpro.model.Patient;
 
 import com.example.medisyncpro.service.PatientService;
@@ -32,7 +32,7 @@ public class PatientRestController {
 
 
     @PostMapping
-    public ResponseEntity<Void> createPatient(@RequestBody CreatePatientDto dto) {
+    public ResponseEntity<Void> createPatient(@RequestBody CreatePatientDto dto) throws Exception {
         this.patientService.save(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

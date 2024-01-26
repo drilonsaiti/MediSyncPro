@@ -21,11 +21,12 @@ const Select = forwardRef(({ options, value, ...props }, ref) => {
 
     const isTypes = Array.isArray(options) && options.length > 0 ? options[0]?.value : null;
 
+    console.log("VALUE " +value);
 
     return (
-        <StyledSelect ref={ref}  {...props} value={value} >
+        <StyledSelect ref={ref}  {...props} value={value}>
             {options?.map((option) => (
-                <option key={option.value || option} value={option.value || option}>
+                <option key={option.value || option} value={option.value}>
                     {option.label || option}
                 </option>
             ))}

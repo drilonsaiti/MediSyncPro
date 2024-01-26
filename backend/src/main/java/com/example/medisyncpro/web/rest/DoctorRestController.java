@@ -1,16 +1,13 @@
 package com.example.medisyncpro.web.rest;
 
 
-import com.example.medisyncpro.dto.CreateDoctorDto;
-import com.example.medisyncpro.dto.CreateMedicalReportDto;
+import com.example.medisyncpro.model.dto.CreateDoctorDto;
 import com.example.medisyncpro.model.Doctor;
-import com.example.medisyncpro.model.MedicalReport;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.SpecializationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

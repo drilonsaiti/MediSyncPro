@@ -13,10 +13,14 @@ const AppointmentTable = () => {
     console.log(appointments);
     return (
         <Menus>
-            <Table columns={'0.6fr 3fr 1fr'}>
+            <Table columns={'0.6fr 2fr repeat(5,1fr)'}>
                 <Table.Header>
                     <div>Id</div>
-                    <div>Receptionist</div>
+                    <div>Patient</div>
+                    <div>Doctor</div>
+                    <div>Date</div>
+                    <div>Service</div>
+                    <div>Attended</div>
                     <div></div>
 
                 </Table.Header>

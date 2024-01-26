@@ -13,6 +13,18 @@ export async function getAppointments(){
 
     }
 }
+export async function getAppointmentsByPatient(id){
+    try{
+        const response = await apiRequest('GET',`appointments/patient/${id}`);
+        console.log("========PATIENT APP==========")
+        console.log(response.data)
+        return response.data;
+    }catch (e) {
+        console.error(error);
+        throw new Error('Appointment could not be loaded');
+
+    }
+}
 
 
 export async function createEditAppointment(newAppointment,id){
@@ -53,5 +65,18 @@ export async function getAppointmentDates(){
     }catch (e) {
         console.error(error);
         throw new Error('Appointment dates could not be deleted');
+    }
+}
+
+
+export async function createAppointmentByReceptionist({...data}){
+
+    try{
+        const response = await apiRequest('POST',`appointments/byReceptionist`,data.newData);
+        console.log(response.data);
+        return response.data;
+    }catch (e) {
+        console.error(error);
+        throw new Error('Appointment cannot created');
     }
 }

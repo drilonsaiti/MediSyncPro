@@ -1,10 +1,8 @@
 package com.example.medisyncpro.web.rest;
 
 
-import com.example.medisyncpro.dto.CreateClinicServicesDto;
-import com.example.medisyncpro.mapper.ClinicServicesMapper;
+import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
 import com.example.medisyncpro.model.ClinicServices;
-import com.example.medisyncpro.model.Doctor;
 import com.example.medisyncpro.service.ClinicServicesService;
 import com.example.medisyncpro.service.SpecializationService;
 import lombok.AllArgsConstructor;

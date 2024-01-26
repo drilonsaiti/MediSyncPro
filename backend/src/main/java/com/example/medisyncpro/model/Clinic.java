@@ -35,6 +35,10 @@ public class Clinic {
     @JsonIgnore
     private List<Doctor> doctors;
 
+    @OneToOne
+    @JoinColumn(name = "settings_id")
+    private Settings settings;
+
     public Clinic(String clinicName, String address) {
         this.clinicName = clinicName;
         this.address = address;

@@ -1,15 +1,16 @@
 package com.example.medisyncpro.service;
 
-import com.example.medisyncpro.dto.CreateMedicalReportDto;
+import com.example.medisyncpro.model.dto.CreateMedicalReportDto;
+import com.example.medisyncpro.model.dto.MedicalReportDto;
 import com.example.medisyncpro.model.MedicalReport;
 
 import java.util.List;
 
 public interface MedicalReportService {
 
-    MedicalReport getById(Long id);
+    MedicalReportDto getById(Long id);
 
-    List<MedicalReport> getAll();
+    List<MedicalReportDto> getAll();
 
     MedicalReport save(CreateMedicalReportDto medicalReport);
     MedicalReport update(MedicalReport medicalReport);

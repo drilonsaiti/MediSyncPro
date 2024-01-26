@@ -1,7 +1,7 @@
 package com.example.medisyncpro.service.impl;
 
-import com.example.medisyncpro.dto.CreateDoctorDto;
-import com.example.medisyncpro.mapper.DoctorMapper;
+import com.example.medisyncpro.model.dto.CreateDoctorDto;
+import com.example.medisyncpro.model.mapper.DoctorMapper;
 import com.example.medisyncpro.model.Clinic;
 import com.example.medisyncpro.model.Doctor;
 import com.example.medisyncpro.model.Specializations;
@@ -10,7 +10,6 @@ import com.example.medisyncpro.repository.DoctorRepository;
 import com.example.medisyncpro.repository.SpecializationRepository;
 import com.example.medisyncpro.service.DoctorService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

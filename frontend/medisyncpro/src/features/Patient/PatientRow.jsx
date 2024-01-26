@@ -2,13 +2,13 @@ import Menus from "../../ui/Menus.jsx";
 import Table from "../../ui/Table.jsx";
 import Modal from "../../ui/Modal.jsx";
 import ButtonGroup from "../../ui/ButtonGroup.jsx";
-import Button from "../../ui/Button.jsx";
 import {HiPencil, HiTrash} from "react-icons/hi";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import styled from "styled-components";
 import CreatePatientForm from "./CreatePatientForm.jsx";
 import {useCreatePatient} from "./useCreatePatient.js";
 import {useDeletePatient} from "./useDeletePatient.js";
+
 const Title = styled.div`
   font-size: 1.6rem;
   font-weight: 600;

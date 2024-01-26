@@ -9,6 +9,8 @@ import styled from "styled-components";
 import CreateClinicForm from "./CreateClinicForm.jsx";
 import {useCreateClinic} from "./useCreateClinic.js";
 import {useDeleteClinic} from "./useDeleteClinic.js";
+import CreateAppointmentForm from "../Appointment/CreateAppointmentForm.jsx";
+
 const Title = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -19,6 +21,7 @@ const ClinicRow = ({clinic}) => {
     const {clinicId,clinicName:name,address} = clinic;
     const {isCreating,createClinic} = useCreateClinic();
     const {isDeleting,deleteMutate} = useDeleteClinic();
+    const user = "RECEPTIONIST";
 
     return (
         <Table.Row role="row">
@@ -27,7 +30,9 @@ const ClinicRow = ({clinic}) => {
             <Title>{address}</Title>
             <Modal>
                 <ButtonGroup>
-
+                    <Modal.Open opens="appointment">
+                        <Button>Book now</Button>
+                    </Modal.Open>
                         <Menus.Menu>
                             <Menus.Toggle id={clinicId} />
                             <Menus.List id={clinicId}>
@@ -43,7 +48,11 @@ const ClinicRow = ({clinic}) => {
 
 
                 </ButtonGroup>
+                <Modal.Window name="appointment">
 
+                        <CreateAppointmentForm clinicId={clinicId} />
+
+                </Modal.Window>
                     <Modal.Window name="edit">
                         <CreateClinicForm clinicToEdit={clinic} />
                     </Modal.Window>

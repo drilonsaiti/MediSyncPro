@@ -13,6 +13,8 @@ import Specializations from "./pages/Specializations.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
+import PatientDetails from "./features/Patient/PatientDetails.jsx";
+import MedicalReportPDF from "./features/MedicalReport/MedicalReportPDF.jsx";
 
 
 const queryClient = new QueryClient({
@@ -45,8 +47,10 @@ function App() {
                   <Route path="patient" element={<Patient/>} />
                   <Route path="receptionist" element={<Receptionist/>} />
                   <Route path="specializations" element={<Specializations/>} />
-
+                      <Route path="patient/:patientId" element={<PatientDetails />} />
                   </Route>
+                  <Route path="medicalReports/:reportId" element={<MedicalReportPDF/>} />
+
                   <Route path="*" element={<PageNotFound />} />
               </Routes>
           </BrowserRouter>

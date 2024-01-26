@@ -1,4 +1,3 @@
-
 import CreateReceptionistForm from "./CreateReceptionistForm.jsx";
 import Modal from "../../ui/Modal.jsx";
 import Button from "../../ui/Button.jsx";

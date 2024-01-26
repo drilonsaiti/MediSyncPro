@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import ButtonIcon from "./ButtonIcon.jsx";
-import {HiArrowRightOnRectangle, HiOutlineUser} from 'react-icons/hi2';
-import {useNavigate} from "react-router-dom";
+import {HiOutlineUser} from 'react-icons/hi2';
 
 
 const StyledHeaderMenu = styled.ul`

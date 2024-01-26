@@ -1,8 +1,6 @@
-
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import styled, {css} from "styled-components";
-import Appointment from "../pages/Appointment.jsx";
 import {Outlet} from "react-router-dom";
 
 const StyledAppLayout = styled.div`

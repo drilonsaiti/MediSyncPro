@@ -1,6 +1,6 @@
 package com.example.medisyncpro.service;
 
-import com.example.medisyncpro.dto.CreatePatientDto;
+import com.example.medisyncpro.model.dto.CreatePatientDto;
 import com.example.medisyncpro.model.Patient;
 
 import java.util.List;
@@ -11,7 +11,7 @@ public interface PatientService {
 
     List<Patient> getAll();
 
-    Patient save(CreatePatientDto patient);
+    Patient save(CreatePatientDto patient) throws Exception;
     Patient update(Patient patient);
 
     void delete(Long id);

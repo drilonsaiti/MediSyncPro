@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, {css} from "styled-components";
 
 
 const Heading = styled.h1`
@@ -20,6 +20,12 @@ const Heading = styled.h1`
       props.type === "h3" &&
       css`
         font-size: 2rem;
+        font-weight: 500;
+      `}
+  ${(props) =>
+          props.type === "h4" &&
+          css`
+        font-size: 1.5rem;
         font-weight: 500;
       `}
 

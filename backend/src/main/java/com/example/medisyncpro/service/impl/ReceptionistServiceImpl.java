@@ -1,12 +1,11 @@
 package com.example.medisyncpro.service.impl;
 
-import com.example.medisyncpro.dto.CreateReceptionistDto;
-import com.example.medisyncpro.mapper.ReceptionistMapper;
+import com.example.medisyncpro.model.dto.CreateReceptionistDto;
+import com.example.medisyncpro.model.mapper.ReceptionistMapper;
 import com.example.medisyncpro.model.Receptionist;
 import com.example.medisyncpro.repository.ReceptionistRepository;
 import com.example.medisyncpro.service.ReceptionistService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

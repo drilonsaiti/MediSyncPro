@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import styled from 'styled-components';
-import { HiArrowDown} from 'react-icons/hi2';
+import {HiArrowDown} from 'react-icons/hi2';
 import {useSearchParams} from "react-router-dom";
 import Input from "./Input.jsx";
 import {useOutsideClick} from "../hooks/useOutsideClick.js";

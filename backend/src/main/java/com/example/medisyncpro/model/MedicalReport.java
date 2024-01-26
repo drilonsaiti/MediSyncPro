@@ -23,6 +23,9 @@ public class MedicalReport {
     @Column(name = "patient_id")
     private Long patientId;
 
+    @Column(name = "appointment_id")
+    private Long appointmentId;
+
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
@@ -30,14 +33,8 @@ public class MedicalReport {
     @Column(name = "medicine_name", nullable = false)
     private String medicineName;
 
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
-
     @Column(name = "disease")
     private String disease;
-
-    @Column(name = "analyses")
-    private String analyses;
 
     @Column(name = "next_appointment_date")
     private LocalDateTime nextAppointmentDate;
@@ -48,15 +45,19 @@ public class MedicalReport {
     @Column(name = "appointment_date")
     private LocalDateTime appointmentDate;
 
-    public MedicalReport(Long patientId, Doctor doctor, String medicineName, Integer quantity, String disease, String analyses, LocalDateTime nextAppointmentDate, Integer noOfDays, LocalDateTime appointmentDate) {
+    @Column(name = "report_date")
+    private LocalDateTime reportDate;
+
+
+    public MedicalReport(Long patientId, Doctor doctor, String medicineName, String disease, LocalDateTime nextAppointmentDate, Integer noOfDays, LocalDateTime appointmentDate, Long appointmentId) {
         this.patientId = patientId;
         this.doctor = doctor;
         this.medicineName = medicineName;
-        this.quantity = quantity;
         this.disease = disease;
-        this.analyses = analyses;
+        this.appointmentId = appointmentId;
         this.nextAppointmentDate = nextAppointmentDate;
         this.noOfDays = noOfDays;
         this.appointmentDate = appointmentDate;
+        this.reportDate = LocalDateTime.now();
     }
 }

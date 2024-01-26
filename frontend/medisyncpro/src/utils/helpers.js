@@ -1,5 +1,5 @@
-import { formatDistance, parseISO } from 'date-fns';
-import { differenceInDays } from 'date-fns/differenceInDays';
+import {formatDistance, parseISO,format, isToday} from 'date-fns';
+import {differenceInDays} from 'date-fns/differenceInDays';
 
 // We want to make this function work for both Date objects and strings (which come from Supabase)
 export const subtractDates = (dateStr1, dateStr2) =>
@@ -28,5 +28,28 @@ export const formatCurrency = (value) =>
   new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(
     value
   );
+
+export const formatDate = (date) => {
+  if (isToday(date)) {
+    return `Today at ${format(date, "HH:mm")}`;
+  } else {
+    return format(date, "dd.MM.yyyy HH:mm");
+  }
+};
+
+export const formatDateMonth = (dateString) =>{
+  const date = new Date(dateString);
+  const options = {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+    timeZone: 'CET'
+  };
+  const formattedDateTime = date.toLocaleString('en-US', options).replace(/,(?=[^,]*$)/, ' at');
+  return formattedDateTime;
+}
 
 export const PAGE_SIZE = 10;

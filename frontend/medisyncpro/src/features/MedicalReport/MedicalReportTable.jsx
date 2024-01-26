@@ -7,7 +7,7 @@ import Spinner from "../../ui/Spinner.jsx";
 
 const MedicalReportTable = () => {
     const {isLoading, medicalReports} = useMedicalReports();
-
+    const user = "doctor";
 
     if (isLoading) return <Spinner/>
 
@@ -18,7 +18,7 @@ const MedicalReportTable = () => {
                 <Table.Header>
                     <div>Id</div>
                     <div>Patient</div>
-                    <div>Doctor</div>
+                    <div>{user !== "doctor" ? 'Doctor' : 'Service'}</div>
                     <div>Appointment date</div>
                     <div></div>
 

@@ -1,4 +1,8 @@
 import styled from "styled-components";
+import React from 'react';
+import Heading from "./Heading.jsx";
+import GlobalStyles from "../styles/GlobalStyles.js";
+import Button from "./Button.jsx";
 
 const StyledErrorFallback = styled.main`
   height: 100vh;
@@ -30,11 +34,6 @@ const Box = styled.div`
     color: var(--color-grey-500);
   }
 `;
-
-import React from 'react';
-import Heading from "./Heading.jsx";
-import GlobalStyles from "../styles/GlobalStyles.js";
-import Button from "./Button.jsx";
 
 const ErrorFallback = ({error,resetErrorBoundary}) => {
     return (

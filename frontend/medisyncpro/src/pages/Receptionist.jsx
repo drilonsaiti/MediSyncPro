@@ -7,7 +7,7 @@ const Receptionist = () => {
     return (
         <>
             <Row type="horizontal" change="yes">
-                <Heading as="h1">All appointments</Heading>
+                <Heading as="h1">All receptionist</Heading>
                 <p>Test</p>
 
             </Row>

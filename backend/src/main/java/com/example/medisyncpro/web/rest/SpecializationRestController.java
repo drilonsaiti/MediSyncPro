@@ -1,6 +1,6 @@
 package com.example.medisyncpro.web.rest;
 
-import com.example.medisyncpro.dto.CreateSpecializationDto;
+import com.example.medisyncpro.model.dto.CreateSpecializationDto;
 import com.example.medisyncpro.model.Specializations;
 import com.example.medisyncpro.service.SpecializationService;
 import lombok.AllArgsConstructor;

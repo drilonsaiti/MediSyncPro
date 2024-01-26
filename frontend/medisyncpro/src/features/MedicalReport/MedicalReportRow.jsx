@@ -2,13 +2,20 @@ import Menus from "../../ui/Menus.jsx";
 import Table from "../../ui/Table.jsx";
 import Modal from "../../ui/Modal.jsx";
 import ButtonGroup from "../../ui/ButtonGroup.jsx";
-import Button from "../../ui/Button.jsx";
-import {HiPencil, HiTrash} from "react-icons/hi";
+import {HiEye, HiPencil, HiTrash} from "react-icons/hi";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import styled from "styled-components";
 import CreateMedicalReportForm from "./CreateMedicalReportForm.jsx";
 import {useCreateMedicalReport} from "./useCreateMedicalReport.js";
 import {useDeleteMedicalReport} from "./useDeleteMedicalReport.js";
+import Stacked from "../../ui/Stacked.jsx";
+import {formatDateMonth} from "../../utils/helpers.js";
+import Button from "../../ui/Button.jsx";
+import CreateAppointmentForm from "../Appointment/CreateAppointmentForm.jsx";
+import ButtonIcon from "../../ui/ButtonIcon.jsx";
+import MedicalReportPDF from "./MedicalReportPDF.jsx";
+import {Link, useNavigate} from "react-router-dom";
+
 const Title = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -16,18 +23,32 @@ const Title = styled.div`
   font-family: "Sono",sans-serif;
 `;
 const MedicalReportRow = ({medicalReport}) => {
-    const {reportId,patientId,doctor,appointmentDate} = medicalReport;
+    const {reportId,patientId,patientName,patientEmail,doctorName,doctorId,services,appointmentDate} = medicalReport;
     const {isCreating,createMedicalReport} = useCreateMedicalReport();
     const {isDeleting,deleteMutate} = useDeleteMedicalReport();
-
+    const navigate = useNavigate();
+    const user = "doctor";
     return (
         <Table.Row role="row">
             <Title>{reportId}</Title>
-            <Title>{patientId}</Title>
-            <Title>{doctor.doctorName}</Title>
-            <Title>{appointmentDate}</Title>
+            <Stacked>
+                <Title>{patientName}</Title>
+                <span>{patientEmail}</span>
+            </Stacked>
+            {user !== "doctor" ?
+            <Title> {doctorName}</Title> :
+            <Stacked>
+                {services.map(service => (<Title key={service.name}>{service.name}</Title>))}
+            </Stacked>
+            }
+            <Title>{formatDateMonth(appointmentDate)}</Title>
             <Modal>
                 <ButtonGroup>
+                    {user === "doctor" ?
+                        <ButtonIcon >
+                            <Link to={`/medicalReports/${reportId}`} target="_blank"><HiEye/></Link>
+                        </ButtonIcon>
+                    :
 
                         <Menus.Menu>
                             <Menus.Toggle id={reportId} />
@@ -41,9 +62,16 @@ const MedicalReportRow = ({medicalReport}) => {
 
                             </Menus.List>
                         </Menus.Menu>
+                    }
 
 
                 </ButtonGroup>
+
+                <Modal.Window name="report-details">
+
+                    <MedicalReportPDF  data={medicalReport}/>
+
+                </Modal.Window>
 
                     <Modal.Window name="edit">
                         <CreateMedicalReportForm medicalReportToEdit={medicalReport} />

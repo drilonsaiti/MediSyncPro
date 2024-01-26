@@ -1,6 +1,6 @@
 package com.example.medisyncpro.service;
 
-import com.example.medisyncpro.dto.CreateReceptionistDto;
+import com.example.medisyncpro.model.dto.CreateReceptionistDto;
 import com.example.medisyncpro.model.Receptionist;
 
 import java.util.List;

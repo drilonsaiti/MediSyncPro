@@ -14,6 +14,7 @@ const StyledModal = styled.div`
     box-shadow: var(--shadow-lg);
     padding: 3.2rem 4rem;
     transition: all 0.5s;
+    overflow-y: auto;
 `;
 
 const Overlay = styled.div`
@@ -83,7 +84,7 @@ const Window = ({children,name}) => {
 
     return createPortal(
         <Overlay>
-        <StyledModal ref={ref}>
+        <StyledModal ref={ref} onClick={(e) => e.stopPropagation()}>
             <Button onClick={close}><HiXMark/></Button>
             <div>
                 {cloneElement(children,{onCloseModal:close})}

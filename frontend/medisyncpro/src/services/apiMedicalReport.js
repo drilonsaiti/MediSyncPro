@@ -15,15 +15,27 @@ export async function getMedicalReports(){
 }
 
 
+export async function getMedicalReportById(id){
+    try{
+        const response = await apiRequest('GET',`medicalReports/${id}`);
+        console.log(response.data)
+        return response.data;
+    }catch (e) {
+        console.error(error);
+        throw new Error('Medical report could not be loaded');
+
+    }
+}
+
 export async function createEditMedicalReport(newMedicalReport,id){
     console.log(newMedicalReport)
     try{
         let response = {}
         if(id){
-            response = await apiRequest('PUT',`medicalReports`,newMedicalReport);
+            response = await apiRequest('PUT',`medicalReports`,newMedicalReport.newData);
 
         }else{
-            response = await apiRequest('POST','medicalReports',newMedicalReport);
+            response = await apiRequest('POST','medicalReports',newMedicalReport.newData);
 
         }
         return response.data;

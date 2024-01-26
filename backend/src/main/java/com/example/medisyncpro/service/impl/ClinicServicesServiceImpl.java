@@ -1,14 +1,13 @@
 package com.example.medisyncpro.service.impl;
 
-import com.example.medisyncpro.dto.CreateClinicServicesDto;
-import com.example.medisyncpro.mapper.ClinicServicesMapper;
+import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
+import com.example.medisyncpro.model.mapper.ClinicServicesMapper;
 import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.Specializations;
 import com.example.medisyncpro.repository.ServiceRepository;
 import com.example.medisyncpro.repository.SpecializationRepository;
 import com.example.medisyncpro.service.ClinicServicesService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

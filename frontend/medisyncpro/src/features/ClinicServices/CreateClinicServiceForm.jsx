@@ -1,6 +1,5 @@
 import {useForm} from "react-hook-form";
 import Button from "../../ui/Button.jsx";
-import Modal from "../../ui/Modal.jsx";
 import Input from "../../ui/Input.jsx";
 import FormRow from "../../ui/FormRow.jsx";
 import Form from "../../ui/Form.jsx";

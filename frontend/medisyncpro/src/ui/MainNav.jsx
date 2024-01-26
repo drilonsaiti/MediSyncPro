@@ -1,16 +1,8 @@
-
 import styled, {css} from "styled-components";
-import {
-  HiOutlineCalendarDays,
-  HiOutlineCog6Tooth,
-  HiOutlineHome,
-  HiOutlineHomeModern,
-  HiOutlineUsers,
-} from "react-icons/hi2";
 
 import {FaCalendarDays, FaGear, FaHouseMedical, FaUserDoctor, FaUserPen} from "react-icons/fa6";
-import { NavLink } from "react-router-dom";
-import {FaAtom, FaAward, FaCalendarCheck, FaClipboardList, FaHospitalUser} from "react-icons/fa";
+import {NavLink} from "react-router-dom";
+import {FaAtom, FaCalendarCheck, FaClipboardList, FaHospitalUser} from "react-icons/fa";
 
 const NavList = styled.ul`
   display: flex;

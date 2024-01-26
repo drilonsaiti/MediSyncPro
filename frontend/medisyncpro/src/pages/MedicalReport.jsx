@@ -7,7 +7,7 @@ const MedicalReport = () => {
     return (
         <>
             <Row type="horizontal" change="yes">
-                <Heading as="h1">All appointments</Heading>
+                <Heading as="h1">All medical reports</Heading>
                 <p>Test</p>
 
             </Row>

@@ -1,10 +1,10 @@
 package com.example.medisyncpro.web.rest;
 
-import com.example.medisyncpro.dto.AppointmentDateDto;
-import com.example.medisyncpro.dto.CreateAppointmentDto;
-import com.example.medisyncpro.dto.CreateClinicServicesDto;
+import com.example.medisyncpro.model.dto.AppointmentByReceptionistDto;
+import com.example.medisyncpro.model.dto.AppointmentDateDto;
+import com.example.medisyncpro.model.dto.AppointmentDto;
+import com.example.medisyncpro.model.dto.CreateAppointmentDto;
 import com.example.medisyncpro.model.Appointment;
-import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,32 +20,40 @@ public class AppointmentRestController {
     private final AppointmentService appointmentService;
 
     @GetMapping
-    public ResponseEntity<Iterable<Appointment>> listAppointments() {
-        Iterable<Appointment> appointments = appointmentService.getAll();
+    public ResponseEntity<Iterable<AppointmentDto>> listAppointments() {
+        Iterable<AppointmentDto> appointments = appointmentService.getAll();
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getClinicServiceById(@PathVariable Long id) {
+    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
 
         return new ResponseEntity<>(appointmentService.getById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/patient/{id}")
+    public ResponseEntity<Iterable<AppointmentDto>> getAppointmentByPatient(@PathVariable Long id) {
+
+        Iterable<AppointmentDto> appointments = appointmentService.getAllByPatient(id);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
+    }
+
+
 
     @PostMapping
-    public ResponseEntity<Void> createClinicServices(@RequestBody CreateAppointmentDto dto) {
+    public ResponseEntity<Void> createAppointments(@RequestBody CreateAppointmentDto dto) {
         this.appointmentService.save(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping()
-    public ResponseEntity<Void> updateClinicServices(@RequestBody Appointment clinicServices) {
-        appointmentService.update(clinicServices);
+    public ResponseEntity<Void> updateAppointments(@RequestBody Appointment Appointments) {
+        appointmentService.update(Appointments);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClinicServices(@PathVariable Long id){
+    public ResponseEntity<Void> deleteAppointments(@PathVariable Long id){
         appointmentService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -56,6 +64,12 @@ public class AppointmentRestController {
         Iterable<AppointmentDateDto> appointments = appointmentService.getAppointmentDates();
         System.out.println(appointments);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
+    }
+
+    @PostMapping("byReceptionist")
+    public ResponseEntity<Void> createAppointmentByReceptionist(@RequestBody AppointmentByReceptionistDto dto) throws Exception {
+        this.appointmentService.createAppointmentByReceptionist(dto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

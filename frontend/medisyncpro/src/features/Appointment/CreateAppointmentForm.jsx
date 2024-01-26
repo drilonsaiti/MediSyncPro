@@ -1,21 +1,21 @@
 import {useForm} from "react-hook-form";
 import Button from "../../ui/Button.jsx";
-import Modal from "../../ui/Modal.jsx";
-import Input from "../../ui/Input.jsx";
 import FormRow, {Label, StyledFormRow} from "../../ui/FormRow.jsx";
 import Form from "../../ui/Form.jsx";
-import {useCreateAppointment} from "./useCreateAppointment.js";
+import {useCreateAppointment, useCreateAppointmentByReceptionist} from "./useCreateAppointment.js";
 import {useEditAppointment} from "./useEditAppointment.js";
 import {useEffect, useState} from "react";
 import {createGlobalStyle} from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {addDays, setHours, setMinutes} from "date-fns";
-import {differenceInDays} from "date-fns/differenceInDays";
+import {addDays, setHours, setMilliseconds, setMinutes, setSeconds} from "date-fns";
 import {useAppointmentDates} from "./useAppointmentDates.js";
-import Select from "../../ui/Select.jsx";
 import {useClinicServices} from "../ClinicServices/useClinicService.js";
-const DatePickerWrapperStyles = createGlobalStyle`
+import CreatePatientForm from "../Patient/CreatePatientForm.jsx";
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+
+ const DatePickerWrapperStyles = createGlobalStyle`
     .date_picker.full-width {
         z-index: 9999 !important; /* Increase the z-index */
         border: 1px solid var(--color-grey-300);
@@ -47,43 +47,64 @@ const DatePickerWrapperStyles = createGlobalStyle`
     .react-datepicker__day-name, .react-datepicker__day {
         margin: 0.5rem !important;
     }
+    .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected:hover {
+        background-color: var(--color-brand-700)
+    }
+
+    .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
+        background-color: var(--color-brand-700);
+        color: white;
+        font-weight: bold;
+
+    }
+
+    .react-datepicker__close-icon::after {
+        background-color: var(--color-brand-700);
+        color: #fff;
+    }
 
 
     input {
         display: block;
         border: none;
         background-color: transparent;
-        
+
         &:focus {
             outline: none;
         }
     }
 `;
-
-const CreateAppointmentForm = ({appointmentToEdit = {},onCloseModal}) => {
-    const {appointmentId,...editValues} = appointmentToEdit;
+const animatedComponents = makeAnimated();
+const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal,clinicId}) => {
+    const {appointmentId, ...editValues} = appointmentToEdit;
     const isEditSession = Boolean(appointmentId);
-    const {register,handleSubmit,reset,getValues,formState} = useForm({
+    const {register, handleSubmit, reset, getValues,setValue, formState} = useForm({
         defaultValues: isEditSession ? editValues : {}
     });
+
     const {errors} = formState;
-    const {isCreating,createAppointment} = useCreateAppointment();
-    const {isEditing,editAppointment} = useEditAppointment();
-    const {isLoading:isLoadingServices,clinicServices} = useClinicServices();
-    const [value, onChange] = useState(new Date());
-    const {isLoading,dates} = useAppointmentDates();
-    const [bookedDates,setBookedDates] = useState([]);
-    const [refreshKey, setRefreshKey] = useState(1);
+    const {isCreating, createAppointment} = useCreateAppointment();
+    const {isEditing, editAppointment} = useEditAppointment();
+    const {isLoading: isLoadingServices, clinicServices} = useClinicServices();
+    const {isCreating:isCreatingAppointment,createAppointmentByRecep} = useCreateAppointmentByReceptionist();
+    const {isLoading, dates} = useAppointmentDates();
+    const [bookedDates, setBookedDates] = useState([]);
+    const [refreshKey, setRefreshKey] = useState(100);
+    const user = "rec";
 
     useEffect(() => {
         // Do something that triggers the need to refresh Select
         // For example, after editing an item
         setRefreshKey((prevKey) => prevKey + 1);
-    },[]);
+    }, []);
 
-    const [startDate, setStartDate] = useState(
-        setHours(setMinutes(new Date(), 30), 16),
-    );
+    const currentDateTime = new Date();
+    const currentMinutes = currentDateTime.getMinutes();
+    const roundedMinutes = Math.ceil(currentMinutes / 30) * 30;
+
+    const roundedDateTime = setMinutes(setSeconds(setMilliseconds(currentDateTime, 0), 0), roundedMinutes);
+
+    const [startDate, setStartDate] = useState(roundedDateTime);
     const isWorking = isCreating || isEditing;
 
     const [includeTimes, setIncludeTimes] = useState([]);
@@ -119,6 +140,7 @@ const CreateAppointmentForm = ({appointmentToEdit = {},onCloseModal}) => {
     }, []);
 
     const filterPassedTime = (time) => {
+        console.log("TIME:" +time);
         const currentDate = new Date();
         const selectedDate = new Date(time);
 
@@ -129,89 +151,105 @@ const CreateAppointmentForm = ({appointmentToEdit = {},onCloseModal}) => {
         endTime.setHours(19, 0, 0, 0); // Set to 19:00:00.000
 
         const withinTimeRange = currentDate.getTime() >= startTime.getTime() && currentDate.getTime() <= endTime.getTime();
+        const futureDate = selectedDate.getTime() > currentDate.getTime(); // Check if the selected date is in the future
 
-        const futureDate = currentDate.getTime() < selectedDate.getTime();
-
-        return withinTimeRange && futureDate;
+        console.log(withinTimeRange,futureDate);
+        return withinTimeRange || futureDate;
     };
-    function onSubmit(data) {
 
-        if (isEditSession) editAppointment({newData: {...data,appointmentId},id:appointmentId},{
+    const filterTime = (time) => {
+        const currentDate = new Date();
+        const selectedDate = new Date(time);
+
+        const startTime = new Date(currentDate);
+        startTime.setHours(7, 0, 0, 0); // Set to 07:00:00.000
+
+        const endTime = new Date(currentDate);
+        endTime.setHours(19, 0, 0, 0); // Set to 19:00:00.000
+
+        const withinTimeRange = selectedDate.getTime() >= startTime.getTime() && selectedDate.getTime() <= endTime.getTime();
+
+        return withinTimeRange;
+    };
+
+    function onSubmit(data) {
+        const timeZoneOffset = startDate.getTimezoneOffset();
+        const adjustedStartDate = new Date(startDate.getTime() - timeZoneOffset * 60000); // Adjust for time zone offset
+
+        if (isEditSession) editAppointment({newData: {...data, appointmentId}, id: appointmentId}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
             },
 
         })
-        else createAppointment({...data},{
-            onSuccess: () => {
-                reset();
-                onCloseModal?.();
+        else {
+            if(user){
+                createAppointmentByRecep(
+                    {newData:{...data,clinicId,appointment:adjustedStartDate}},{
+                    onSuccess: () => {
+                        reset();
+                        onCloseModal?.();
+                    },
+                }
+                )
+            }else{
+                createAppointment({...data}, {
+                    onSuccess: () => {
+                        reset();
+                        onCloseModal?.();
+                    }
+                });
             }
-        });
+        }
     }
 
     useEffect(() => {
-        const fetchBookedDates =  () => {
+        const fetchBookedDates = () => {
             try {
-
                 const bookedDatesdata = dates?.map(bookingDate => ({
                     start: new Date(Date.parse(bookingDate.startDate)),
                 }));
-                console.log("EXLUDED DATES");
-                console.log(bookedDatesdata);
 
                 const excludedDates = bookedDatesdata?.flatMap((dates) => {
-
-
-                    return addDays(dates.start,0);
+                    return addDays(dates.start, 0);
                 });
 
-                console.log(excludedDates);
                 setBookedDates(excludedDates);
-                console.log(bookedDatesdata);
 
-               /* const earliestStartDate = bookedDates?.reduce(
-                    (earliest, booking) => (booking.start < earliest ? booking.start : earliest),
-                    new Date()
-                );
-
-                const latestEndDate = bookedDates?.reduce(
-                    (latest, booking) => (booking.end > latest ? booking.end : latest),
-                    new Date()
-                );
-
-
-                setMinStartDate(earliestStartDate.toISOString().split('T')[0]);
-                setMaxEndDate(latestEndDate.toISOString().split('T')[0]);*/
             } catch (error) {
                 console.error('Error fetching booked dates:', error);
             }
         };
 
         fetchBookedDates();
-    }, [appointmentId ]);
+    }, [appointmentId]);
 
-    const servicesGrouped = clinicServices?.map(clinic =>  {
+    const servicesGrouped = clinicServices?.map(clinic => {
         return {
             value: clinic.serviceId,
             label: clinic.serviceName
         }
     })
 
-    return (
-        <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
-            <FormRow label="Specialization name" error={errors?.appointmentName?.message}>
-                <Input type="text" disabled={isWorking} id="appointmentName" {...register("appointmentName",{required:"This field is required"})}/>
-            </FormRow>
-
-            <StyledFormRow label="Calendar"  orientation="horizontal" calendar="calendar">
+    const FORM_ROWS = (
+        <>
+            {user &&
+            <CreatePatientForm registerTest={register}/>
+            }
+            <StyledFormRow label="Calendar" orientation="horizontal" calendar="calendar">
 
                 <Label>Calendar</Label>
                 <DatePicker
                     wrapperClassName='date_picker full-width'
                     selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date) => {
+
+                            setStartDate(date)
+                            console.log("TRUE");
+
+                        filterPassedTime(date)
+                    }}
                     showTimeSelect
                     includeTimes={includeTimes}
                     minTime={setHours(setMinutes(new Date(), 0), 7)}
@@ -222,8 +260,12 @@ const CreateAppointmentForm = ({appointmentToEdit = {},onCloseModal}) => {
                     excludeDates={bookedDates}
                     containerStyle={{width: '100%'}}
                     isClearable={true}
-
-                    popperModifiers={{ flip: { behavior: ["bottom"] }, preventOverflow: { enabled: false }, hide: { enabled: false } }}
+                    placeholderText="Click to select a date"
+                    popperModifiers={{
+                        flip: {behavior: ["bottom"]},
+                        preventOverflow: {enabled: false},
+                        hide: {enabled: false}
+                    }}
                 />
 
                 <DatePickerWrapperStyles/>
@@ -231,13 +273,30 @@ const CreateAppointmentForm = ({appointmentToEdit = {},onCloseModal}) => {
 
             </StyledFormRow>
 
-            <FormRow label="Clinic" error={errors?.serviceId?.message}>
-                <Select key={refreshKey} value={getValues('serviceId')} type="white"
-                        options={servicesGrouped} disabled={isWorking}
-                        id="serviceId" {...register("serviceId",{required:"This field is required"})}>
+            <FormRow label="Services" error={errors?.servicesId?.message} style={{position: 'relative'}}>
+                <Select
+                    closeMenuOnSelect={false}
+                    components={animatedComponents}
 
-                </Select>
+                    isMulti
+                    options={servicesGrouped}
+                    onChange={(selectedOptions) => {
+                        // Extract the selected values from the selected options
+                        const selectedValues = selectedOptions.map(option => option.value);
+                        console.log(selectedValues);
+                        setValue("serviceId", selectedValues);
+                    }}
+                    closeOnSelect={false}
+                    menuPortalTarget={document.body}
+                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                />
             </FormRow>
+        </>
+    )
+
+    return (
+        <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
+            {FORM_ROWS}
 
             <FormRow>
 

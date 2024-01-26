@@ -1,7 +1,5 @@
-import styled, {css} from "styled-components";
+import styled from "styled-components";
 import HeaderMenu from "./HeaderMenu.jsx";
-
-import MainNav from "./MainNav.jsx";
 
 /*
 * ${(props) =>

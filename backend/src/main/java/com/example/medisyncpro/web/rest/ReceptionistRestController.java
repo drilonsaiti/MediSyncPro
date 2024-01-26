@@ -1,10 +1,8 @@
 package com.example.medisyncpro.web.rest;
 
 
-import com.example.medisyncpro.dto.CreateReceptionistDto;
-import com.example.medisyncpro.dto.CreateSpecializationDto;
+import com.example.medisyncpro.model.dto.CreateReceptionistDto;
 import com.example.medisyncpro.model.Receptionist;
-import com.example.medisyncpro.model.Specializations;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.ReceptionistService;

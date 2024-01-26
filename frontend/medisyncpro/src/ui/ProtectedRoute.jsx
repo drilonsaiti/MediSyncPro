@@ -1,14 +1,10 @@
 import {useGetToken} from "../services/useGetToken.js";
 import styled from "styled-components";
 import Spinner from "./Spinner.jsx";
-import {useEffect, useState} from "react";
-import {Route, Routes, useNavigate} from "react-router-dom";
+import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 import {useGetRole} from "../services/useGetRole.js";
 import AccessDenied from "./AccessDenied.jsx";
-import BookingDetail from "../features/bookings/BookingDetail.jsx";
-import Checkin from "../pages/Checkin.jsx";
-import Accommodations from "../pages/Accommodations.jsx";
-import Account from "../pages/Account.jsx";
 
 const FullPage = styled.div`
 height: 100vh;

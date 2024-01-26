@@ -14,6 +14,17 @@ export async function getPatients(){
     }
 }
 
+export async function getPatientById(id) {
+    try {
+        const response = await apiRequest('GET',`patients/${id}`);
+        console.log("=====PATIENT=====");
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        throw new Error('Patient could not be loaded');
+    }
+}
+
 
 export async function createEditPatient(newPatient,id){
     console.log(newPatient)

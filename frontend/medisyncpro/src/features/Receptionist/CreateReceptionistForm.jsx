@@ -1,12 +1,10 @@
 import {useForm} from "react-hook-form";
 import Button from "../../ui/Button.jsx";
-import Modal from "../../ui/Modal.jsx";
 import Input from "../../ui/Input.jsx";
 import FormRow from "../../ui/FormRow.jsx";
 import Form from "../../ui/Form.jsx";
 import {useCreateReceptionist} from "./useCreateReceptionist.js";
 import {useEditReceptionist} from "./useEditReceptionist.js";
-import {useDoctors} from "../Doctor/useDoctors.js";
 import Select from "../../ui/Select.jsx";
 import {useEffect, useState} from "react";
 import {useClinics} from "../Clinic/useClinic.js";

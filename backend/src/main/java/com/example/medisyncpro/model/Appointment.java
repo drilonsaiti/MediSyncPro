@@ -2,8 +2,13 @@ package com.example.medisyncpro.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CollectionId;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -26,24 +31,26 @@ public class Appointment {
     private Long clinicId;
 
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDateTime date;
 
-    @Column(name = "time_slot", nullable = false)
-    private String timeSlot;
-
-    @Column(name = "service_id", nullable = false)
-    private Long serviceId;
+    @ElementCollection
+    @CollectionTable(name = "APPOINTMENT_SERVICE", joinColumns = @JoinColumn(name = "appointment_id"))
+    @Column(name = "service_id")
+    private List<Long> serviceIds = new ArrayList<>();
 
     @Column(name = "attended", nullable = false)
     private boolean attended;
 
-    public Appointment(Long patientId, Long doctorId, Long clinicId, Date date, String timeSlot, Long serviceId) {
+    public Appointment(Long patientId, Long doctorId, Long clinicId, LocalDateTime date) {
         this.patientId = patientId;
         this.doctorId = doctorId;
         this.clinicId = clinicId;
         this.date = date;
-        this.timeSlot = timeSlot;
-        this.serviceId = serviceId;
+        this.serviceIds = new ArrayList<>();
         this.attended = false;
+    }
+
+    public void setAllServicesIds(List<Long> serviceIds){
+        this.serviceIds.addAll(serviceIds);
     }
 }

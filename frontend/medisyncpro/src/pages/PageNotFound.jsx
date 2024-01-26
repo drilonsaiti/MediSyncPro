@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { useMoveBack } from "../hooks/useMoveBack";
+import {useMoveBack} from "../hooks/useMoveBack";
 import Heading from "../ui/Heading";
 import Button from "../ui/Button.jsx";
 import {HiChevronLeft} from "react-icons/hi2";

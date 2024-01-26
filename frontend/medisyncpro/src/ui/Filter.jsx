@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, {css} from "styled-components";
 import {useSearchParams} from "react-router-dom";
 
 const StyledFilter = styled.div`
@@ -40,7 +40,7 @@ const FilterButton = styled.button`
 const Filter = ({filterField,options}) => {
 
   const [searchParams,setSearchParams] = useSearchParams();
-  const currentFilter = searchParams.get(filterField) || options[0].value;
+  const currentFilter = searchParams.get(filterField) || options[1].value;
   const handleClick = (value) => {
     searchParams.set(filterField,value);
     setSearchParams(searchParams);

@@ -35,9 +35,16 @@ public class Clinic {
     @JsonIgnore
     private List<Doctor> doctors;
 
-    @OneToOne
-    @JoinColumn(name = "settings_id")
-    private Settings settings;
+    @OneToMany
+    @JsonIgnore
+    List<ClinicServices> services;
+
+
+    @Column(name = "settings_id")
+
+    private Long settingsId;
+
+    // TODO imageurl
 
     public Clinic(String clinicName, String address) {
         this.clinicName = clinicName;

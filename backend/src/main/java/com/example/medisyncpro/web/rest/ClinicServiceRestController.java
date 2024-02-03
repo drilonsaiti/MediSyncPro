@@ -1,11 +1,15 @@
 package com.example.medisyncpro.web.rest;
 
 
+import com.example.medisyncpro.model.dto.ClinicServicesResultDto;
 import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
 import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.service.ClinicServicesService;
 import com.example.medisyncpro.service.SpecializationService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +27,15 @@ public class ClinicServiceRestController {
 
 
     @GetMapping
-    public ResponseEntity<List<ClinicServices>> listServices() {
-        List<ClinicServices> services = clinicServicesService.getAll();
-        return new ResponseEntity<>(services, HttpStatus.OK);
+    public Page<ClinicServices> listServices(@RequestParam(defaultValue = "1") int page,
+                                             @RequestParam(defaultValue = "all") String specializations,
+                                             @RequestParam(defaultValue = "id-asc") String sort) {
+        System.out.println("==============SERVICE==========");
+        System.out.println(specializations);
+        System.out.println(sort);
+        PageRequest pageable = PageRequest.of(page - 1, 15);
+       ClinicServicesResultDto services = clinicServicesService.getAll(pageable,specializations,sort);
+        return new PageImpl<>(services.getServices(), pageable,services.getTotalElements());
     }
 
     @GetMapping("/{id}")
@@ -33,6 +43,7 @@ public class ClinicServiceRestController {
 
         return new ResponseEntity<>(clinicServicesService.getById(id), HttpStatus.OK);
     }
+
 
 
     @PostMapping

@@ -3,9 +3,13 @@ package com.example.medisyncpro.web.rest;
 
 import com.example.medisyncpro.model.dto.CreateDoctorDto;
 import com.example.medisyncpro.model.Doctor;
+import com.example.medisyncpro.model.dto.DoctorResultDto;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.SpecializationService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +24,13 @@ public class DoctorRestController {
     private final SpecializationService specializationService;
 
     @GetMapping
-    public ResponseEntity<Iterable<Doctor>> listDoctors() {
-        Iterable<Doctor> doctors = doctorService.getAll();
-        return new ResponseEntity<>(doctors, HttpStatus.OK);
+    public Page<Doctor> listDoctors(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "all") String specializations,
+                                    @RequestParam(defaultValue = "all") String service) {
+        PageRequest pageable = PageRequest.of(page - 1, 15);
+        DoctorResultDto clinicDtoList = doctorService.getAll(pageable,specializations,service);
+
+        return new PageImpl<>(clinicDtoList.getClinics(), pageable, clinicDtoList.getTotalElements());
     }
 
     @GetMapping("/{id}")

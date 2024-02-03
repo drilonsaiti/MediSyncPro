@@ -1,11 +1,13 @@
 package com.example.medisyncpro.service.impl;
 
 import com.example.medisyncpro.model.dto.CreatePatientDto;
+import com.example.medisyncpro.model.dto.PatientResultDto;
 import com.example.medisyncpro.model.mapper.PatientMapper;
 import com.example.medisyncpro.model.Patient;
 import com.example.medisyncpro.repository.PatientRepository;
 import com.example.medisyncpro.service.PatientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -24,8 +26,17 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Patient> getAll() {
-        return patientRepository.findAll();
+    public PatientResultDto getAll(PageRequest pageable, String nameOrEmail) {
+        List<Patient> patients =  patientRepository.findAll().stream().filter(patient ->
+                (((nameOrEmail.equals("all") || patient.getPatientName().toLowerCase().contains(nameOrEmail.toLowerCase())
+                    || patient.getEmail().toLowerCase().contains(nameOrEmail.toLowerCase()))))
+        ).toList();
+
+        int totalElements = patients.size();
+
+        return new PatientResultDto(patients.stream()
+                .skip(pageable.getOffset())
+                .limit(pageable.getPageSize()).toList(),totalElements);
     }
 
     @Override

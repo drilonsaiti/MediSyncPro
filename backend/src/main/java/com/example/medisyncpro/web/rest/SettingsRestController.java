@@ -1,6 +1,7 @@
 package com.example.medisyncpro.web.rest;
 
 import com.example.medisyncpro.model.Settings;
+import com.example.medisyncpro.model.dto.SettingsDTO;
 import com.example.medisyncpro.service.SettingsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +11,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/settings")
 @RequiredArgsConstructor
+@CrossOrigin
 public class SettingsRestController {
 
     private final SettingsService settingsService;
 
 
     @GetMapping
-    public List<Settings> getAllSettings() {
+    public List<SettingsDTO> getAllSettings() {
         return settingsService.getAllSettings();
     }
 
@@ -31,8 +33,8 @@ public class SettingsRestController {
     }
 
     @PutMapping("/{id}")
-    public Settings updateSettings(@PathVariable Long id, @RequestBody Settings settings) {
-        return settingsService.saveSettings(settings);
+    public SettingsDTO updateSettings(@PathVariable Long id, @RequestBody SettingsDTO settings) {
+        return settingsService.updateSettings(settings);
     }
 
     @DeleteMapping("/{id}")

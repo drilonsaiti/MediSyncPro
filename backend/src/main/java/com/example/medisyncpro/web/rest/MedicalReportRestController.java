@@ -1,11 +1,16 @@
 package com.example.medisyncpro.web.rest;
 
 
+import com.example.medisyncpro.model.dto.ClinicResultDto;
 import com.example.medisyncpro.model.dto.CreateMedicalReportDto;
 import com.example.medisyncpro.model.dto.MedicalReportDto;
 import com.example.medisyncpro.model.MedicalReport;
+import com.example.medisyncpro.model.dto.MedicalReportResultDto;
 import com.example.medisyncpro.service.MedicalReportService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +26,15 @@ public class MedicalReportRestController {
     private final MedicalReportService medicalReportService;
 
     @GetMapping
-    public ResponseEntity<List<MedicalReportDto>> listMedicalReports() {
-        System.out.println("ITS HERE REST CONTROLLER");
-        List<MedicalReportDto> medicalReports = medicalReportService.getAll();
-        return new ResponseEntity<>(medicalReports, HttpStatus.OK);
+    public Page<MedicalReportDto> listMedicalReports(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "all") String nameOrEmail,
+                                                     @RequestParam(defaultValue = "all") String byDate
+    ) {
+
+        PageRequest pageable = PageRequest.of(page - 1, 15);
+        MedicalReportResultDto report = medicalReportService.getAll(pageable,nameOrEmail, byDate);
+
+        return new PageImpl<>(report.getMedicalReport(), pageable, report.getTotalElements());
     }
 
     @GetMapping("/{id}")

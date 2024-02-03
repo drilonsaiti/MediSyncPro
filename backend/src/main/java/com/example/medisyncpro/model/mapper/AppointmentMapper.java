@@ -6,6 +6,7 @@ import com.example.medisyncpro.model.Patient;
 import com.example.medisyncpro.model.dto.AppointmentDto;
 import com.example.medisyncpro.model.dto.CreateAppointmentDto;
 import com.example.medisyncpro.model.Appointment;
+import com.example.medisyncpro.model.dto.MedicalReportDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class AppointmentMapper {
         return old;
     }
 
-    public AppointmentDto getAppointment(Appointment appm, Patient patient, Doctor doctor, List<String> services){
+    public AppointmentDto getAppointment(Appointment appm, Patient patient, Doctor doctor, List<String> services, MedicalReportDto report){
         return new AppointmentDto(
                 appm.getAppointmentId(),
                 patient.getPatientId(),
@@ -41,9 +42,11 @@ public class AppointmentMapper {
                 patient.getEmail(),
                 doctor.getDoctorName(),
                 doctor.getSpecialization().getSpecializationName(),
+                appm.getClinicId(),
                 appm.getDate(),
                 services,
-                false
+                false,
+                report
         );
     }
 

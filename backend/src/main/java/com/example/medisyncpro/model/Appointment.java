@@ -35,7 +35,6 @@ public class Appointment {
 
     @ElementCollection
     @CollectionTable(name = "APPOINTMENT_SERVICE", joinColumns = @JoinColumn(name = "appointment_id"))
-    @Column(name = "service_id")
     private List<Long> serviceIds = new ArrayList<>();
 
     @Column(name = "attended", nullable = false)

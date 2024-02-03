@@ -27,5 +27,5 @@ public class MedicalReportDto {
     /*private String doctorEmail;*/
     private LocalDateTime appointmentDate;
     private List<ServiceDto> services;
-    private BigDecimal totalPrice;
+    private int totalPrice;
 }

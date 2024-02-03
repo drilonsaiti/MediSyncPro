@@ -1,10 +1,14 @@
 package com.example.medisyncpro.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -14,20 +18,20 @@ public class Settings {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "settings")
-    private Clinic clinic;
+    @Column(name = "clinic_id")
+    private Long clinicId;
 
     @Column(name = "morning_start_time")
-    private LocalDateTime morningStartTime;
+    private LocalTime morningStartTime;
 
     @Column(name = "morning_end_time")
-    private LocalDateTime morningEndTime;
+    private LocalTime morningEndTime;
 
     @Column(name = "afternoon_start_time")
-    private LocalDateTime afternoonStartTime;
+    private LocalTime afternoonStartTime;
 
     @Column(name = "afternoon_end_time")
-    private LocalDateTime afternoonEndTime;
+    private LocalTime afternoonEndTime;
 
     @Column(name = "appointment_duration_minutes")
     private int appointmentDurationMinutes;
@@ -41,6 +45,7 @@ public class Settings {
             joinColumns = @JoinColumn(name = "settings_id"),
             inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
+    @JsonIgnore
     private List<Doctor> morningDoctors;
 
     @ManyToMany
@@ -49,8 +54,12 @@ public class Settings {
             joinColumns = @JoinColumn(name = "settings_id"),
             inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
+    @JsonIgnore
     private List<Doctor> afternoonDoctors;
 
-    // Getters and setters
+    public Settings (){
+        morningDoctors = new ArrayList<>();
+        afternoonDoctors = new ArrayList<>();
+    }
 }
 

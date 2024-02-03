@@ -2,14 +2,25 @@ package com.example.medisyncpro.web.rest;
 
 
 
+import com.example.medisyncpro.model.dto.ClinicScheduleDto;
+import com.example.medisyncpro.model.dto.ClinicScheduleResultDto;
 import com.example.medisyncpro.model.dto.CreateClinicSchedulesDto;
 import com.example.medisyncpro.model.ClinicSchedule;
+import com.example.medisyncpro.model.dto.GroupedClinicSchedule;
 import com.example.medisyncpro.service.ClinicScheduleService;
 import com.example.medisyncpro.service.DoctorService;
+import com.example.medisyncpro.service.SettingsService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -19,11 +30,11 @@ public class ClinicScheduleRestController {
 
     private final ClinicScheduleService clinicScheduleService;
     private final DoctorService doctorService;
+    private final SettingsService service;
 
     @GetMapping
-    public ResponseEntity<Iterable<ClinicSchedule>> listClinicSchedules() {
-        Iterable<ClinicSchedule> clinicSchedules = clinicScheduleService.getAll();
-        return new ResponseEntity<>(clinicSchedules, HttpStatus.OK);
+    public ResponseEntity<List<ClinicSchedule>> listClinicSchedules() {
+        return new ResponseEntity<>(clinicScheduleService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -51,4 +62,20 @@ public class ClinicScheduleRestController {
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+    @PostMapping("/generate/{id}")
+    public ResponseEntity<Iterable<ClinicSchedule>> generateClinicSchedules(@PathVariable Long id) {
+        Iterable<ClinicSchedule> clinicSchedules = clinicScheduleService.generateSchedules(id);
+        return new ResponseEntity<>(clinicSchedules, HttpStatus.OK);
+    }
+
+    @GetMapping("/grouped/{id}")
+    public Page<GroupedClinicSchedule> getAllByClinicGroupedByDate(@PathVariable Long id,
+                                                                   @RequestParam(defaultValue = "1") int page,
+                                                                   @RequestParam(defaultValue = "startDate-asc") String sort){
+        PageRequest pageable = PageRequest.of(page - 1, 15);
+        ClinicScheduleResultDto results = clinicScheduleService.getAllByClinicGroupedByDate(id,pageable,sort);
+        return new PageImpl<>(results.getClinicSchedule(),pageable,results.getTotalElements());
+    }
+
 }

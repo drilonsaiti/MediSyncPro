@@ -14,12 +14,14 @@ import java.util.List;
 public class AppointmentDto {
 
     private Long appointmentId;
-private Long patientId;
+    private Long patientId;
     private String patientName;
     private String patientEmail;
 
     private String doctorName;
     private String doctorSpecializations;
+
+    private Long clinicId;
 
     private LocalDateTime date;
 
@@ -27,4 +29,5 @@ private Long patientId;
 
 
     private boolean attended;
+    private MedicalReportDto report;
 }

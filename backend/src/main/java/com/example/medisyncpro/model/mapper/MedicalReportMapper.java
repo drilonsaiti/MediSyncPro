@@ -15,7 +15,7 @@ import java.util.List;
 public class MedicalReportMapper {
 
 
-    public MedicalReportDto getMedicalReport(MedicalReport report, Long patientId, String patientName, String patientEmail, List<ServiceDto> services, BigDecimal totalPrice){
+    public MedicalReportDto getMedicalReport(MedicalReport report, Long patientId, String patientName, String patientEmail, List<ServiceDto> services, int totalPrice){
         return new MedicalReportDto(
                 report.getReportId(),
                 report.getDisease(),

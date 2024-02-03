@@ -3,6 +3,7 @@ package com.example.medisyncpro.web.rest;
 
 import com.example.medisyncpro.model.dto.CreateReceptionistDto;
 import com.example.medisyncpro.model.Receptionist;
+import com.example.medisyncpro.model.dto.ReceptionistDto;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.ReceptionistService;
@@ -28,9 +29,9 @@ public class ReceptionistRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Receptionist> getReceptionistById(@PathVariable Long id) {
+    public ResponseEntity<ReceptionistDto> getReceptionistById(@PathVariable Long id) {
 
-        return new ResponseEntity<>(receptionistService.getById(id), HttpStatus.OK);
+        return new ResponseEntity<>(receptionistService.getByIdDto(id), HttpStatus.OK);
     }
 
 

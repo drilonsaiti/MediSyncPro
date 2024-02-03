@@ -1,5 +1,6 @@
 package com.example.medisyncpro.model.mapper;
 
+import com.example.medisyncpro.model.dto.ClinicDto;
 import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
 import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.Specializations;
@@ -24,4 +25,6 @@ public class ClinicServicesMapper {
         old.setSpecializations(newServices.getSpecializations());
         return old;
     }
+
+
 }

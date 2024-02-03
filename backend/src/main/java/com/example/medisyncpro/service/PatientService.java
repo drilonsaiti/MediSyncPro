@@ -2,6 +2,8 @@ package com.example.medisyncpro.service;
 
 import com.example.medisyncpro.model.dto.CreatePatientDto;
 import com.example.medisyncpro.model.Patient;
+import com.example.medisyncpro.model.dto.PatientResultDto;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -9,7 +11,7 @@ public interface PatientService {
 
     Patient getById(Long id);
 
-    List<Patient> getAll();
+    PatientResultDto getAll(PageRequest pageable,String nameOrEmail);
 
     Patient save(CreatePatientDto patient) throws Exception;
     Patient update(Patient patient);

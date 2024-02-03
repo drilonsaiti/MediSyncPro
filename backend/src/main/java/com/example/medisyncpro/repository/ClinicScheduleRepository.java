@@ -10,5 +10,6 @@ public interface ClinicScheduleRepository extends JpaRepository<ClinicSchedule, 
 
     ClinicSchedule findClinicScheduleByClinicIdAndStartTime(Long id, LocalDateTime startTime);
     ClinicSchedule findClinicScheduleByClinicId(Long id);
+    List<ClinicSchedule> findAllByClinicId(Long id);
 }
 

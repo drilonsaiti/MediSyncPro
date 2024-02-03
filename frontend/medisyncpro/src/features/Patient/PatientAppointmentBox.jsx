@@ -1,6 +1,5 @@
 import styled, {createGlobalStyle} from "styled-components";
 import {StyledBox} from "./PatientHeaderBox.jsx";
-import Tag from "../../ui/Tag.jsx";
 import {FaFilePdf} from "react-icons/fa";
 import {HiEye, HiPencil} from "react-icons/hi";
 import Heading from "../../ui/Heading.jsx";
@@ -9,9 +8,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ButtonIcon from "../../ui/ButtonIcon.jsx";
 import Stacked from "../../ui/Stacked.jsx";
-import {useAppointments, useAppointmentsByPatient} from "../Appointment/useAppointments.js";
-import {formatDate, formatDateMonth} from "../../utils/helpers.js";
+import {useAppointmentsByPatient} from "../Appointment/useAppointments.js";
+import {formatDateMonth} from "../../utils/helpers.js";
 import Spinner from "../../ui/Spinner.jsx";
+import {Link} from "react-router-dom";
+import DownloadButton from "../MedicalReport/DownloadButton.jsx";
+import Modal from "../../ui/Modal.jsx";
+import CreateAppointmentForm from "../Appointment/CreateAppointmentForm.jsx";
 
 const DatePickerWrapperStyles = createGlobalStyle`
     
@@ -178,7 +181,7 @@ const Avatar = styled.img`
 `;
 const PatientAppointmentBox = ({patientId}) => {
     const [startDate, setStartDate] = useState(new Date());
-    const {isLoading,appointments} = useAppointmentsByPatient(patientId);
+    const {isLoading, appointments} = useAppointmentsByPatient(patientId);
 
     if (isLoading) return <Spinner/>
 
@@ -189,20 +192,40 @@ const PatientAppointmentBox = ({patientId}) => {
         console.log(appDate === startDateString);
         return appDate === startDateString;
     });
+
+    // TODO button nav next and past appointments for past buttons check and download report for next update appointment
+    console.log(filteredAppointments);
     return (
         <StyledBox>
             <Container>
                 <Appointments>
                     {filteredAppointments.map(app => {
-                        return(
+                        return (
                             <AppointmentsItem key={app.appointmentId}>
 
                                 <Heading type="h2" style={{marginTop: '2rem'}}>{app.serviceName}</Heading>
+
                                 <Icons>
-                                    <ButtonIcon type="icon"><HiEye /></ButtonIcon>
-                                    <ButtonIcon type="icon"><FaFilePdf /></ButtonIcon>
-                                    <ButtonIcon type="icon"><HiPencil /></ButtonIcon>
+                                    {app.report &&
+                                        <><ButtonIcon type="icon"><Link to={`/medicalReports/${app.reportId}`} target="_blank"><FaFilePdf /></Link></ButtonIcon>
+                                    <ButtonIcon type="icon">
+                                        <DownloadButton  medicalReport={app.report} isDownload/>
+
+                                    </ButtonIcon>
+                                        </>
+                                    }
+                                    <Modal>
+                                        <Modal.Open opens="edit">
+                                            <ButtonIcon type="icon"><HiPencil/></ButtonIcon>
+                                        </Modal.Open>
+
+                                        <Modal.Window name="edit">
+                                            <CreateAppointmentForm appointmentToEdit={app} clinicId={app.clinicId} />
+                                        </Modal.Window>
+                                    </Modal>
+
                                 </Icons>
+
 
                                 <Heading type="h3">{formatDateMonth(app.date)}</Heading>
                                 <Doctor>
@@ -225,6 +248,9 @@ const PatientAppointmentBox = ({patientId}) => {
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
                         inline
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
                     />
                     <DatePickerWrapperStyles/>
                 </Calendar>

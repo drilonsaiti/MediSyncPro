@@ -61,34 +61,33 @@ const PaginationButton = styled.button`
 `;
 
 
-
-
 const Pagination = ({count}) => {
 
-    const [searchParams,setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const currentPage = !searchParams.get('page') ? 1 : Number(searchParams.get('page'));
     const pageCount = Math.ceil(count / PAGE_SIZE);
     const rangeLimit = 5; // Set the limit of page numbers to display
     let startPage = Math.max(currentPage - Math.floor(rangeLimit / 2), 1);
     let endPage = Math.min(startPage + rangeLimit - 1, pageCount);
-    const range = Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
+    const range = Array.from({length: endPage - startPage + 1}, (_, index) => startPage + index);
 
-    function nextPage(){
-        const next = currentPage === pageCount ? currentPage : currentPage+1;
+    function nextPage() {
+        const next = currentPage === pageCount ? currentPage : currentPage + 1;
 
-        searchParams.set('page',next);
-        setSearchParams(searchParams);
-    }
-    function prevPage(){
-        const prev = currentPage === 1 ? currentPage : currentPage-1;
-
-        searchParams.set('page',prev);
+        searchParams.set('page', next);
         setSearchParams(searchParams);
     }
 
-    function numPage(page){
+    function prevPage() {
+        const prev = currentPage === 1 ? currentPage : currentPage - 1;
 
-        searchParams.set('page',page);
+        searchParams.set('page', prev);
+        setSearchParams(searchParams);
+    }
+
+    function numPage(page) {
+
+        searchParams.set('page', page);
         setSearchParams(searchParams);
     }
 
@@ -96,13 +95,15 @@ const Pagination = ({count}) => {
     return (
         <StyledPagination>
             <P>Showing <span>{(currentPage - 1) * PAGE_SIZE + 1}</span> to <span>{currentPage === pageCount ? count : currentPage * PAGE_SIZE} </span>
-             of <span>{count}</span> results</P>
+                of <span>{count}</span> results</P>
 
             <Buttons>
                 <PaginationButton disabled={currentPage === 1} onClick={prevPage}><HiChevronLeft/> <span>Previous</span></PaginationButton>
 
-                {range.map((value) => (<PaginationButton active={value === currentPage} onClick={() => numPage(value)} key={value}>{value}</PaginationButton>))}
-                <PaginationButton  disabled={currentPage === pageCount} onClick={nextPage}><HiChevronRight/> <span>Next</span></PaginationButton>
+                {range.map((value) => (<PaginationButton active={value === currentPage} onClick={() => numPage(value)}
+                                                         key={value}>{value}</PaginationButton>))}
+                <PaginationButton disabled={currentPage === pageCount} onClick={nextPage}><HiChevronRight/>
+                    <span>Next</span></PaginationButton>
 
             </Buttons>
         </StyledPagination>

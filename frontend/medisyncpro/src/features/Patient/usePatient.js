@@ -1,22 +1,49 @@
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {getPatientById, getPatients} from "../../services/apiPatients.js";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 
-export function usePatients(){
-    const {data:patients,isLoading} = useQuery({
-        queryFn: getPatients,
-        queryKey: ["patients"]
+export function usePatients() {
+    const queryClient = useQueryClient();
+    const [searchParams] = useSearchParams();
+
+    const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+    const nameOrEmail = searchParams.get('nameOrEmail') || '';
+
+
+    const {data, isLoading} = useQuery({
+        queryFn: () => getPatients({page, nameOrEmail}),
+        queryKey: ["patients", page, nameOrEmail]
     })
 
-    return {patients,isLoading};
+    const patients = data?.content;
+    const totalElements = data?.totalElements;
+
+    const pageCount = Math.ceil(totalElements / 15);
+
+    if (page < pageCount)
+        queryClient.prefetchQuery({
+            queryKey: ["patients", page + 1, nameOrEmail],
+            queryFn: () => getPatients({page: page - 1, nameOrEmail}),
+
+        });
+
+    if (page > 1)
+        queryClient.prefetchQuery({
+            queryKey: ["patients", page - 1, nameOrEmail],
+
+            queryFn: () => getPatients({page: page - 1, nameOrEmail}),
+
+        });
+
+    return {isLoading, patients, totalElements}
 }
 
-export function usePatientById(){
-    const { patientId } = useParams();
-    const {data:patient,isLoading} = useQuery({
+export function usePatientById() {
+    const {patientId} = useParams();
+    const {data: patient, isLoading} = useQuery({
         queryFn: () => getPatientById(patientId),
-        queryKey: ["patient",patientId]
+        queryKey: ["patient", patientId]
     })
 
-    return {patient,isLoading};
+    return {patient, isLoading};
 }

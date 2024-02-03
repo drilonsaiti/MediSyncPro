@@ -36,12 +36,11 @@ const StyledHeader = styled.header`
 function Header() {
 
 
-
-    return <StyledHeader >
-      <div >
-      {/*<UserAvatar src={profileData?.profileImage !== "" ? profileData.profileImage : "http://localhost:5173/default-user.jpg"} alt="Avatar"/>*/}
-      <HeaderMenu/>
-      </div>
+    return <StyledHeader>
+        <div>
+            {/*<UserAvatar src={profileData?.profileImage !== "" ? profileData.profileImage : "http://localhost:5173/default-user.jpg"} alt="Avatar"/>*/}
+            <HeaderMenu/>
+        </div>
     </StyledHeader>;
 
 }

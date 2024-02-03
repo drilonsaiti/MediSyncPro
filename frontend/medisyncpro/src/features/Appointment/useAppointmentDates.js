@@ -1,12 +1,12 @@
 import {useQuery} from "@tanstack/react-query";
 import {getAppointmentDates} from "../../services/apiAppointments.js";
 
-export function useAppointmentDates(){
+export function useAppointmentDates() {
 
-    const {isLoading,data:dates} = useQuery({
+    const {isLoading, data: dates} = useQuery({
         queryFn: getAppointmentDates,
-        queryKey:  ["appointmentDates",],
+        queryKey: ["appointmentDates",],
     })
 
-    return {isLoading,dates};
+    return {isLoading, dates};
 }

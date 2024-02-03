@@ -11,11 +11,11 @@ const StyledAppLayout = styled.div`
 `;
 
 const Main = styled.main`
-  background-color: var(--color-grey-50);
-  padding: 4rem 4.8rem 6.4rem;
+    background-color: var(--color-grey-50);
+    padding: 4rem 4.8rem 6.4rem;
 
     ${(props) =>
-            props.user  &&
+            props.user &&
             css`
         grid-column: 1 / -1;
       `}
@@ -26,15 +26,15 @@ function AppLayout() {
     const hasAdminRole = roles.includes("ROLE_ADMIN");*/
 
     return (
-    <StyledAppLayout>
-      <Header />
-        <Sidebar />
+        <StyledAppLayout>
+            <Header/>
+            <Sidebar/>
 
-      <Main>
-        <Outlet/>
-      </Main>
-    </StyledAppLayout>
-  );
+            <Main>
+                <Outlet/>
+            </Main>
+        </StyledAppLayout>
+    );
 }
 
 export default AppLayout;

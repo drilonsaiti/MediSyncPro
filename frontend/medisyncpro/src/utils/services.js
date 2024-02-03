@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const BASE_URL = "http://localhost:9091/api";
+
 /*
 const cookies = new Cookies();
 export const HEADERS = {
@@ -17,7 +18,7 @@ function shouldIncludeHeaders(url) {
 }
 
 
-export const apiRequest = async (method, url, data = null,params = null) => {
+export const apiRequest = async (method, url, data = null, params = null) => {
     try {
         const config = {
             method,

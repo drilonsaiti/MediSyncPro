@@ -4,9 +4,10 @@ import Table from "../../ui/Table.jsx";
 import ClinicRow from "./ClinicRow.jsx";
 import {useClinics} from "./useClinic.js";
 import Spinner from "../../ui/Spinner.jsx";
+import Pagination from "../../ui/Pagination.jsx";
 
 const ClinicTable = () => {
-    const {isLoading, clinics} = useClinics();
+    const {isLoading, clinics,totalElements} = useClinics();
 
 
     if (isLoading) return <Spinner/>
@@ -25,6 +26,10 @@ const ClinicTable = () => {
                 <Table.Body data={clinics} render={
                     spc => <ClinicRow clinic={spc} key={spc.clinicId}/>
                 }/>
+
+                <Table.Footer>
+                    <Pagination count={totalElements}/>
+                </Table.Footer>
 
             </Table>
         </Menus>

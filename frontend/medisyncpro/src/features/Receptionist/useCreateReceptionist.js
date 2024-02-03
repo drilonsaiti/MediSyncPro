@@ -6,7 +6,7 @@ import {createEditReceptionist} from "../../services/apiReceptionist.js";
 export function useCreateReceptionist() {
     const queryClient = useQueryClient();
 
-    const {mutate:createReceptionist,isPending:isCreating} = useMutation({
+    const {mutate: createReceptionist, isPending: isCreating} = useMutation({
         mutationFn: createEditReceptionist,
         onSuccess: () => {
             toast.success("New receptionists successfully created");
@@ -14,8 +14,8 @@ export function useCreateReceptionist() {
                 queryKey: ['receptionists'],
             });
         },
-        onError:(err) => toast.error(err.message)
+        onError: (err) => toast.error(err.message)
     });
 
-    return {isCreating,createReceptionist}
+    return {isCreating, createReceptionist}
 }

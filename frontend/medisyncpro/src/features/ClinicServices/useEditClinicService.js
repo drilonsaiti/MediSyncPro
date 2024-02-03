@@ -5,16 +5,16 @@ import {createEditClinicService} from "../../services/apiClinicServices.js";
 export function useEditClinicService() {
     const queryClient = useQueryClient();
 
-    const {mutate:editClinicService,isPending: isEditing} = useMutation({
-        mutationFn:({newData, id}) => createEditClinicService(newData,id),
+    const {mutate: editClinicService, isPending: isEditing} = useMutation({
+        mutationFn: ({newData, id}) => createEditClinicService(newData, id),
         onSuccess: () => {
             toast.success("Clinic service successfully edited");
             queryClient.invalidateQueries({
                 queryKey: ['clinicService'],
             });
         },
-        onError:(err) => toast.error(err.message)
+        onError: (err) => toast.error(err.message)
     });
 
-    return {isEditing,editClinicService}
+    return {isEditing, editClinicService}
 }

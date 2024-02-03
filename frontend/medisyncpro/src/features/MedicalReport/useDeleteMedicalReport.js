@@ -6,8 +6,8 @@ export function useDeleteMedicalReport() {
 
     const queryClient = useQueryClient();
 
-    const {isPending:isDeleting,mutate:deleteMutate} = useMutation({
-        mutationFn:  deleteMedicalReport,
+    const {isPending: isDeleting, mutate: deleteMutate} = useMutation({
+        mutationFn: deleteMedicalReport,
         onSuccess: () => {
             toast.success("Medical report successfully deleted")
             queryClient.invalidateQueries({
@@ -17,5 +17,5 @@ export function useDeleteMedicalReport() {
         onError: (error) => toast.error(error.message)
     })
 
-    return {isDeleting,deleteMutate}
+    return {isDeleting, deleteMutate}
 }

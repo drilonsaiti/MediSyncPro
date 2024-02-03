@@ -103,15 +103,15 @@ const DatePickerWrapperStyles = createGlobalStyle`
         }
     }
 `;
-const CreateMedicalReportForm = ({medicalReportToEdit = {},onCloseModal,appointmentDate,appointmentId}) => {
-    const {reportId,...editValues} = medicalReportToEdit;
+const CreateMedicalReportForm = ({medicalReportToEdit = {}, onCloseModal, appointmentDate, appointmentId}) => {
+    const {reportId, ...editValues} = medicalReportToEdit;
     const isEditSession = Boolean(reportId);
-    const {register,handleSubmit,reset,getValues,formState} = useForm({
+    const {register, handleSubmit, reset, getValues, formState} = useForm({
         defaultValues: isEditSession ? editValues : {}
     });
     const {errors} = formState;
-    const {isCreating,createMedicalReport} = useCreateMedicalReport();
-    const {isEditing,editMedicalReport} = useEditMedicalReport();
+    const {isCreating, createMedicalReport} = useCreateMedicalReport();
+    const {isEditing, editMedicalReport} = useEditMedicalReport();
     const {isLoading, dates} = useAppointmentDates();
     const [bookedDates, setBookedDates] = useState([]);
 
@@ -158,7 +158,7 @@ const CreateMedicalReportForm = ({medicalReportToEdit = {},onCloseModal,appointm
     }, []);
 
     const filterPassedTime = (time) => {
-        console.log("TIME:" +time);
+        console.log("TIME:" + time);
         const currentDate = new Date();
         const selectedDate = new Date(time);
 
@@ -171,7 +171,7 @@ const CreateMedicalReportForm = ({medicalReportToEdit = {},onCloseModal,appointm
         const withinTimeRange = currentDate.getTime() >= startTime.getTime() && currentDate.getTime() <= endTime.getTime();
         const futureDate = selectedDate.getTime() > currentDate.getTime(); // Check if the selected date is in the future
 
-        console.log(withinTimeRange,futureDate);
+        console.log(withinTimeRange, futureDate);
         return withinTimeRange || futureDate;
     };
 
@@ -195,16 +195,24 @@ const CreateMedicalReportForm = ({medicalReportToEdit = {},onCloseModal,appointm
 
         fetchBookedDates();
     }, [dates]);
+
     function onSubmit(data) {
         console.log(appointmentDate);
-        if (isEditSession) editMedicalReport({newData: {...data,reportId,appointmentId,nextAppointmentDate:startDate},id:reportId},{
+        if (isEditSession) editMedicalReport({
+            newData: {
+                ...data,
+                reportId,
+                appointmentId,
+                nextAppointmentDate: startDate
+            }, id: reportId
+        }, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
             },
 
         })
-        else createMedicalReport({newData: {...data,appointmentId,nextAppointmentDate:startDate}},{
+        else createMedicalReport({newData: {...data, appointmentId, nextAppointmentDate: startDate}}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
@@ -215,10 +223,12 @@ const CreateMedicalReportForm = ({medicalReportToEdit = {},onCloseModal,appointm
     return (
         <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
             <FormRow label="Disease" error={errors?.disease?.message}>
-                <Textarea type="text" disabled={isWorking} id="disease" {...register("disease",{required:"This field is required"})}/>
+                <Textarea type="text" disabled={isWorking}
+                          id="disease" {...register("disease", {required: "This field is required"})}/>
             </FormRow>
             <FormRow label="Medicine name" error={errors?.medicineName?.message}>
-                <Textarea type="text" disabled={isWorking} id="medicineName" {...register("medicineName",{required:"This field is required"})}/>
+                <Textarea type="text" disabled={isWorking}
+                          id="medicineName" {...register("medicineName", {required: "This field is required"})}/>
             </FormRow>
 
             <StyledFormRow label="Calendar" orientation="horizontal" calendar="calendar">
@@ -234,6 +244,9 @@ const CreateMedicalReportForm = ({medicalReportToEdit = {},onCloseModal,appointm
 
                         filterPassedTime(date)
                     }}
+                    peekNextMonth
+                    showMonthDropdown
+                    showYearDropdown
                     showTimeSelect
                     includeTimes={includeTimes}
                     minTime={setHours(setMinutes(new Date(), 0), 7)}

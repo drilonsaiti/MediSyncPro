@@ -6,7 +6,7 @@ export const StyledSelect = styled.select`
   padding: 0.8rem 1.2rem;
   border: 1px solid
     ${(props) =>
-      props.type === "white"
+    props.type === "white"
         ? "var(--color-grey-100)"
         : "var(--color-grey-300)"};
   border-radius: var(--border-radius-sm);
@@ -17,11 +17,11 @@ export const StyledSelect = styled.select`
 
 
 // eslint-disable-next-line react/display-name
-const Select = forwardRef(({ options, value, ...props }, ref) => {
+const Select = forwardRef(({options, value, ...props}, ref) => {
 
     const isTypes = Array.isArray(options) && options.length > 0 ? options[0]?.value : null;
 
-    console.log("VALUE " +value);
+    console.log("VALUE " + value);
 
     return (
         <StyledSelect ref={ref}  {...props} value={value}>

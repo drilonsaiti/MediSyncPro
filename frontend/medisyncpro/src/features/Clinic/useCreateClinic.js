@@ -6,7 +6,7 @@ import {createEditPatient} from "../../services/apiPatients.js";
 export function useCreateClinic() {
     const queryClient = useQueryClient();
 
-    const {mutate:createPatient,isPending:isCreating} = useMutation({
+    const {mutate: createPatient, isPending: isCreating} = useMutation({
         mutationFn: createEditPatient,
         onSuccess: () => {
             toast.success("New patient successfully created");
@@ -14,8 +14,8 @@ export function useCreateClinic() {
                 queryKey: ['patients'],
             });
         },
-        onError:(err) => toast.error(err.message)
+        onError: (err) => toast.error(err.message)
     });
 
-    return {isCreating,createPatient}
+    return {isCreating, createPatient}
 }

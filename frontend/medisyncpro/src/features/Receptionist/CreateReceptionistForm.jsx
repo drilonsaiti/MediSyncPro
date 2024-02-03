@@ -9,27 +9,27 @@ import Select from "../../ui/Select.jsx";
 import {useEffect, useState} from "react";
 import {useClinics} from "../Clinic/useClinic.js";
 
-const CreateReceptionistForm = ({receptionistToEdit = {},onCloseModal}) => {
-    const {receptionistId,...editValues} = receptionistToEdit;
+const CreateReceptionistForm = ({receptionistToEdit = {}, onCloseModal}) => {
+    const {receptionistId, ...editValues} = receptionistToEdit;
     const isEditSession = Boolean(receptionistId);
-    const {register,handleSubmit,reset,getValues,formState} = useForm({
+    const {register, handleSubmit, reset, getValues, formState} = useForm({
         defaultValues: isEditSession ? editValues : {}
     });
     const {errors} = formState;
-    const {isCreating,createReceptionist} = useCreateReceptionist();
-    const {isEditing,editReceptionist} = useEditReceptionist();
-    const {isLoading,clinics} = useClinics();
+    const {isCreating, createReceptionist} = useCreateReceptionist();
+    const {isEditing, editReceptionist} = useEditReceptionist();
+    const {isLoading, clinics} = useClinics();
     const [refreshKey, setRefreshKey] = useState(1);
 
     useEffect(() => {
         // Do something that triggers the need to refresh Select
         // For example, after editing an item
         setRefreshKey((prevKey) => prevKey + 1);
-    },[]);
+    }, []);
 
     const isWorking = isCreating || isEditing || isLoading;
 
-    const clinicsGrouped = clinics?.map(clinic =>  {
+    const clinicsGrouped = clinics?.map(clinic => {
         return {
             value: clinic.clinicId,
             label: clinic.clinicName
@@ -38,14 +38,14 @@ const CreateReceptionistForm = ({receptionistToEdit = {},onCloseModal}) => {
 
     function onSubmit(data) {
 
-        if (isEditSession) editReceptionist({newData: {...data,receptionistId},id:receptionistId},{
+        if (isEditSession) editReceptionist({newData: {...data, receptionistId}, id: receptionistId}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
             },
 
         })
-        else createReceptionist({...data},{
+        else createReceptionist({...data}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
@@ -56,17 +56,19 @@ const CreateReceptionistForm = ({receptionistToEdit = {},onCloseModal}) => {
     return (
         <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
             <FormRow label="Receptionist name" error={errors?.receptionistName?.message}>
-                <Input type="text" disabled={isWorking} id="receptionistName" {...register("receptionistName",{required:"This field is required"})}/>
+                <Input type="text" disabled={isWorking}
+                       id="receptionistName" {...register("receptionistName", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow label="Email" error={errors?.emailAddress?.message}>
-                <Input type="email" disabled={isWorking} id="emailAddress" {...register("emailAddress",{required:"This field is required"})}/>
+                <Input type="email" disabled={isWorking}
+                       id="emailAddress" {...register("emailAddress", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow label="Clinic" error={errors?.clinicId?.message}>
                 <Select key={refreshKey} value={getValues('clinicId')} type="white"
                         options={clinicsGrouped} disabled={isWorking}
-                        id="clinicId" {...register("clinicId",{required:"This field is required"})}>
+                        id="clinicId" {...register("clinicId", {required: "This field is required"})}>
 
                 </Select>
             </FormRow>

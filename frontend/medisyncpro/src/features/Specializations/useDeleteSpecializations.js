@@ -6,8 +6,8 @@ export function useDeleteSpecializations() {
 
     const queryClient = useQueryClient();
 
-    const {isPending:isDeleting,mutate:deleteMutate} = useMutation({
-        mutationFn:  deleteSpecializations,
+    const {isPending: isDeleting, mutate: deleteMutate} = useMutation({
+        mutationFn: deleteSpecializations,
         onSuccess: () => {
             toast.success("Specializations successfully deleted")
             queryClient.invalidateQueries({
@@ -17,5 +17,5 @@ export function useDeleteSpecializations() {
         onError: (error) => toast.error(error.message)
     })
 
-    return {isDeleting,deleteMutate}
+    return {isDeleting, deleteMutate}
 }

@@ -6,8 +6,8 @@ export function useDeleteAppointment() {
 
     const queryClient = useQueryClient();
 
-    const {isPending:isDeleting,mutate:deleteMutate} = useMutation({
-        mutationFn:  deleteAppointment,
+    const {isPending: isDeleting, mutate: deleteMutate} = useMutation({
+        mutationFn: deleteAppointment,
         onSuccess: () => {
             toast.success("Appointment successfully deleted")
             queryClient.invalidateQueries({
@@ -17,5 +17,5 @@ export function useDeleteAppointment() {
         onError: (error) => toast.error(error.message)
     })
 
-    return {isDeleting,deleteMutate}
+    return {isDeleting, deleteMutate}
 }

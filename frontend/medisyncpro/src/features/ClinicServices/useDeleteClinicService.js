@@ -6,8 +6,8 @@ export function useDeleteClinicService() {
 
     const queryClient = useQueryClient();
 
-    const {isPending:isDeleting,mutate:deleteMutate} = useMutation({
-        mutationFn:  deleteClinicService,
+    const {isPending: isDeleting, mutate: deleteMutate} = useMutation({
+        mutationFn: deleteClinicService,
         onSuccess: () => {
             toast.success("Clinic service successfully deleted")
             queryClient.invalidateQueries({
@@ -17,5 +17,5 @@ export function useDeleteClinicService() {
         onError: (error) => toast.error(error.message)
     })
 
-    return {isDeleting,deleteMutate}
+    return {isDeleting, deleteMutate}
 }

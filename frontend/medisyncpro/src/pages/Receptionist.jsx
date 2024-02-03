@@ -8,8 +8,6 @@ const Receptionist = () => {
         <>
             <Row type="horizontal" change="yes">
                 <Heading as="h1">All receptionist</Heading>
-                <p>Test</p>
-
             </Row>
 
             <Row>

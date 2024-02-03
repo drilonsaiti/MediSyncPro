@@ -6,7 +6,7 @@ import {createEditClinicSchedule} from "../../services/apiClinicSchedules.js";
 export function useCreateClinicSchedule() {
     const queryClient = useQueryClient();
 
-    const {mutate:createClinicSchedule,isPending:isCreating} = useMutation({
+    const {mutate: createClinicSchedule, isPending: isCreating} = useMutation({
         mutationFn: createEditClinicSchedule,
         onSuccess: () => {
             toast.success("New clinic schedule successfully created");
@@ -14,8 +14,8 @@ export function useCreateClinicSchedule() {
                 queryKey: ['clinicSchedule'],
             });
         },
-        onError:(err) => toast.error(err.message)
+        onError: (err) => toast.error(err.message)
     });
 
-    return {isCreating,createClinicSchedule}
+    return {isCreating, createClinicSchedule}
 }

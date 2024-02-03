@@ -38,8 +38,8 @@ function AccessDenied() {
                 <Heading as="h2" style={{marginBottom: '2rem'}}>
                     Access Denied. You dont have the required permissions. 😢❌
                 </Heading>
-                <Button  notFound={"notFound"} onClick={moveBack} size="large">
-                    <HiChevronLeft /> Go back
+                <Button notFound={"notFound"} onClick={moveBack} size="large">
+                    <HiChevronLeft/> Go back
                 </Button>
             </Box>
         </StyledPageNotFound>

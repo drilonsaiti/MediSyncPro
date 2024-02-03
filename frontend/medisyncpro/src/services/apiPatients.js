@@ -2,12 +2,15 @@ import {apiRequest} from "../utils/services.js";
 import error from "eslint-plugin-react/lib/util/error.js";
 
 
-export async function getPatients(){
-    try{
-        const response = await apiRequest('GET','patients');
+export async function getPatients({page,nameOrEmail}) {
+    try {
+        const response = await apiRequest('GET', 'patients',null,{
+            page:page,
+            nameOrEmail: nameOrEmail
+        });
         console.log(response.data)
         return response.data;
-    }catch (e) {
+    } catch (e) {
         console.error(error);
         throw new Error('Patients could not be loaded');
 
@@ -16,7 +19,7 @@ export async function getPatients(){
 
 export async function getPatientById(id) {
     try {
-        const response = await apiRequest('GET',`patients/${id}`);
+        const response = await apiRequest('GET', `patients/${id}`);
         console.log("=====PATIENT=====");
         console.log(response.data);
         return response.data;
@@ -26,30 +29,30 @@ export async function getPatientById(id) {
 }
 
 
-export async function createEditPatient(newPatient,id){
+export async function createEditPatient(newPatient, id) {
     console.log(newPatient)
-    try{
+    try {
         let response = {}
-        if(id){
-            response = await apiRequest('PUT',`patients`,newPatient);
+        if (id) {
+            response = await apiRequest('PUT', `patients`, newPatient);
 
-        }else{
-            response = await apiRequest('POST','patients',newPatient);
+        } else {
+            response = await apiRequest('POST', 'patients', newPatient);
 
         }
         return response.data;
-    }catch (e) {
+    } catch (e) {
         console.error(error);
         throw new Error('Patient could not be updated/created');
 
     }
 }
 
-export async function deletePatient(id){
-    try{
-        const response = await apiRequest('DELETE',`patients/${id}`);
+export async function deletePatient(id) {
+    try {
+        const response = await apiRequest('DELETE', `patients/${id}`);
         return response.data;
-    }catch (e) {
+    } catch (e) {
         console.error(error);
         throw new Error('Patient could not be deleted');
 

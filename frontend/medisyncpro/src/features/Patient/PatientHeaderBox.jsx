@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import {HiPhone,HiAtSymbol} from "react-icons/hi2";
+import {HiAtSymbol, HiPhone} from "react-icons/hi2";
 import {HiLocationMarker} from "react-icons/hi";
 import Heading from "../../ui/Heading.jsx";
-import Button from "../../ui/Button.jsx";
 import {FaCalendarCheck, FaClipboardList, FaEnvelope} from "react-icons/fa";
 import {FaCakeCandles, FaMarsAndVenus} from "react-icons/fa6";
 
@@ -107,12 +106,12 @@ const Title = styled.div`
 `;
 
 const PatientHeaderBox = ({patient}) => {
-    const {patientId,patientName:name,gender,address,contactNumber,email,birthDay} = patient;
+    const {patientId, patientName: name, gender, address, contactNumber, email, birthDay} = patient;
 
     return (
         <StyledBox>
             <HeaderProfile>
-            <Heading type="h1">{name} #{patientId}</Heading>
+                <Heading type="h1">{name} #{patientId}</Heading>
                 <Title>User</Title>
             </HeaderProfile>
             <Container>
@@ -135,16 +134,16 @@ const PatientHeaderBox = ({patient}) => {
                 <ContactInfo>
                     <Heading type="h2">Info</Heading>
                     <ContactItem type="lg">
-                        <FaCakeCandles />
+                        <FaCakeCandles/>
 
                         <p>{birthDay}</p>
                     </ContactItem>
                     <ContactItem type="lg">
                         <FaMarsAndVenus/>
                         <p>{gender.toString().toLowerCase().at(0).toUpperCase() + gender.toString().slice(1).toLowerCase()}</p>
-                    </ContactItem >
+                    </ContactItem>
                     <ContactItem type="lg">
-                        <FaClipboardList />
+                        <FaClipboardList/>
                         <p>14</p>
                     </ContactItem>
                 </ContactInfo>
@@ -152,14 +151,14 @@ const PatientHeaderBox = ({patient}) => {
                 <QuickActions>
                     <Heading type="h3">Quick actions</Heading>
                     <QuickActionsButton>
-                        <FaClipboardList /> Medical Records
+                        <FaClipboardList/> Medical Records
                     </QuickActionsButton>
-                    <QuickActionsButton >
+                    <QuickActionsButton>
                         <FaEnvelope/>
                         Send Message
                     </QuickActionsButton>
-                    <QuickActionsButton >
-                        <FaCalendarCheck />
+                    <QuickActionsButton>
+                        <FaCalendarCheck/>
                         Appointment
                     </QuickActionsButton>
                 </QuickActions>

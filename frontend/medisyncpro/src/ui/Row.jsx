@@ -1,37 +1,37 @@
 import styled, {css} from "styled-components";
 
 const Row = styled.div`
-  display: flex;
+    display: flex;
 
-  ${(props) =>
-      props.type === 'horizontal' &&
-      css`
-        justify-content: space-between;
-        align-items: center;
+    ${(props) =>
+            props.type === 'horizontal' &&
+            css`
+                justify-content: space-between;
+                align-items: center;
 
-        @media screen and (max-width: 84em) {
-          ${(props.change === 'yes') &&
-          css`
+                @media screen and (max-width: 84em) {
+                    ${(props.change === 'yes') &&
+                    css`
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start; 
             gap: 1.6rem;
             margin-bottom: 1rem;
           `
-          }
-        }
-      `}
+                    }
+                }
+            `}
 
-  ${(props) =>
-    props.type === "vertical" &&
-    css`
+    ${(props) =>
+            props.type === "vertical" &&
+            css`
       flex-direction: column;
       gap: 1.6rem;
     `}
 `;
 
 Row.defaultProps = {
-  type: "vertical",
+    type: "vertical",
 };
 
 export default Row;

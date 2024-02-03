@@ -15,11 +15,15 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import PatientDetails from "./features/Patient/PatientDetails.jsx";
 import MedicalReportPDF from "./features/MedicalReport/MedicalReportPDF.jsx";
+import DoctorDetails from "./features/Doctor/DoctorDetails.jsx";
+import ReceptionistDetails from "./features/Receptionist/ReceptionistDetails.jsx";
+import ClinicDetails from "./features/Clinic/ClinicDetails.jsx";
+import AppointmentsForUsers from "./pages/AppointmentsForUsers.jsx";
 
 
 const queryClient = new QueryClient({
-    defaultOptions:{
-        queries:{
+    defaultOptions: {
+        queries: {
             staleTime: 0
         }
 
@@ -28,34 +32,38 @@ const queryClient = new QueryClient({
 
 function App() {
 
-  return (
-      <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false}/>
-      <GlobalStyles/>
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false}/>
+            <GlobalStyles/>
 
-          <BrowserRouter>
-              <Routes>
-                  <Route element={<AppLayout/>}>
+            <BrowserRouter>
+                <Routes>
+                    <Route element={<AppLayout/>}>
 
-                      <Route index element={<Navigate replace to={"/appointment"}/>}/>
-                  <Route index path="appointment" element={<Appointment/>} />
-                  <Route path="clinics" element={<Clinic/>} />
-                  <Route path="clinic-schedule" element={<ClinicSchedule/>} />
-                  <Route path="clinicService" element={<ClinicServices/>} />
-                  <Route path="doctors" element={<Doctor/>} />
-                  <Route path="medicalReports" element={<MedicalReport/>} />
-                  <Route path="patient" element={<Patient/>} />
-                  <Route path="receptionist" element={<Receptionist/>} />
-                  <Route path="specializations" element={<Specializations/>} />
-                      <Route path="patient/:patientId" element={<PatientDetails />} />
-                  </Route>
-                  <Route path="medicalReports/:reportId" element={<MedicalReportPDF/>} />
+                        <Route index element={<Navigate replace to={"/appointment"}/>}/>
+                        <Route index path="appointment" element={<Appointment/>}/>
+                        <Route index path="appointmentUser" element={<AppointmentsForUsers/>}/>
+                        <Route path="clinics" element={<Clinic/>}/>
+                        <Route path="clinics/:clinicId" element={<ClinicDetails/>}/>
+                        <Route path="clinic-schedule" element={<ClinicSchedule/>}/>
+                        <Route path="clinicService" element={<ClinicServices/>}/>
+                        <Route path="doctors" element={<Doctor/>}/>
+                        <Route path="doctors/:doctorId" element={<DoctorDetails/>}/>
+                        <Route path="medicalReports" element={<MedicalReport/>}/>
+                        <Route path="patient" element={<Patient/>}/>
+                        <Route path="receptionist" element={<Receptionist/>}/>
+                        <Route path="receptionist/:receptionistId" element={<ReceptionistDetails/>}/>
+                        <Route path="specializations" element={<Specializations/>}/>
+                        <Route path="patient/:patientId" element={<PatientDetails/>}/>
+                    </Route>
+                    <Route path="medicalReports/:reportId" element={<MedicalReportPDF/>}/>
 
-                  <Route path="*" element={<PageNotFound />} />
-              </Routes>
-          </BrowserRouter>
-      </QueryClientProvider>
-  )
+                    <Route path="*" element={<PageNotFound/>}/>
+                </Routes>
+            </BrowserRouter>
+        </QueryClientProvider>
+    )
 }
 
 export default App

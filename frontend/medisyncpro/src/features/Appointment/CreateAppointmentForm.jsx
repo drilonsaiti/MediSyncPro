@@ -10,14 +10,16 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {addDays, setHours, setMilliseconds, setMinutes, setSeconds} from "date-fns";
 import {useAppointmentDates} from "./useAppointmentDates.js";
-import {useClinicServices} from "../ClinicServices/useClinicService.js";
 import CreatePatientForm from "../Patient/CreatePatientForm.jsx";
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+import {formatCurrency} from "../../utils/helpers.js";
+import {useClinicServicesById} from "../Clinic/useClinic.js";
+import Spinner from "../../ui/Spinner.jsx";
 
- const DatePickerWrapperStyles = createGlobalStyle`
-    .date_picker.full-width {
-        z-index: 9999 !important; /* Increase the z-index */
+const DatePickerWrapperStyles = createGlobalStyle`
+    /*.date_picker{
+        z-index: 9999 !important; !* Increase the z-index *!
         border: 1px solid var(--color-grey-300);
         background-color: var(--color-grey-0);
         border-radius: var(--border-radius-sm);
@@ -25,7 +27,7 @@ import makeAnimated from 'react-select/animated';
         box-shadow: var(--shadow-sm);
         display: inline-block;
         width: 28.5%;
-    }
+    }*/
 
 
     .react-datepicker {
@@ -75,18 +77,18 @@ import makeAnimated from 'react-select/animated';
     }
 `;
 const animatedComponents = makeAnimated();
-const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal,clinicId}) => {
+const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId}) => {
     const {appointmentId, ...editValues} = appointmentToEdit;
     const isEditSession = Boolean(appointmentId);
-    const {register, handleSubmit, reset, getValues,setValue, formState} = useForm({
+    const {register, handleSubmit, reset, getValues, setValue, formState} = useForm({
         defaultValues: isEditSession ? editValues : {}
     });
 
     const {errors} = formState;
     const {isCreating, createAppointment} = useCreateAppointment();
     const {isEditing, editAppointment} = useEditAppointment();
-    const {isLoading: isLoadingServices, clinicServices} = useClinicServices();
-    const {isCreating:isCreatingAppointment,createAppointmentByRecep} = useCreateAppointmentByReceptionist();
+    const {isLoading: isLoadingServices, clinicServices} = useClinicServicesById(clinicId);
+    const {isCreating: isCreatingAppointment, createAppointmentByRecep} = useCreateAppointmentByReceptionist();
     const {isLoading, dates} = useAppointmentDates();
     const [bookedDates, setBookedDates] = useState([]);
     const [refreshKey, setRefreshKey] = useState(100);
@@ -104,8 +106,11 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal,clinicId}) 
 
     const roundedDateTime = setMinutes(setSeconds(setMilliseconds(currentDateTime, 0), 0), roundedMinutes);
 
-    const [startDate, setStartDate] = useState(roundedDateTime);
-    const isWorking = isCreating || isEditing;
+    const [startDate, setStartDate] = useState();
+    const isWorking = isCreating || isEditing || isLoadingServices || isCreatingAppointment || isLoading;
+
+    console.log("==========EDIT VALUES =============")
+    console.log(editValues)
 
     const [includeTimes, setIncludeTimes] = useState([]);
 
@@ -140,7 +145,7 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal,clinicId}) 
     }, []);
 
     const filterPassedTime = (time) => {
-        console.log("TIME:" +time);
+        console.log("TIME:" + time);
         const currentDate = new Date();
         const selectedDate = new Date(time);
 
@@ -153,7 +158,7 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal,clinicId}) 
         const withinTimeRange = currentDate.getTime() >= startTime.getTime() && currentDate.getTime() <= endTime.getTime();
         const futureDate = selectedDate.getTime() > currentDate.getTime(); // Check if the selected date is in the future
 
-        console.log(withinTimeRange,futureDate);
+        console.log(withinTimeRange, futureDate);
         return withinTimeRange || futureDate;
     };
 
@@ -184,16 +189,16 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal,clinicId}) 
 
         })
         else {
-            if(user){
+            if (user) {
                 createAppointmentByRecep(
-                    {newData:{...data,clinicId,appointment:adjustedStartDate}},{
-                    onSuccess: () => {
-                        reset();
-                        onCloseModal?.();
-                    },
-                }
+                    {newData: {...data, clinicId, appointment: adjustedStartDate}}, {
+                        onSuccess: () => {
+                            reset();
+                            onCloseModal?.();
+                        },
+                    }
                 )
-            }else{
+            } else {
                 createAppointment({...data}, {
                     onSuccess: () => {
                         reset();
@@ -223,19 +228,21 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal,clinicId}) 
         };
 
         fetchBookedDates();
-    }, [appointmentId]);
+    }, [appointmentId, dates]);
+
+    if (isWorking) return <Spinner/>
 
     const servicesGrouped = clinicServices?.map(clinic => {
         return {
             value: clinic.serviceId,
-            label: clinic.serviceName
+            label: `${clinic.serviceName} - ${formatCurrency(clinic.price)}`
         }
     })
 
     const FORM_ROWS = (
         <>
             {user &&
-            <CreatePatientForm registerTest={register}/>
+                <CreatePatientForm registerTest={register}/>
             }
             <StyledFormRow label="Calendar" orientation="horizontal" calendar="calendar">
 
@@ -245,11 +252,14 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal,clinicId}) 
                     selected={startDate}
                     onChange={(date) => {
 
-                            setStartDate(date)
-                            console.log("TRUE");
+                        setStartDate(date)
+                        console.log("TRUE");
 
                         filterPassedTime(date)
                     }}
+                    peekNextMonth
+                    showMonthDropdown
+                    showYearDropdown
                     showTimeSelect
                     includeTimes={includeTimes}
                     minTime={setHours(setMinutes(new Date(), 0), 7)}
@@ -288,7 +298,7 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal,clinicId}) 
                     }}
                     closeOnSelect={false}
                     menuPortalTarget={document.body}
-                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
             </FormRow>
         </>

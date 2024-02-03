@@ -1,13 +1,12 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import {createEditPatient} from "../../services/apiPatients.js";
 import {createAppointmentByReceptionist, createEditAppointment} from "../../services/apiAppointments.js";
 
 
 export function useCreateAppointment() {
     const queryClient = useQueryClient();
 
-    const {mutate:createAppointment,isPending:isCreating} = useMutation({
+    const {mutate: createAppointment, isPending: isCreating} = useMutation({
         mutationFn: createEditAppointment,
         onSuccess: () => {
             toast.success("New appointment successfully created");
@@ -15,17 +14,17 @@ export function useCreateAppointment() {
                 queryKey: ['appointments'],
             });
         },
-        onError:(err) => toast.error(err.message)
+        onError: (err) => toast.error(err.message)
     });
 
-    return {isCreating,createAppointment}
+    return {isCreating, createAppointment}
 }
 
 
-export function useCreateAppointmentByReceptionist(){
+export function useCreateAppointmentByReceptionist() {
     const queryClient = useQueryClient();
 
-    const {mutate:createAppointmentByRecep,isPending:isCreating} = useMutation({
+    const {mutate: createAppointmentByRecep, isPending: isCreating} = useMutation({
         mutationFn: createAppointmentByReceptionist,
         onSuccess: () => {
             toast.success("New appointment successfully created");
@@ -33,8 +32,8 @@ export function useCreateAppointmentByReceptionist(){
                 queryKey: ['appointments'],
             });
         },
-        onError:(err) => toast.error(err.message)
+        onError: (err) => toast.error(err.message)
     });
 
-    return {isCreating,createAppointmentByRecep}
+    return {isCreating, createAppointmentByRecep}
 }

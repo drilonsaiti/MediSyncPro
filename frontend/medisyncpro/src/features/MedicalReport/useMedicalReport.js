@@ -1,22 +1,59 @@
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {getMedicalReportById, getMedicalReports} from "../../services/apiMedicalReport.js";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 
-export function useMedicalReports(){
-    const {data:medicalReports,isLoading} = useQuery({
-        queryFn: getMedicalReports,
-        queryKey: ["medicalReport"]
+export function useMedicalReports() {
+    const queryClient = useQueryClient();
+    const [searchParams] = useSearchParams();
+
+    const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+    const nameOrEmail = searchParams.get('nameOrEmail') || '';
+    const byDate = searchParams.get('byDate') || '';
+
+
+    const {data, isLoading} = useQuery({
+        queryFn: () => getMedicalReports({page, nameOrEmail,byDate}),
+        queryKey: ["medicalReport", page, nameOrEmail,byDate]
     })
 
-    return {medicalReports,isLoading};
+    const medicalReports = data?.content;
+    const totalElements = data?.totalElements;
+
+    const pageCount = Math.ceil(totalElements / 15);
+
+    if (page < pageCount)
+        queryClient.prefetchQuery({
+            queryKey: ["medicalReport", page + 1, nameOrEmail,byDate],
+            queryFn: () => getMedicalReports({page: page - 1, nameOrEmail,byDate}),
+
+        });
+
+    if (page > 1)
+        queryClient.prefetchQuery({
+            queryKey: ["medicalReport", page - 1, nameOrEmail,byDate],
+
+            queryFn: () => getMedicalReports({page: page - 1, nameOrEmail,byDate}),
+
+        });
+
+    return {isLoading, medicalReports, totalElements}
 }
 
-export function useGetMedicalReportById(){
-    const { reportId } = useParams();
-    const {data,isLoading} = useQuery({
+export function useGetMedicalReportById() {
+    const {reportId} = useParams();
+    const {data, isLoading} = useQuery({
         queryFn: () => getMedicalReportById(reportId),
         queryKey: ["medicalReport"]
     })
 
-    return {data,isLoading};
+    return {data, isLoading};
+}
+export function useGetMedicalReportByReportId(reportId) {
+    console.log("USE GET ", reportId);
+    const {data, isLoading} = useQuery({
+        queryFn:() => getMedicalReportById(reportId),
+        queryKey: ["medicalReport",reportId]
+    })
+
+    return {data, isLoading};
 }

@@ -23,9 +23,9 @@ const Price = styled.div`
 `;
 
 const ClinicServiceRow = ({clinicService}) => {
-    const {serviceId,serviceName:name,durationMinutes,price,specializations} = clinicService;
-    const {isCreating,createClinicService} = useCreateClinicService();
-    const {isDeleting,deleteMutate} = useDeleteClinicService();
+    const {serviceId, serviceName: name, durationMinutes, price, specializations} = clinicService;
+    const {isCreating, createClinicService} = useCreateClinicService();
+    const {isDeleting, deleteMutate} = useDeleteClinicService();
 
     return (
         <Table.Row role="row">
@@ -37,29 +37,30 @@ const ClinicServiceRow = ({clinicService}) => {
             <Modal>
                 <ButtonGroup>
 
-                        <Menus.Menu>
-                            <Menus.Toggle id={serviceId} />
-                            <Menus.List id={serviceId}>
-                                <Modal.Open opens="edit">
-                                    <Menus.Button icon={<HiPencil/> }>Edit</Menus.Button>
-                                </Modal.Open>
-                                <Modal.Open opens="delete">
-                                    <Menus.Button icon={<HiTrash/> }>Delete</Menus.Button>
-                                </Modal.Open>
+                    <Menus.Menu>
+                        <Menus.Toggle id={serviceId}/>
+                        <Menus.List id={serviceId}>
+                            <Modal.Open opens="edit">
+                                <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
+                            </Modal.Open>
+                            <Modal.Open opens="delete">
+                                <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
+                            </Modal.Open>
 
-                            </Menus.List>
-                        </Menus.Menu>
+                        </Menus.List>
+                    </Menus.Menu>
 
 
                 </ButtonGroup>
 
-                    <Modal.Window name="edit">
-                        <CreateClinicServiceForm clinicServiceToEdit={clinicService} />
-                    </Modal.Window>
+                <Modal.Window name="edit">
+                    <CreateClinicServiceForm clinicServiceToEdit={clinicService}/>
+                </Modal.Window>
 
-                    <Modal.Window name="delete">
-                        <ConfirmDelete resource="accommodations" disabled={isDeleting} onConfirm={() => deleteMutate(serviceId)}/>
-                    </Modal.Window>
+                <Modal.Window name="delete">
+                    <ConfirmDelete resource="accommodations" disabled={isDeleting}
+                                   onConfirm={() => deleteMutate(serviceId)}/>
+                </Modal.Window>
 
             </Modal>
         </Table.Row>

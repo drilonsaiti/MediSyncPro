@@ -6,7 +6,7 @@ import {createEditSpecializations} from "../../services/apiSpecializations.js";
 export function useCreateSpecializations() {
     const queryClient = useQueryClient();
 
-    const {mutate:createSpecializations,isPending:isCreating} = useMutation({
+    const {mutate: createSpecializations, isPending: isCreating} = useMutation({
         mutationFn: createEditSpecializations,
         onSuccess: () => {
             toast.success("New specializations successfully created");
@@ -14,8 +14,8 @@ export function useCreateSpecializations() {
                 queryKey: ['specializations'],
             });
         },
-        onError:(err) => toast.error(err.message)
+        onError: (err) => toast.error(err.message)
     });
 
-    return {isCreating,createSpecializations}
+    return {isCreating, createSpecializations}
 }

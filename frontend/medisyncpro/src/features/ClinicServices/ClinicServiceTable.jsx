@@ -2,11 +2,12 @@ import React from 'react';
 import Menus from "../../ui/Menus.jsx";
 import Table from "../../ui/Table.jsx";
 import ClinicServiceRow from "./ClinicServiceRow.jsx";
-import {useClinicServices} from "./useClinicService.js";
 import Spinner from "../../ui/Spinner.jsx";
+import {useClinicServices} from "./useClinicService.js";
+import Pagination from "../../ui/Pagination.jsx";
 
 const ClinicServiceTable = () => {
-    const {isLoading, clinicServices} = useClinicServices();
+    const {isLoading, clinicServices,totalElements} = useClinicServices();
 
 
     if (isLoading) return <Spinner/>
@@ -27,6 +28,10 @@ const ClinicServiceTable = () => {
                 <Table.Body data={clinicServices} render={
                     spc => <ClinicServiceRow clinicService={spc} key={spc.serviceId}/>
                 }/>
+
+                <Table.Footer>
+                    <Pagination count={totalElements}/>
+                </Table.Footer>
 
             </Table>
         </Menus>

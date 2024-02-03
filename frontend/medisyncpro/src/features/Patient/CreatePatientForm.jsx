@@ -8,75 +8,82 @@ import {useEditPatient} from "./useEditPatient.js";
 import Select from "../../ui/Select.jsx";
 import {useEffect, useState} from "react";
 
-const CreatePatientForm = ({patientToEdit = {},onCloseModal,registerTest}) => {
-    const {patientId,...editValues} = patientToEdit;
+const CreatePatientForm = ({patientToEdit = {}, onCloseModal, registerTest}) => {
+    const {patientId, ...editValues} = patientToEdit;
     const isEditSession = Boolean(patientId);
-    const {register,handleSubmit,reset,getValues,formState} = useForm({
+    const {register, handleSubmit, reset, getValues, formState} = useForm({
         defaultValues: isEditSession ? editValues : {}
     });
     const {errors} = formState;
-    const {isCreating,createPatient} = useCreatePatient();
-    const {isEditing,editPatient} = useEditPatient();
+    const {isCreating, createPatient} = useCreatePatient();
+    const {isEditing, editPatient} = useEditPatient();
     const [refreshKey, setRefreshKey] = useState(1);
 
     useEffect(() => {
         // Do something that triggers the need to refresh Select
         // For example, after editing an item
         setRefreshKey((prevKey) => prevKey + 1);
-    },[]);
+    }, []);
     const isWorking = isCreating || isEditing;
     const genders = [
-        {value:"MALE",label:"Male"},
-        {value:"FEMALE",label: "Female"}
+        {value: "MALE", label: "Male"},
+        {value: "FEMALE", label: "Female"}
     ]
+
     function onSubmit(data) {
 
-        if (isEditSession) editPatient({newData: {...data,patientId},id:patientId},{
+        if (isEditSession) editPatient({newData: {...data, patientId}, id: patientId}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
             },
 
         })
-        else createPatient({...data},{
+        else createPatient({...data}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
             }
         });
     }
+
     const user = "RECEPTIONIST";
     console.log(registerTest)
 
     const FORM_ROWS = (
         <>
             <FormRow label="Patient name" error={errors?.patientName?.message}>
-                <Input type="text" disabled={isWorking} id="patientName" {...registerTest("patientName",{required:"This field is required"})}/>
+                <Input type="text" disabled={isWorking}
+                       id="patientName" {...registerTest("patientName", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow label="Genders" error={errors?.gender?.message}>
                 <Select key={refreshKey} value={getValues('gender')} type="white"
                         options={genders} disabled={isWorking}
-                        id="gender" {...registerTest("gender",{required:"This field is required"})}>
+                        id="gender" {...registerTest("gender", {required: "This field is required"})}>
 
                 </Select>
             </FormRow>
 
             <FormRow label="Address" error={errors?.address?.message}>
-                <Input type="text" disabled={isWorking} id="address" {...registerTest("address",{required:"This field is required"})}/>
+                <Input type="text" disabled={isWorking}
+                       id="address" {...registerTest("address", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow label="Contact number" error={errors?.contactNumber?.message}>
-                <Input type="text" disabled={isWorking} id="contactNumber" {...registerTest("contactNumber",{required:"This field is required"})}/>
+                <Input type="text" disabled={isWorking}
+                       id="contactNumber" {...registerTest("contactNumber", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow label="Email" error={errors?.email?.message}>
-                <Input type="email" disabled={isWorking} id="email" {...registerTest("email",{required:"This field is required"})}/>
+                <Input type="email" disabled={isWorking}
+                       id="email" {...registerTest("email", {required: "This field is required"})}/>
             </FormRow>
 
 
             <FormRow label="Birthday" error={errors?.birthDay?.message}>
-                <Input type="date" disabled={isWorking} id="birthDay" {...registerTest("birthDay",{required:"This field is required"})}/>
+                <Input type="date" disabled={isWorking}
+                       id="birthDay" {...registerTest("birthDay", {required: "This field is required"})}/>
             </FormRow>
         </>
     )
@@ -84,17 +91,17 @@ const CreatePatientForm = ({patientToEdit = {},onCloseModal,registerTest}) => {
     return (
         <>
             {user ? FORM_ROWS :
-        <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
+                <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
 
 
-            <FormRow>
+                    <FormRow>
 
-                <Button onClick={() => onCloseModal?.()} variation="secondary" type="reset">
-                    Cancel
-                </Button>
-                <Button disabled={isWorking}>{isEditSession ? "Edit patient" : "Add patient"}</Button>
-            </FormRow>
-        </Form>
+                        <Button onClick={() => onCloseModal?.()} variation="secondary" type="reset">
+                            Cancel
+                        </Button>
+                        <Button disabled={isWorking}>{isEditSession ? "Edit patient" : "Add patient"}</Button>
+                    </FormRow>
+                </Form>
             }
         </>
     );

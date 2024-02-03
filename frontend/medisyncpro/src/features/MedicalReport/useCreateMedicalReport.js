@@ -6,7 +6,7 @@ import {createEditMedicalReport} from "../../services/apiMedicalReport.js";
 export function useCreateMedicalReport() {
     const queryClient = useQueryClient();
 
-    const {mutate:createMedicalReport,isPending:isCreating} = useMutation({
+    const {mutate: createMedicalReport, isPending: isCreating} = useMutation({
         mutationFn: createEditMedicalReport,
         onSuccess: () => {
             toast.success("New medical report successfully created");
@@ -14,8 +14,8 @@ export function useCreateMedicalReport() {
                 queryKey: ['medicalReports'],
             });
         },
-        onError:(err) => toast.error(err.message)
+        onError: (err) => toast.error(err.message)
     });
 
-    return {isCreating,createMedicalReport}
+    return {isCreating, createMedicalReport}
 }

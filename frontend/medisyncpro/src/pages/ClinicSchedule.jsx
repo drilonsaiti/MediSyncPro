@@ -1,7 +1,9 @@
 import Row from "../ui/Row.jsx";
 import Heading from "../ui/Heading.jsx";
 import ClinicScheduleTable from "../features/ClinicSchedule/ClinicScheduleTable.jsx";
-import AddClinicSchedule from "../features/ClinicSchedule/AddClinicSchedule.jsx";
+import UpdateSettingsForm from "../features/Settings/UpdateSettingsForm.jsx";
+import GenerateSchedule from "../features/ClinicSchedule/GenerateSchedule.jsx";
+import ClinicScheduleTableOperations from "../features/ClinicSchedule/ClinicScheduleTableOperations.jsx";
 
 const ClinicSchedule = () => {
     return (
@@ -13,8 +15,15 @@ const ClinicSchedule = () => {
             </Row>
 
             <Row>
+                {/*<ClinicScheduleTable/>
+                <AddClinicSchedule/>*/}
+                <UpdateSettingsForm/>
+                <GenerateSchedule/>
+            </Row>
+
+            <Row style={{marginTop: '3rem'}}>
+                <ClinicScheduleTableOperations/>
                 <ClinicScheduleTable/>
-                <AddClinicSchedule/>
             </Row>
 
         </>

@@ -16,9 +16,9 @@ const Title = styled.div`
   font-family: "Sono",sans-serif;
 `;
 const SpecializationsRow = ({specialization}) => {
-    const {specializationId,specializationName:name} = specialization;
-    const {isCreating,createSpecializations} = useCreateSpecializations();
-    const {isDeleting,deleteMutate} = useDeleteSpecializations();
+    const {specializationId, specializationName: name} = specialization;
+    const {isCreating, createSpecializations} = useCreateSpecializations();
+    const {isDeleting, deleteMutate} = useDeleteSpecializations();
 
     return (
         <Table.Row role="row">
@@ -28,29 +28,30 @@ const SpecializationsRow = ({specialization}) => {
             <Modal>
                 <ButtonGroup>
 
-                        <Menus.Menu>
-                            <Menus.Toggle id={specializationId} />
-                            <Menus.List id={specializationId}>
-                                <Modal.Open opens="edit">
-                                    <Menus.Button icon={<HiPencil/> }>Edit</Menus.Button>
-                                </Modal.Open>
-                                <Modal.Open opens="delete">
-                                    <Menus.Button icon={<HiTrash/> }>Delete</Menus.Button>
-                                </Modal.Open>
+                    <Menus.Menu>
+                        <Menus.Toggle id={specializationId}/>
+                        <Menus.List id={specializationId}>
+                            <Modal.Open opens="edit">
+                                <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
+                            </Modal.Open>
+                            <Modal.Open opens="delete">
+                                <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
+                            </Modal.Open>
 
-                            </Menus.List>
-                        </Menus.Menu>
+                        </Menus.List>
+                    </Menus.Menu>
 
 
                 </ButtonGroup>
 
-                    <Modal.Window name="edit">
-                        <CreateSpecializationForm  specializationToEdit={specialization} />
-                    </Modal.Window>
+                <Modal.Window name="edit">
+                    <CreateSpecializationForm specializationToEdit={specialization}/>
+                </Modal.Window>
 
-                    <Modal.Window name="delete">
-                        <ConfirmDelete resource="accommodations" disabled={isDeleting} onConfirm={() => deleteMutate(specializationId)}/>
-                    </Modal.Window>
+                <Modal.Window name="delete">
+                    <ConfirmDelete resource="accommodations" disabled={isDeleting}
+                                   onConfirm={() => deleteMutate(specializationId)}/>
+                </Modal.Window>
 
             </Modal>
         </Table.Row>

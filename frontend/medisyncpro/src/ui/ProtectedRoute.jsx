@@ -14,11 +14,11 @@ height: 100vh;
     justify-content: center;
 `
 
-const ProtectedRoute = ({ children,adminOnly,userOnly }) => {
-    const { goToLogin, isLoading, token } = useGetToken();
+const ProtectedRoute = ({children, adminOnly, userOnly}) => {
+    const {goToLogin, isLoading, token} = useGetToken();
     const navigate = useNavigate();
 
-    const {roles,isLoading:isLoadingRole} = useGetRole();
+    const {roles, isLoading: isLoadingRole} = useGetRole();
 
     useEffect(() => {
         if (goToLogin) {
@@ -30,14 +30,14 @@ const ProtectedRoute = ({ children,adminOnly,userOnly }) => {
         return <FullPage><Spinner/></FullPage>;
     }
 
-    const hasAdminRole = roles ==="ROLE_ADMIN";
+    const hasAdminRole = roles === "ROLE_ADMIN";
     const hasUserRole = roles === "ROLE_USER";
     if (adminOnly && !hasAdminRole) {
-        return <FullPage><AccessDenied /></FullPage>;
+        return <FullPage><AccessDenied/></FullPage>;
     }
 
     if (userOnly && !hasUserRole) {
-        return <FullPage><AccessDenied /></FullPage>;
+        return <FullPage><AccessDenied/></FullPage>;
     }
 
     return children;

@@ -11,12 +11,12 @@ const Img = styled.img`
 `;
 
 function Logo() {
-  return (
-    <StyledLogo>
-      <Img src="http://localhost:5173/logo.png" alt="Logo" />
-        <Heading type="h3">Eclectic retreat heaven</Heading>
-    </StyledLogo>
-  );
+    return (
+        <StyledLogo>
+            <Img src="http://localhost:5173/logo.png" alt="Logo"/>
+            <Heading type="h3">Eclectic retreat heaven</Heading>
+        </StyledLogo>
+    );
 }
 
 export default Logo;

@@ -13,11 +13,11 @@ const HeaderMenu = () => {
     return (
         <StyledHeaderMenu>
             <li>
-                <ButtonIcon >
+                <ButtonIcon>
                     <HiOutlineUser/>
                 </ButtonIcon>
             </li>
-          {/*  <li>
+            {/*  <li>
                 <DarkModeToggle />
 
             </li>

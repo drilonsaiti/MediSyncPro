@@ -18,6 +18,7 @@ export function useOutsideClick(close, additionalPixelsY = 70, listenCapturing =
                 }
             }
         }
+
         document.addEventListener("click", handleClick, listenCapturing);
 
         return () => document.removeEventListener("click", handleClick, listenCapturing);

@@ -10,28 +10,28 @@ import {useSpecializations} from "../Specializations/useSpecializations.js";
 import Select from "../../ui/Select.jsx";
 import {useEffect, useState} from "react";
 
-const CreateDoctorForm = ({doctorToEdit = {},onCloseModal}) => {
-    const {doctorId,...editValues} = doctorToEdit;
+const CreateDoctorForm = ({doctorToEdit = {}, onCloseModal}) => {
+    const {doctorId, ...editValues} = doctorToEdit;
     const isEditSession = Boolean(doctorId);
-    const {register,handleSubmit,reset,getValues,formState} = useForm({
+    const {register, handleSubmit, reset, getValues, formState} = useForm({
         defaultValues: isEditSession ? editValues : {}
     });
     const {errors} = formState;
-    const {isCreating,createDoctor} = useCreateDoctor();
-    const {isEditing,editDoctor} = useEditDoctor();
-    const {isLoading:isLoadingClinics,clinics} = useClinics();
-    const {isLoading:isLoadingSpecz,specializations} = useSpecializations();
+    const {isCreating, createDoctor} = useCreateDoctor();
+    const {isEditing, editDoctor} = useEditDoctor();
+    const {isLoading: isLoadingClinics, clinics} = useClinics();
+    const {isLoading: isLoadingSpecz, specializations} = useSpecializations();
     const [refreshKey, setRefreshKey] = useState(1);
 
     useEffect(() => {
         // Do something that triggers the need to refresh Select
         // For example, after editing an item
         setRefreshKey((prevKey) => prevKey + 1);
-    },[]);
+    }, []);
 
     const isWorking = isCreating || isEditing || isLoadingClinics || isLoadingSpecz;
 
-    const clinicsGrouped = clinics?.map(clinic =>  {
+    const clinicsGrouped = clinics?.map(clinic => {
         return {
             value: clinic.clinicId,
             label: clinic.clinicName
@@ -44,16 +44,17 @@ const CreateDoctorForm = ({doctorToEdit = {},onCloseModal}) => {
             label: spez.specializationName
         }
     })
+
     function onSubmit(data) {
 
-        if (isEditSession) editDoctor({newData: {...data,doctorId},id:doctorId},{
+        if (isEditSession) editDoctor({newData: {...data, doctorId}, id: doctorId}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
             },
 
         })
-        else createDoctor({...data},{
+        else createDoctor({...data}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
@@ -64,29 +65,32 @@ const CreateDoctorForm = ({doctorToEdit = {},onCloseModal}) => {
     return (
         <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
             <FormRow label="Doctor name" error={errors?.doctorName?.message}>
-                <Input type="text" disabled={isWorking} id="doctorName" {...register("doctorName",{required:"This field is required"})}/>
+                <Input type="text" disabled={isWorking}
+                       id="doctorName" {...register("doctorName", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow label="Specialization" error={errors?.specializationId?.message}>
                 <Select key={refreshKey} value={getValues('specializationId')} type="white"
                         options={specilzationsGrouped} disabled={isWorking}
-                        id="specializationId" {...register("specializationId",{required:"This field is required"})}>
+                        id="specializationId" {...register("specializationId", {required: "This field is required"})}>
 
                 </Select>
             </FormRow>
 
             <FormRow label="Education" error={errors?.education?.message}>
-                <Input type="text" disabled={isWorking} id="education" {...register("education",{required:"This field is required"})}/>
+                <Input type="text" disabled={isWorking}
+                       id="education" {...register("education", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow label="Working time" error={errors?.workingDays?.message}>
-                <Input type="text" disabled={isWorking} id="workingDays" {...register("workingDays",{required:"This field is required"})}/>
+                <Input type="text" disabled={isWorking}
+                       id="workingDays" {...register("workingDays", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow label="Clinic" error={errors?.clinicId?.message}>
                 <Select key={refreshKey} value={getValues('clinicId')} type="white"
                         options={clinicsGrouped} disabled={isWorking}
-                        id="clinicId" {...register("clinicId",{required:"This field is required"})}>
+                        id="clinicId" {...register("clinicId", {required: "This field is required"})}>
 
                 </Select>
             </FormRow>

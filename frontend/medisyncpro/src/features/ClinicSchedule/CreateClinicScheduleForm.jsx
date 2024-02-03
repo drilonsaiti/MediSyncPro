@@ -6,27 +6,28 @@ import Form from "../../ui/Form.jsx";
 import {useCreateClinicSchedule} from "./useCreateClinicSchedule.js";
 import {useEditClinicSchedule} from "./useEditClinicSchedule.js";
 
-const CreateClinicScheduleForm = ({clinicScheduleToEdit = {},onCloseModal}) => {
-    const {scheduleId,...editValues} = clinicScheduleToEdit;
+const CreateClinicScheduleForm = ({clinicScheduleToEdit = {}, onCloseModal}) => {
+    const {scheduleId, ...editValues} = clinicScheduleToEdit;
     const isEditSession = Boolean(scheduleId);
-    const {register,handleSubmit,reset,getValues,formState} = useForm({
+    const {register, handleSubmit, reset, getValues, formState} = useForm({
         defaultValues: isEditSession ? editValues : {}
     });
     const {errors} = formState;
-    const {isCreating,createClinicSchedule} = useCreateClinicSchedule();
-    const {isEditing,editClinicSchedule} = useEditClinicSchedule();
+    const {isCreating, createClinicSchedule} = useCreateClinicSchedule();
+    const {isEditing, editClinicSchedule} = useEditClinicSchedule();
 
     const isWorking = isCreating || isEditing;
+
     function onSubmit(data) {
 
-        if (isEditSession) editClinicSchedule({newData: {...data,scheduleId},id:scheduleId},{
+        if (isEditSession) editClinicSchedule({newData: {...data, scheduleId}, id: scheduleId}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
             },
 
         })
-        else createClinicSchedule({...data},{
+        else createClinicSchedule({...data}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
@@ -37,7 +38,8 @@ const CreateClinicScheduleForm = ({clinicScheduleToEdit = {},onCloseModal}) => {
     return (
         <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
             <FormRow label="Specialization name" error={errors?.clinicScheduleName?.message}>
-                <Input type="text" disabled={isWorking} id="clinicScheduleName" {...register("clinicScheduleName",{required:"This field is required"})}/>
+                <Input type="text" disabled={isWorking}
+                       id="clinicScheduleName" {...register("clinicScheduleName", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow>

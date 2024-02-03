@@ -4,9 +4,10 @@ import Table from "../../ui/Table.jsx";
 import DoctorRow from "./DoctorRow.jsx";
 import {useDoctors} from "./useDoctors.js";
 import Spinner from "../../ui/Spinner.jsx";
+import Pagination from "../../ui/Pagination.jsx";
 
 const DoctorTable = () => {
-    const {isLoading, doctors} = useDoctors();
+    const {isLoading, doctors,totalElements} = useDoctors();
 
 
     if (isLoading) return <Spinner/>
@@ -26,7 +27,9 @@ const DoctorTable = () => {
                 <Table.Body data={doctors} render={
                     spc => <DoctorRow doctor={spc} key={spc.doctorId}/>
                 }/>
-
+                <Table.Footer>
+                    <Pagination count={totalElements} />
+                </Table.Footer>
             </Table>
         </Menus>
     );

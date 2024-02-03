@@ -8,8 +8,6 @@ const Specializations = () => {
         <>
             <Row type="horizontal" change="yes">
                 <Heading as="h1">All specializations</Heading>
-                <p>Test</p>
-
             </Row>
 
             <Row>

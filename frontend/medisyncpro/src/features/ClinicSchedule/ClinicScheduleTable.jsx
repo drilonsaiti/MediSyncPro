@@ -2,28 +2,37 @@ import React from 'react';
 import Menus from "../../ui/Menus.jsx";
 import Table from "../../ui/Table.jsx";
 import ClinicScheduleRow from "./ClinicScheduleRow.jsx";
-import {useClinicSchedules} from "./useClinicSchedule.js";
 import Spinner from "../../ui/Spinner.jsx";
+import Pagination from "../../ui/Pagination.jsx";
+import {useClinicSchedules} from "./useClinicSchedule.js";
 
 const ClinicScheduleTable = () => {
-    const {isLoading, clinicSchedules} = useClinicSchedules();
+    const {isLoading, clinicSchedules,totalElements} = useClinicSchedules();
 
 
     if (isLoading) return <Spinner/>
 
+    console.log("===========CLINIC SCHEDULE============");
     console.log(clinicSchedules);
+
+    const data = Object.entries(clinicSchedules).map(([date, scheduleDtos]) => ({date: date, schedules: scheduleDtos}));
+    console.log("===========CLINIC SCHEDULE DATA============");
+    console.log(data)
     return (
         <Menus>
             <Table columns={'0.6fr 3fr 1fr'}>
                 <Table.Header>
-                    <div>Id</div>
-                    <div>Receptionist</div>
+                    <div>Date</div>
+                    <div>Length of schedules</div>
                     <div></div>
 
                 </Table.Header>
                 <Table.Body data={clinicSchedules} render={
-                    spc => <ClinicScheduleRow clinicSchedule={spc} key={spc.clinicScheduleId}/>
+                    spc => <ClinicScheduleRow clinicSchedule={spc} key={spc.date}/>
                 }/>
+                <Table.Footer>
+                    <Pagination count={totalElements}/>
+                </Table.Footer>
 
             </Table>
         </Menus>

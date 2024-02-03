@@ -8,6 +8,9 @@ import styled from "styled-components";
 import CreateDoctorForm from "./CreateDoctorForm.jsx";
 import {useCreateDoctor} from "./useCreateDoctor.js";
 import {useDeleteDoctor} from "./useDeleteDoctor.js";
+import {Link} from "react-router-dom";
+import {FaEye} from "react-icons/fa6";
+import ButtonIcon from "../../ui/ButtonIcon.jsx";
 
 const Title = styled.div`
   font-size: 1.6rem;
@@ -16,9 +19,9 @@ const Title = styled.div`
   font-family: "Sono",sans-serif;
 `;
 const DoctorRow = ({doctor}) => {
-    const {doctorId,doctorName:name,specialization,workingDays} = doctor;
-    const {isCreating,createDoctor} = useCreateDoctor();
-    const {isDeleting,deleteMutate} = useDeleteDoctor();
+    const {doctorId, doctorName: name, specialization, workingDays} = doctor;
+    const {isCreating, createDoctor} = useCreateDoctor();
+    const {isDeleting, deleteMutate} = useDeleteDoctor();
 
     return (
         <Table.Row role="row">
@@ -29,29 +32,37 @@ const DoctorRow = ({doctor}) => {
             <Modal>
                 <ButtonGroup>
 
-                        <Menus.Menu>
-                            <Menus.Toggle id={doctorId} />
-                            <Menus.List id={doctorId}>
-                                <Modal.Open opens="edit">
-                                    <Menus.Button icon={<HiPencil/> }>Edit</Menus.Button>
-                                </Modal.Open>
-                                <Modal.Open opens="delete">
-                                    <Menus.Button icon={<HiTrash/> }>Delete</Menus.Button>
-                                </Modal.Open>
+                    <ButtonIcon>
+                        <Link to={`/doctors/${doctorId}`}>
+                            <FaEye/>
+                        </Link>
 
-                            </Menus.List>
-                        </Menus.Menu>
+                    </ButtonIcon>
+
+                    <Menus.Menu>
+                        <Menus.Toggle id={doctorId}/>
+                        <Menus.List id={doctorId}>
+                            <Modal.Open opens="edit">
+                                <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
+                            </Modal.Open>
+                            <Modal.Open opens="delete">
+                                <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
+                            </Modal.Open>
+
+                        </Menus.List>
+                    </Menus.Menu>
 
 
                 </ButtonGroup>
 
-                    <Modal.Window name="edit">
-                        <CreateDoctorForm doctorToEdit={doctor} />
-                    </Modal.Window>
+                <Modal.Window name="edit">
+                    <CreateDoctorForm doctorToEdit={doctor}/>
+                </Modal.Window>
 
-                    <Modal.Window name="delete">
-                        <ConfirmDelete resource="accommodations" disabled={isDeleting} onConfirm={() => deleteMutate(doctorId)}/>
-                    </Modal.Window>
+                <Modal.Window name="delete">
+                    <ConfirmDelete resource="accommodations" disabled={isDeleting}
+                                   onConfirm={() => deleteMutate(doctorId)}/>
+                </Modal.Window>
 
             </Modal>
         </Table.Row>

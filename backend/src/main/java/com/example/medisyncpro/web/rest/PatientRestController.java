@@ -6,6 +6,7 @@ import com.example.medisyncpro.model.Patient;
 
 import com.example.medisyncpro.model.dto.MedicalReportResultDto;
 import com.example.medisyncpro.model.dto.PatientResultDto;
+import com.example.medisyncpro.model.dto.UpdatePatientDto;
 import com.example.medisyncpro.service.PatientService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,7 +46,7 @@ public class PatientRestController {
     }
 
     @PutMapping()
-    public ResponseEntity<Void> updatePatient(@RequestBody Patient patient) {
+    public ResponseEntity<Void> updatePatient(@RequestBody UpdatePatientDto patient) {
         patientService.update(patient);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

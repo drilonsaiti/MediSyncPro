@@ -103,8 +103,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public Appointment update(Appointment appointment) {
+    public Appointment update(AppointmentDto appointment) throws Exception {
         Appointment old = this.getById(appointment.getAppointmentId());
+        UpdatePatientDto patient = new UpdatePatientDto(appointment.getPatientId(), appointment.getPatientName(), appointment.getGender(), appointment.getAddress(), appointment.getContactNumber(), appointment.getEmail(), appointment.getBirthDay());
+        patientService.update(patient);
         return  appointmentRepository.save(appointmentMapper.updateAppointment(old,appointment));
     }
 
@@ -119,9 +121,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         return this.appointmentRepository.findAll()
                 .stream()
                 .map(appm -> {
-                    /*LocalDate currentDate = appm.getDate().toLocalDate();*/
                     boolean isBookedForEntireDay = clinicSchedules.stream()
-                            .filter(cs -> cs.getStartTime().toLocalDate().isEqual(LocalDate.of(2024, 1, 22)))
+                            .filter(cs -> cs.getStartTime().toLocalDate().isEqual(appm.getDate().toLocalDate()))
                             .allMatch(ClinicSchedule::getIsBooked);
 
                     return isBookedForEntireDay ? new AppointmentDateDto(appm.getDate()) : null;

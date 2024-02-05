@@ -7,6 +7,7 @@ import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.dto.ClinicDto;
 import com.example.medisyncpro.model.dto.ClinicResultDto;
 import com.example.medisyncpro.model.dto.ReceptionistDto;
+import com.example.medisyncpro.model.dto.UpdateClinicDto;
 import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.SpecializationService;
@@ -56,15 +57,9 @@ public class ClinicRestController {
         return new ResponseEntity<>(clinicService.getClinicServicesById(id), HttpStatus.OK);
     }
 
-
-        @GetMapping("/add")
-    public ResponseEntity showAddClinicForm() {
-       /* ClinicFormDto clinicFormDto = new ClinicFormDto(
-                specializationService.getAll(),
-                doctorService.getAll(),
-                new Clinic()
-        );*/
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping()
+    public ResponseEntity<Clinic> updateClinic(@RequestBody UpdateClinicDto dto){
+        return new ResponseEntity<>(clinicService.updateClinic(dto),HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/save")

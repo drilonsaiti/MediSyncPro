@@ -34,7 +34,6 @@ public class Appointment {
     private LocalDateTime date;
 
     @ElementCollection
-    @CollectionTable(name = "APPOINTMENT_SERVICE", joinColumns = @JoinColumn(name = "appointment_id"))
     private List<Long> serviceIds = new ArrayList<>();
 
     @Column(name = "attended", nullable = false)

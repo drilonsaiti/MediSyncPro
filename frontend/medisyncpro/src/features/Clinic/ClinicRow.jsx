@@ -31,9 +31,7 @@ const ClinicRow = ({clinic}) => {
 
             <Modal>
                 <ButtonGroup>
-                    <Modal.Open opens="appointment">
-                        <Button>Book now</Button>
-                    </Modal.Open>
+
                     <Menus.Menu>
                         <Menus.Toggle id={clinicId}/>
                         <Menus.List id={clinicId}>
@@ -49,11 +47,6 @@ const ClinicRow = ({clinic}) => {
 
 
                 </ButtonGroup>
-                <Modal.Window name="appointment">
-
-                    <CreateAppointmentForm clinicId={clinicId}/>
-
-                </Modal.Window>
                 <Modal.Window name="edit">
                     <CreateClinicForm clinicToEdit={clinic}/>
                 </Modal.Window>

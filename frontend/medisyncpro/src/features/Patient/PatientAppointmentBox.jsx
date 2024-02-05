@@ -16,36 +16,28 @@ import DownloadButton from "../MedicalReport/DownloadButton.jsx";
 import Modal from "../../ui/Modal.jsx";
 import CreateAppointmentForm from "../Appointment/CreateAppointmentForm.jsx";
 
-const DatePickerWrapperStyles = createGlobalStyle`
-    
-
-
+const CustomStyledDatePicker = styled.div`
     .react-datepicker {
         font-size: 1.42rem !important;
         color: #fff !important;
         background-color: #1C1F21;
         border-radius: 20px;
     }
-    
     .react-datepicker__header{
         background-color: #1C1F21;
         color: #fff !important;
 
     }
-
     .react-datepicker__current-month {
         font-size: 1.5rem !important;
         color: #fff !important;
-
     }
-
     .react-datepicker__header {
         padding-top: 7px !important;
         color: #fff !important;
         border-top-left-radius: 20px !important;
         border-top-right-radius: 20px !important;
     }
-
     .react-datepicker__navigation {
         top: 7px !important;
         color: #fff !important;
@@ -57,25 +49,20 @@ const DatePickerWrapperStyles = createGlobalStyle`
         color: #fff !important;
 
     }
-    
-    
     .react-datepicker__day--selected:hover, .react-datepicker__day--in-selecting-range:hover, .react-datepicker__day--in-range:hover, .react-datepicker__month-text--selected:hover, .react-datepicker__month-text--in-selecting-range:hover, .react-datepicker__month-text--in-range:hover, .react-datepicker__quarter-text--selected:hover, .react-datepicker__quarter-text--in-selecting-range:hover, .react-datepicker__quarter-text--in-range:hover, .react-datepicker__year-text--selected:hover, .react-datepicker__year-text--in-selecting-range:hover, .react-datepicker__year-text--in-range:hover {
         background-color: var(--color-primary-900);
     }
     .react-datepicker__day--keyboard-selected{
         background-color: var(--color-primary-300);
-
     }
     .react-datepicker__day--keyboard-selected:hover, .react-datepicker__month-text--keyboard-selected:hover, .react-datepicker__quarter-text--keyboard-selected:hover, .react-datepicker__year-text--keyboard-selected:hover {
         background-color: var(--color-primary-300);
     }
-    
     .react-datepicker__day:hover{
         background-color: var(--color-primary-900);
         color: var(--color-grey-0);
 
     }
-
     .react-datepicker__day-name, .react-datepicker__day {
         margin: 1.08rem !important;
         color: #fff !important;
@@ -85,14 +72,10 @@ const DatePickerWrapperStyles = createGlobalStyle`
             color: var(--color-grey-400) !important;
         }
     }
-    
     .react-datepicker__month-container{
         float: none !important;
         color: #fff !important;
-
     }
-
-
     input {
         display: block;
         border: none;
@@ -243,16 +226,19 @@ const PatientAppointmentBox = ({patientId}) => {
 
                 <Calendar>
                     <Heading type="h2">Select date</Heading>
-                    <DatePicker
-                        wrapperClassName='date_picker full-width'
-                        selected={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        inline
-                        peekNextMonth
-                        showMonthDropdown
-                        showYearDropdown
-                    />
-                    <DatePickerWrapperStyles/>
+
+                    <CustomStyledDatePicker>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            inline
+                            peekNextMonth
+                            showMonthDropdown
+                            showYearDropdown
+                        />
+                    </CustomStyledDatePicker>
+
+
                 </Calendar>
             </Container>
         </StyledBox>

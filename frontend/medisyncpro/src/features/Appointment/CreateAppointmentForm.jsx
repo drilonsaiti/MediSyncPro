@@ -17,6 +17,11 @@ import {formatCurrency} from "../../utils/helpers.js";
 import {useClinicServicesById} from "../Clinic/useClinic.js";
 import Spinner from "../../ui/Spinner.jsx";
 
+const TooltipOption = ({ innerProps, label, data }) => (
+    <div {...innerProps} title={`Tooltip: ${data.tooltip}`}>
+        {label}
+    </div>
+);
 const DatePickerWrapperStyles = createGlobalStyle`
     /*.date_picker{
         z-index: 9999 !important; !* Increase the z-index *!
@@ -29,6 +34,46 @@ const DatePickerWrapperStyles = createGlobalStyle`
         width: 28.5%;
     }*/
 
+    .react-datepicker-wrapper{
+        border: 1px solid var(--color-brand-700);
+    }
+    .react-datepicker__day--selected:hover, .react-datepicker__day--in-selecting-range:hover, .react-datepicker__day--in-range:hover, .react-datepicker__month-text--selected:hover, .react-datepicker__month-text--in-selecting-range:hover, .react-datepicker__month-text--in-range:hover, .react-datepicker__quarter-text--selected:hover, .react-datepicker__quarter-text--in-selecting-range:hover, .react-datepicker__quarter-text--in-range:hover, .react-datepicker__year-text--selected:hover, .react-datepicker__year-text--in-selecting-range:hover, .react-datepicker__year-text--in-range:hover {
+        background-color: var(--color-primary-900);
+    }
+    .react-datepicker__day--keyboard-selected{
+        background-color: var(--color-primary-300);
+
+    }
+    .react-datepicker__day--keyboard-selected:hover, .react-datepicker__month-text--keyboard-selected:hover, .react-datepicker__quarter-text--keyboard-selected:hover, .react-datepicker__year-text--keyboard-selected:hover {
+        background-color: var(--color-primary-300);
+    }
+
+    .react-datepicker__day:hover{
+        background-color: var(--color-primary-900);
+        color: var(--color-grey-0);
+
+    }
+    .react-datepicker__day {
+        &--outside-month {
+            color: var(--color-grey-400) !important;
+
+            &:hover{
+                color: var(--color-grey-0) !important;
+            }
+        }
+    }
+
+    .react-datepicker__input-container .react-datepicker__view-calendar-icon{
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+
+    }
+
+    .react-datepicker__calendar-icon {
+        width: 1.2em;
+        height: 1.2em;
+    }
 
     .react-datepicker {
         font-size: 1.3rem !important;
@@ -61,21 +106,37 @@ const DatePickerWrapperStyles = createGlobalStyle`
     }
 
     .react-datepicker__close-icon::after {
-        background-color: var(--color-brand-700);
+        background-color: var(--color-brand-700) !important;
+        color: #fff;
+    }
+
+    .react-datepicker__input-container {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .react-datepicker__calendar-icon{
+        color: var(--color-brand-700) !important;
+    }
+    .react-datepicker__day--selected, .react-datepicker__day--in-selecting-range, .react-datepicker__day--in-range, .react-datepicker__month-text--selected, .react-datepicker__month-text--in-selecting-range, .react-datepicker__month-text--in-range, .react-datepicker__quarter-text--selected, .react-datepicker__quarter-text--in-selecting-range, .react-datepicker__quarter-text--in-range, .react-datepicker__year-text--selected, .react-datepicker__year-text--in-selecting-range, .react-datepicker__year-text--in-range {
+        border-radius: 0.3rem;
+        background-color: var(--color-brand-700) !important;
         color: #fff;
     }
 
 
     input {
         display: block;
-        border: none;
         background-color: transparent;
+        padding: 1rem 2rem;
+        border: none;
 
         &:focus {
             outline: none;
         }
     }
 `;
+
 const animatedComponents = makeAnimated();
 const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId}) => {
     const {appointmentId, ...editValues} = appointmentToEdit;
@@ -106,11 +167,9 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
 
     const roundedDateTime = setMinutes(setSeconds(setMilliseconds(currentDateTime, 0), 0), roundedMinutes);
 
-    const [startDate, setStartDate] = useState();
+    const [startDate, setStartDate] = useState(isEditSession ? new Date(editValues.appointmentDate) : roundedDateTime);
     const isWorking = isCreating || isEditing || isLoadingServices || isCreatingAppointment || isLoading;
 
-    console.log("==========EDIT VALUES =============")
-    console.log(editValues)
 
     const [includeTimes, setIncludeTimes] = useState([]);
 
@@ -177,18 +236,31 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
         return withinTimeRange;
     };
 
+    const servicesGrouped = clinicServices?.map(clinic => {
+        return {
+            value: clinic.serviceId,
+            label: `${clinic.serviceName} - ${formatCurrency(clinic.price)}`
+        }
+    })
     function onSubmit(data) {
         const timeZoneOffset = startDate.getTimezoneOffset();
         const adjustedStartDate = new Date(startDate.getTime() - timeZoneOffset * 60000); // Adjust for time zone offset
 
-        if (isEditSession) editAppointment({newData: {...data, appointmentId}, id: appointmentId}, {
-            onSuccess: () => {
-                reset();
-                onCloseModal?.();
-            },
+        if (isEditSession) {
+            const serviceName = clinicServices?.map((clinic,index) => {
+                if(clinic.serviceId === getValues('serviceId')[index])
+                    return clinic.serviceName;
+            }).filter(s => s !== undefined);
+            console.log("EDIT SESSION");
+            console.log(serviceName);
+            editAppointment({newData: {...data, appointmentId,serviceName}, id: appointmentId,}, {
+                onSuccess: () => {
+                    reset();
+                    onCloseModal?.();
+                },
 
-        })
-        else {
+            })
+        }else {
             if (user) {
                 createAppointmentByRecep(
                     {newData: {...data, clinicId, appointment: adjustedStartDate}}, {
@@ -232,12 +304,17 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
 
     if (isWorking) return <Spinner/>
 
-    const servicesGrouped = clinicServices?.map(clinic => {
+    console.log(editValues);
+
+    const selectedValues = editValues?.serviceName?.map(service => {
+        const selectedService = clinicServices.find(srv => srv.serviceName === service);
         return {
-            value: clinic.serviceId,
-            label: `${clinic.serviceName} - ${formatCurrency(clinic.price)}`
-        }
-    })
+            value: selectedService ? selectedService.serviceId : null,
+            label: selectedService ? `${service} - ${formatCurrency(selectedService.price)}` : ''
+        };
+    });
+
+
 
     const FORM_ROWS = (
         <>
@@ -276,9 +353,10 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
                         preventOverflow: {enabled: false},
                         hide: {enabled: false}
                     }}
+                    appendToBody
                 />
 
-                <DatePickerWrapperStyles/>
+                <DatePickerWrapperStyles />
 
 
             </StyledFormRow>
@@ -287,7 +365,7 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
                 <Select
                     closeMenuOnSelect={false}
                     components={animatedComponents}
-
+                    isSearchable
                     isMulti
                     options={servicesGrouped}
                     onChange={(selectedOptions) => {
@@ -299,6 +377,7 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
                     closeOnSelect={false}
                     menuPortalTarget={document.body}
                     styles={{menuPortal: base => ({...base, zIndex: 9999})}}
+                    defaultValue={selectedValues}
                 />
             </FormRow>
         </>

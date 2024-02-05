@@ -41,6 +41,7 @@ export async function getAppointmentsByDoctor(id) {
 
 
 export async function createEditAppointment(newAppointment, id) {
+    console.log("EDIT EDIT")
     console.log(newAppointment)
     try {
         let response = {}

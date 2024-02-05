@@ -7,12 +7,17 @@ import com.example.medisyncpro.model.dto.AppointmentDto;
 import com.example.medisyncpro.model.dto.CreateAppointmentDto;
 import com.example.medisyncpro.model.Appointment;
 import com.example.medisyncpro.model.dto.MedicalReportDto;
+import com.example.medisyncpro.repository.ServiceRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AppointmentMapper {
+    private final ServiceRepository serviceRepository;
 
     public Appointment createAppointment(CreateAppointmentDto dto) {
         Appointment appointment = new Appointment();
@@ -24,12 +29,17 @@ public class AppointmentMapper {
         return appointment;
     }
 
-    public Appointment updateAppointment(Appointment old, Appointment newAppointment) {
-        old.setPatientId(newAppointment.getPatientId());
-        old.setDoctorId(newAppointment.getDoctorId());
-        old.setClinicId(newAppointment.getClinicId());
+    public Appointment updateAppointment(Appointment old, AppointmentDto newAppointment) {
+        System.out.println("================UPDATE================");
+        System.out.println(newAppointment.getServiceName());
+        List<Long> servicesId = serviceRepository.findAll().stream()
+                .filter(service -> newAppointment.getServiceName().contains(service.getServiceName()))
+                .map(ClinicServices::getServiceId)
+                .toList();
+        System.out.println(servicesId);
         old.setDate(newAppointment.getDate());
-        old.setAllServicesIds(newAppointment.getServiceIds());
+        old.getServiceIds().clear();
+        old.getServiceIds().addAll(servicesId);
         old.setAttended(newAppointment.isAttended());
         return old;
     }
@@ -37,9 +47,14 @@ public class AppointmentMapper {
     public AppointmentDto getAppointment(Appointment appm, Patient patient, Doctor doctor, List<String> services, MedicalReportDto report){
         return new AppointmentDto(
                 appm.getAppointmentId(),
+                appm.getDate(),
                 patient.getPatientId(),
                 patient.getPatientName(),
                 patient.getEmail(),
+                patient.getGender(),
+                patient.getAddress(),
+                patient.getContactNumber(),
+                patient.getBirthDay(),
                 doctor.getDoctorName(),
                 doctor.getSpecialization().getSpecializationName(),
                 appm.getClinicId(),

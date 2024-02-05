@@ -4,6 +4,8 @@ package com.example.medisyncpro.web.rest;
 import com.example.medisyncpro.model.dto.ClinicServicesResultDto;
 import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
 import com.example.medisyncpro.model.ClinicServices;
+import com.example.medisyncpro.model.dto.ServiceBySpecializationIdDto;
+import com.example.medisyncpro.model.dto.ServiceForClinicsDto;
 import com.example.medisyncpro.service.ClinicServicesService;
 import com.example.medisyncpro.service.SpecializationService;
 import lombok.AllArgsConstructor;
@@ -30,9 +32,6 @@ public class ClinicServiceRestController {
     public Page<ClinicServices> listServices(@RequestParam(defaultValue = "1") int page,
                                              @RequestParam(defaultValue = "all") String specializations,
                                              @RequestParam(defaultValue = "id-asc") String sort) {
-        System.out.println("==============SERVICE==========");
-        System.out.println(specializations);
-        System.out.println(sort);
         PageRequest pageable = PageRequest.of(page - 1, 15);
        ClinicServicesResultDto services = clinicServicesService.getAll(pageable,specializations,sort);
         return new PageImpl<>(services.getServices(), pageable,services.getTotalElements());
@@ -42,6 +41,12 @@ public class ClinicServiceRestController {
     public ResponseEntity<ClinicServices> getClinicServiceById(@PathVariable Long id) {
 
         return new ResponseEntity<>(clinicServicesService.getById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/clinic")
+    public ResponseEntity<List<ServiceForClinicsDto>> getClinicServiceForClinic() {
+
+        return new ResponseEntity<>(clinicServicesService.getClinicServiceForClinic(), HttpStatus.OK);
     }
 
 

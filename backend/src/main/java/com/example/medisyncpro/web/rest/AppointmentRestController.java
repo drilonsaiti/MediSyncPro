@@ -59,7 +59,7 @@ public class AppointmentRestController {
     }
 
     @PutMapping()
-    public ResponseEntity<Void> updateAppointments(@RequestBody Appointment Appointments) {
+    public ResponseEntity<Void> updateAppointments(@RequestBody AppointmentDto Appointments) throws Exception {
         appointmentService.update(Appointments);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

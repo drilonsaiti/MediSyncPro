@@ -2,6 +2,7 @@ package com.example.medisyncpro.model.mapper;
 
 import com.example.medisyncpro.model.dto.CreatePatientDto;
 import com.example.medisyncpro.model.Patient;
+import com.example.medisyncpro.model.dto.UpdatePatientDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,7 +13,7 @@ public class PatientMapper {
                 dto.getContactNumber(), dto.getEmail(), dto.getBirthDay());
     }
 
-    public Patient updatePatient(Patient old,Patient newP){
+    public Patient updatePatient(Patient old, UpdatePatientDto newP){
         old.setPatientName(newP.getPatientName());
         old.setGender(newP.getGender());
         old.setAddress(newP.getAddress());

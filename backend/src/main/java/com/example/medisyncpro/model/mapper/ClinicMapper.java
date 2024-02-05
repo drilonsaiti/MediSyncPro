@@ -1,11 +1,9 @@
 package com.example.medisyncpro.model.mapper;
 
-import com.example.medisyncpro.model.Clinic;
-import com.example.medisyncpro.model.ClinicServices;
-import com.example.medisyncpro.model.Settings;
-import com.example.medisyncpro.model.Specializations;
+import com.example.medisyncpro.model.*;
 import com.example.medisyncpro.model.dto.ClinicDto;
 import com.example.medisyncpro.model.dto.ServiceBySpecializationIdDto;
+import com.example.medisyncpro.model.dto.UpdateClinicDto;
 import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.ClinicServicesService;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +37,19 @@ public class ClinicMapper {
                 settings.getMorningStartTime().toString() + "-" + settings.getMorningEndTime(),
                 settings.getAfternoonStartTime().toString() + "-" + settings.getAfternoonEndTime()
         );
+    }
+
+    public Clinic updateClinic(Clinic old, UpdateClinicDto newClinic,
+                               List<ClinicServices> clinicServices,List<Doctor> doctors){
+        old.setClinicName(newClinic.getClinicName());
+        old.setAddress(newClinic.getAddress());
+        old.getSpecializations().clear();
+        old.getSpecializations().addAll(newClinic.getSpecializations());
+        old.getServices().clear();
+        old.getServices().addAll(clinicServices);
+        old.getDoctors().clear();
+        old.getDoctors().addAll(doctors);
+        return old;
+
     }
 }

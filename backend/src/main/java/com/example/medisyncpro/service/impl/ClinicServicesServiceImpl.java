@@ -1,8 +1,6 @@
 package com.example.medisyncpro.service.impl;
 
-import com.example.medisyncpro.model.dto.ClinicServicesResultDto;
-import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
-import com.example.medisyncpro.model.dto.GroupedClinicSchedule;
+import com.example.medisyncpro.model.dto.*;
 import com.example.medisyncpro.model.mapper.ClinicServicesMapper;
 import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.Specializations;
@@ -84,4 +82,11 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
     public List<ClinicServices> findAllBySpecializationsId(Long id) {
         return serviceRepository.findAllBySpecializations_SpecializationId(id);
     }
+
+
+    @Override
+    public List<ServiceForClinicsDto> getClinicServiceForClinic(){
+        return serviceRepository.findAll().stream().map(service -> new ServiceForClinicsDto(service.getServiceId(),service.getServiceName())).toList();
+    }
+
 }

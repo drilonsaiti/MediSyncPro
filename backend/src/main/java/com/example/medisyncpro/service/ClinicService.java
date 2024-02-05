@@ -4,6 +4,7 @@ import com.example.medisyncpro.model.Clinic;
 import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.dto.ClinicDto;
 import com.example.medisyncpro.model.dto.ClinicResultDto;
+import com.example.medisyncpro.model.dto.UpdateClinicDto;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
@@ -22,5 +23,7 @@ public interface ClinicService {
     void delete(Long id);
 
     long getTotalClinicCount(String specialization,String status);
+
+    Clinic updateClinic(UpdateClinicDto dto);
 }
 

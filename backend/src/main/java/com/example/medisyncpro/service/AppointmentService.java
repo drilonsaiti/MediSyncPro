@@ -15,7 +15,7 @@ public interface AppointmentService {
 
     List<AppointmentDto> getAllByDoctor(Long id);
     Appointment save(CreateAppointmentDto appointment);
-    Appointment update(Appointment appointment);
+    Appointment update(AppointmentDto appointment) throws Exception;
 
     void delete(Long id);
 

@@ -2,6 +2,7 @@ package com.example.medisyncpro.service.impl;
 
 import com.example.medisyncpro.model.dto.CreatePatientDto;
 import com.example.medisyncpro.model.dto.PatientResultDto;
+import com.example.medisyncpro.model.dto.UpdatePatientDto;
 import com.example.medisyncpro.model.mapper.PatientMapper;
 import com.example.medisyncpro.model.Patient;
 import com.example.medisyncpro.repository.PatientRepository;
@@ -48,7 +49,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Patient update(Patient patient) {
+    public Patient update(UpdatePatientDto patient) {
         Patient p = this.getById(patient.getPatientId());
 
         return patientRepository.save(patientMapper.updatePatient(p,patient));

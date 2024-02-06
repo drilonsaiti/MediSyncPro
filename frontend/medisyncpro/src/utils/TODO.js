@@ -3,7 +3,6 @@
 // TODO  9. Remove appointment(backend) after 4 months
 // TODO 13. Fix links
 // TODO 14. Errors toast and exception in backend
-// TODO 15. Fix update(edit) and delete
 
 // Appointment,Schedule,Doctors,Medical reports,Patients,Receptionist - doctors,receptionist,clinic
 // Clinic,Services,Specializations - admin

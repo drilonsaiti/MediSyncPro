@@ -58,7 +58,7 @@ const ClinicServiceRow = ({clinicService}) => {
                 </Modal.Window>
 
                 <Modal.Window name="delete">
-                    <ConfirmDelete resource="accommodations" disabled={isDeleting}
+                    <ConfirmDelete resource="service" disabled={isDeleting}
                                    onConfirm={() => deleteMutate(serviceId)}/>
                 </Modal.Window>
 

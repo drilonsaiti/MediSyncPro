@@ -48,6 +48,17 @@ export async function deleteClinicSchedule(id) {
     }
 }
 
+export async function deleteClinicScheduleGrouped(id,date) {
+    console.log(date);
+    try {
+        const response = await apiRequest('DELETE', `clinicSchedules/grouped/${id}/${date}`);
+        return response.data;
+    } catch (e) {
+        console.error(error);
+        throw new Error('Clinic schedule could not be deleted');
+
+    }
+}
 
 export async function generateSchedules(clinicId) {
     console.log(clinicId)

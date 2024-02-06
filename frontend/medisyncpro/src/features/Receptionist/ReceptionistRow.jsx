@@ -11,6 +11,7 @@ import {useDeleteReceptionist} from "./useDeleteReceptionist.js";
 import {Link, useNavigate} from "react-router-dom";
 import ButtonIcon from "../../ui/ButtonIcon.jsx";
 import {FaEye} from "react-icons/fa6";
+import {useDeleteReceptionistFromClinic} from "./useDeleteReceptionistFromClinic.js";
 
 const Title = styled.div`
   font-size: 1.6rem;
@@ -21,7 +22,7 @@ const Title = styled.div`
 const ReceptionistRow = ({receptionist}) => {
     const {receptionistId, receptionistName: name, emailAddress: email, clinicId} = receptionist;
     const {isCreating, createReceptionist} = useCreateReceptionist();
-    const {isDeleting, deleteMutate} = useDeleteReceptionist();
+    const {isDeleting, deleteMutate} = useDeleteReceptionistFromClinic();
     const navigate = useNavigate();
 
     return (
@@ -43,9 +44,6 @@ const ReceptionistRow = ({receptionist}) => {
                     <Menus.Menu>
                         <Menus.Toggle id={receptionistId}/>
                         <Menus.List id={receptionistId}>
-                            <Modal.Open opens="edit">
-                                <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
-                            </Modal.Open>
                             <Modal.Open opens="delete">
                                 <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
                             </Modal.Open>
@@ -56,9 +54,6 @@ const ReceptionistRow = ({receptionist}) => {
 
                 </ButtonGroup>
 
-                <Modal.Window name="edit">
-                    <CreateReceptionistForm receptionistToEdit={receptionist}/>
-                </Modal.Window>
 
                 <Modal.Window name="delete">
                     <ConfirmDelete resource="accommodations" disabled={isDeleting}

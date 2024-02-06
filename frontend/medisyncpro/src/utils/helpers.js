@@ -38,7 +38,9 @@ export const formatDate = (date) => {
 };
 
 export const formatDateMonth = (dateString) => {
-    const date = new Date(dateString);
+    const date = parseISO(dateString);
+    //const utcDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+
     const options = {
         month: 'short',
         day: 'numeric',
@@ -49,6 +51,22 @@ export const formatDateMonth = (dateString) => {
         timeZone: 'CET'
     };
     const formattedDateTime = date.toLocaleString('en-US', options).replace(/,(?=[^,]*$)/, ' at');
+    return formattedDateTime;
+}
+
+export const formatDateMonthWithoutHour = (dateString) => {
+    const date = parseISO(dateString);
+    const utcDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+
+    const options = {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour12: false,
+        timeZone: 'UTC' // Specify UTC time zone
+    };
+
+    const formattedDateTime = utcDate.toLocaleString('en-US', options);
     return formattedDateTime;
 }
 

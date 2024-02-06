@@ -1,17 +1,17 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import {deleteClinic} from "../../services/apiClinics.js";
+import {deleteDoctor, deleteDoctorFromClinic} from "../../services/apiDoctors.js";
 
-export function useDeleteClinic() {
+export function useDeleteDoctorFromClinic() {
 
     const queryClient = useQueryClient();
 
     const {isPending: isDeleting, mutate: deleteMutate} = useMutation({
-        mutationFn: deleteClinic,
+        mutationFn: ({doctorId,clinicId}) =>deleteDoctorFromClinic(doctorId,clinicId),
         onSuccess: () => {
-            toast.success("Clinic successfully deleted")
+            toast.success("Doctor successfully deleted")
             queryClient.invalidateQueries({
-                queryKey: ['clinics'],
+                queryKey: ['doctors'],
             })
         },
         onError: (error) => toast.error(error.message)

@@ -10,7 +10,7 @@ export function useEditClinicService() {
         onSuccess: () => {
             toast.success("Clinic service successfully edited");
             queryClient.invalidateQueries({
-                queryKey: ['clinicService'],
+                queryKey: ['clinicServices'],
             });
         },
         onError: (err) => toast.error(err.message)

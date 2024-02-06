@@ -122,7 +122,7 @@ const DoctorHeaderBox = ({doctor}) => {
                     </ContactItem>
                     <ContactItem type="lg">
                         <FaHouseMedical/>
-                        <p>{clinic.clinicName}</p>
+                        <p>{clinic !== null ? clinic.clinicName : "Unemployed"}</p>
                     </ContactItem>
 
                     <ContactItem type="lg">

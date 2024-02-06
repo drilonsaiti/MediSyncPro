@@ -8,11 +8,12 @@ import styled from "styled-components";
 import CreateClinicScheduleForm from "./CreateClinicScheduleForm.jsx";
 import {useCreateClinicSchedule} from "./useCreateClinicSchedule.js";
 import {useDeleteClinicSchedule} from "./useDeleteClinicSchedule.js";
-import {formatDateMonth} from "../../utils/helpers.js";
+import {formatDateMonth, formatDateMonthWithoutHour} from "../../utils/helpers.js";
 import React, {useState} from "react";
 import ClinicScheduleDetailedRow from "./ClinicScheduleDetailedRow.jsx";
 import ButtonIcon from "../../ui/ButtonIcon.jsx";
 import {HiChevronDown, HiChevronRight, HiChevronUp} from "react-icons/hi2";
+import {useDeleteGroupedClinicSchedule} from "./useDeleteGroupedClinicSchedule.js";
 
 const Title = styled.div`
   font-size: 1.6rem;
@@ -21,10 +22,11 @@ const Title = styled.div`
   font-family: "Sono",sans-serif;
 `;
 const ClinicScheduleRow = ({clinicSchedule}) => {
-    const {date, scheduleDtos} = clinicSchedule;
+    const {clinicId,date, scheduleDtos} = clinicSchedule;
     const [isAccordionOpen, setAccordionOpen] = useState(false);
     const {isCreating, createClinicSchedule} = useCreateClinicSchedule();
-    const {isDeleting, deleteMutate} = useDeleteClinicSchedule();
+    const {isDeleting, deleteMutate} = useDeleteGroupedClinicSchedule();
+
 
     const toggleAccordion = () => {
         setAccordionOpen(!isAccordionOpen);
@@ -32,7 +34,7 @@ const ClinicScheduleRow = ({clinicSchedule}) => {
     return (
         <>
             <Table.Row role="row" onClick={toggleAccordion} style={{cursor: 'pointer'}}>
-                <Title>{formatDateMonth(date)}</Title>
+                <Title>{formatDateMonthWithoutHour(date)}</Title>
                 <Title>{scheduleDtos.length}</Title>
 
                 <Modal>
@@ -44,9 +46,6 @@ const ClinicScheduleRow = ({clinicSchedule}) => {
                         <Menus.Menu>
                             <Menus.Toggle id={date}/>
                             <Menus.List id={date}>
-                                <Modal.Open opens="edit">
-                                    <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
-                                </Modal.Open>
                                 <Modal.Open opens="delete">
                                     <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
                                 </Modal.Open>
@@ -57,13 +56,12 @@ const ClinicScheduleRow = ({clinicSchedule}) => {
 
                     </ButtonGroup>
 
-                    <Modal.Window name="edit">
-                        <CreateClinicScheduleForm clinicScheduleToEdit={clinicSchedule}/>
-                    </Modal.Window>
-
                     <Modal.Window name="delete">
-                        <ConfirmDelete resource="accommodations" disabled={isDeleting}
-                                       onConfirm={() => deleteMutate(date)}/>
+                        <ConfirmDelete resource="schedule" disabled={isDeleting}
+                                       onConfirm={() => {
+                                           console.log("DATE",date)
+                                           deleteMutate({clinicId, date})
+                                       }}/>
                     </Modal.Window>
 
                 </Modal>
@@ -72,12 +70,11 @@ const ClinicScheduleRow = ({clinicSchedule}) => {
 
             {isAccordionOpen && (
                 <Menus>
-                    <Table columns={'0.6fr 3fr repeat(4,1fr)'}>
+                    <Table columns={'0.6fr 3fr repeat(3,1fr)'}>
                         <Table.Header>
                             <div>Id</div>
                             <div>Date</div>
                             <div>Doctor</div>
-                            <div>Time</div>
                             <div>Booked</div>
 
                         </Table.Header>

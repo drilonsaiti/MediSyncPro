@@ -45,9 +45,20 @@ export async function createEditReceptionist(newReceptionist, id) {
     }
 }
 
-export async function deleteReceptionist(id) {
+export async function deleteReceptionist(receptionistId) {
     try {
-        const response = await apiRequest('DELETE', `receptionists/${id}`);
+        const response = await apiRequest('DELETE', `receptionists/${receptionistId}`);
+        return response.data;
+    } catch (e) {
+        console.error(error);
+        throw new Error('Receptionist could not be deleted');
+
+    }
+}
+
+export async function deleteReceptionistFromClinic(receptionistId) {
+    try {
+        const response = await apiRequest('DELETE', `receptionists/clinic/${receptionistId}`);
         return response.data;
     } catch (e) {
         console.error(error);

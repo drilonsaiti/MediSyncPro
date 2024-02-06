@@ -41,32 +41,7 @@ const PatientRow = ({patient}) => {
                         </Link>
 
                     </ButtonIcon>
-
-                    <Menus.Menu>
-                        <Menus.Toggle id={patientId}/>
-                        <Menus.List id={patientId}>
-                            <Modal.Open opens="edit">
-                                <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
-                            </Modal.Open>
-                            <Modal.Open opens="delete">
-                                <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
-                            </Modal.Open>
-
-                        </Menus.List>
-                    </Menus.Menu>
-
-
                 </ButtonGroup>
-
-                <Modal.Window name="edit">
-                    <CreatePatientForm patientToEdit={patient}/>
-                </Modal.Window>
-
-                <Modal.Window name="delete">
-                    <ConfirmDelete resource="accommodations" disabled={isDeleting}
-                                   onConfirm={() => deleteMutate(patientId)}/>
-                </Modal.Window>
-
             </Modal>
         </Table.Row>
     );

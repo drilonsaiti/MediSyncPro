@@ -8,6 +8,7 @@ import styled from "styled-components";
 import {useCreateClinicSchedule} from "./useCreateClinicSchedule.js";
 import {useDeleteClinicSchedule} from "./useDeleteClinicSchedule.js";
 import CreateClinicServiceForm from "../ClinicServices/CreateClinicServiceForm.jsx";
+import {formatDate, formatDateMonth, formatDateMonthWithoutHour} from "../../utils/helpers.js";
 
 const Title = styled.div`
   font-size: 1.6rem;
@@ -30,9 +31,8 @@ const ClinicScheduleDetailedRow = ({clinicSchedule}) => {
     return (
         <Table.Row role="row">
             <Title>{id}</Title>
-            <Title>{date}</Title>
+            <Title>{formatDateMonthWithoutHour(date)} - {timeSlot}</Title>
             <Title>{doctorName}</Title>
-            <Price>{timeSlot}</Price>
             <Title>{isBooked ? 'Yes' : 'No'}</Title>
             <Modal>
                 <ButtonGroup>
@@ -40,9 +40,6 @@ const ClinicScheduleDetailedRow = ({clinicSchedule}) => {
                     <Menus.Menu>
                         <Menus.Toggle id={id}/>
                         <Menus.List id={id}>
-                            <Modal.Open opens="edit">
-                                <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
-                            </Modal.Open>
                             <Modal.Open opens="delete">
                                 <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
                             </Modal.Open>
@@ -53,12 +50,9 @@ const ClinicScheduleDetailedRow = ({clinicSchedule}) => {
 
                 </ButtonGroup>
 
-                <Modal.Window name="edit">
-                    <CreateClinicServiceForm clinicServiceToEdit={clinicSchedule}/>
-                </Modal.Window>
 
                 <Modal.Window name="delete">
-                    <ConfirmDelete resource="accommodations" disabled={isDeleting} onConfirm={() => deleteMutate(id)}/>
+                    <ConfirmDelete resource={`schedule#${id}`} disabled={isDeleting} onConfirm={() => deleteMutate(id)}/>
                 </Modal.Window>
 
             </Modal>

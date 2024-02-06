@@ -57,7 +57,7 @@ const CreateClinicServiceForm = ({clinicServiceToEdit = {}, onCloseModal}) => {
         <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
             <FormRow label="Service name" error={errors?.clinicServiceName?.message}>
                 <Input type="text" disabled={isWorking}
-                       id="clinicServiceName" {...register("clinicServiceName", {required: "This field is required"})}/>
+                       id="serviceName" {...register("serviceName", {required: "This field is required"})}/>
             </FormRow>
 
             <FormRow label="Duration name" error={errors?.durationMinutes?.message}>

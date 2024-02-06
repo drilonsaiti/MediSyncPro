@@ -1,20 +1,20 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import {createEditPatient} from "../../services/apiPatients.js";
+import {createEditClinic} from "../../services/apiClinics.js";
 
 export function useEditClinic() {
     const queryClient = useQueryClient();
 
-    const {mutate: editPatient, isPending: isEditing} = useMutation({
-        mutationFn: ({newData, id}) => createEditPatient(newData, id),
+    const {mutate: editClinic, isPending: isEditing} = useMutation({
+        mutationFn: ({newData, id}) => createEditClinic(newData, id),
         onSuccess: () => {
-            toast.success("Patient successfully edited");
+            toast.success("Clinic successfully edited");
             queryClient.invalidateQueries({
-                queryKey: ['patients'],
+                queryKey: ['clinics'],
             });
         },
         onError: (err) => toast.error(err.message)
     });
 
-    return {isEditing, editPatient}
+    return {isEditing, editClinic}
 }

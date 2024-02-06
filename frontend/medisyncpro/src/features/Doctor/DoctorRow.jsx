@@ -11,6 +11,7 @@ import {useDeleteDoctor} from "./useDeleteDoctor.js";
 import {Link} from "react-router-dom";
 import {FaEye} from "react-icons/fa6";
 import ButtonIcon from "../../ui/ButtonIcon.jsx";
+import {useDeleteDoctorFromClinic} from "./useDeleteDoctorFromClinic.js";
 
 const Title = styled.div`
   font-size: 1.6rem;
@@ -19,10 +20,11 @@ const Title = styled.div`
   font-family: "Sono",sans-serif;
 `;
 const DoctorRow = ({doctor}) => {
-    const {doctorId, doctorName: name, specialization, workingDays} = doctor;
+    const {doctorId, doctorName: name, specialization, workingDays,clinic} = doctor;
     const {isCreating, createDoctor} = useCreateDoctor();
-    const {isDeleting, deleteMutate} = useDeleteDoctor();
+    const {isDeleting, deleteMutate} = useDeleteDoctorFromClinic();
 
+    console.log("CLINIC",clinic);
     return (
         <Table.Row role="row">
             <Title>{doctorId}</Title>
@@ -42,11 +44,8 @@ const DoctorRow = ({doctor}) => {
                     <Menus.Menu>
                         <Menus.Toggle id={doctorId}/>
                         <Menus.List id={doctorId}>
-                            <Modal.Open opens="edit">
-                                <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
-                            </Modal.Open>
                             <Modal.Open opens="delete">
-                                <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
+                                <Menus.Button icon={<HiTrash/>}>Delete from clinic</Menus.Button>
                             </Modal.Open>
 
                         </Menus.List>
@@ -55,13 +54,9 @@ const DoctorRow = ({doctor}) => {
 
                 </ButtonGroup>
 
-                <Modal.Window name="edit">
-                    <CreateDoctorForm doctorToEdit={doctor}/>
-                </Modal.Window>
-
                 <Modal.Window name="delete">
-                    <ConfirmDelete resource="accommodations" disabled={isDeleting}
-                                   onConfirm={() => deleteMutate(doctorId)}/>
+                    <ConfirmDelete resource={`doctor from clinic`} disabled={isDeleting}
+                                   onConfirm={() => deleteMutate({doctorId,clinicId:clinic.clinicId})}/>
                 </Modal.Window>
 
             </Modal>

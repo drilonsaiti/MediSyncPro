@@ -11,7 +11,7 @@ export function useDeleteClinicService() {
         onSuccess: () => {
             toast.success("Clinic service successfully deleted")
             queryClient.invalidateQueries({
-                queryKey: ['clinicService'],
+                queryKey: ['clinicServices'],
             })
         },
         onError: (error) => toast.error(error.message)

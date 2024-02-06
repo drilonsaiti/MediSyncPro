@@ -49,7 +49,7 @@ const SpecializationsRow = ({specialization}) => {
                 </Modal.Window>
 
                 <Modal.Window name="delete">
-                    <ConfirmDelete resource="accommodations" disabled={isDeleting}
+                    <ConfirmDelete resource="specialization" disabled={isDeleting}
                                    onConfirm={() => deleteMutate(specializationId)}/>
                 </Modal.Window>
 

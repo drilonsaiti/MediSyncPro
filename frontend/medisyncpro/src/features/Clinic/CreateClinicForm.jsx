@@ -22,8 +22,8 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
         defaultValues: isEditSession ? editValues : {}
     });
     const {errors} = formState;
-    const {isCreating, createPatient} = useCreateClinic();
-    const {isEditing, editPatient} = useEditClinic();
+    const {isCreating, createClinic} = useCreateClinic();
+    const {isEditing, editClinic} = useEditClinic();
 
     const selectedValues = editValues?.specializations?.map(spec => {
         const selectedService = specializations?.find(srv => srv.specializationId === spec.specializationId);
@@ -65,7 +65,7 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
     const [selectedSpecializations, setSelectedSpecializations] = useState(selectedValues);
     const [optionsService, setOptionsService] = useState(optionsServices);
     const [selectedService,setSelectedService] = useState(selectedServicesValues);
-    const isWorking = isCreating || isEditing || isLoading || isLoadingServices;
+    const isWorking = isCreating || isEditing || isLoading || isLoadingServices || !selectedService;
 
     useEffect(() => {
         const updatedSelectedOptionsServices = clinicServices
@@ -97,7 +97,7 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
 
         const list = updatedSelectedOptionsServices?.filter((item,index) =>  item.options?.flatMap(i => selectedService.filter(s => s.value === i.value)));
 
-        setSelectedService(list.flatMap(option => option.options));
+        setSelectedService(list?.flatMap(option => option.options));
         setOptionsService(updatedSelectedOptionsServices);
     }, [selectedSpecializations]);
 
@@ -105,15 +105,42 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
 
 
     function onSubmit(data) {
+        const selectedSpecializations = getValues("specializations")?.sort((a, b) => a.specializationId - b.specializationId)?.map(spec => {
+            return {
+                specializationId: spec.value,
+                specializationName: spec.label
+            };
+        });
 
-        if (isEditSession) editPatient({newData: {...data, clinicId}, id: clinicId}, {
-            onSuccess: () => {
-                reset();
-                onCloseModal?.();
-            },
+        const selectedServices = clinicServices?.map(clinic => {
+            const findedService = selectedService?.find(s => s.value === clinic.serviceName);
+            if (findedService) {
+                return {
+                    serviceId: clinic.serviceId,
+                    serviceName: clinic.serviceName
+                };
+            }
+            return null;
+        })?.filter(service => service !== null);
 
-        })
-        else createPatient({...data}, {
+        if (isEditSession) {
+            editClinic({
+                newData: {
+                    ...data,
+                    clinicId,
+                    specializations: selectedSpecializations,
+                    serviceDto: selectedServices
+                }, id: clinicId
+            }, {
+                onSuccess: () => {
+                    reset();
+                    onCloseModal?.();
+                },
+
+            })
+        }else createClinic({...data,
+            specializations: selectedSpecializations,
+            serviceDto: selectedServices}, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();

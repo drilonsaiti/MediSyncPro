@@ -21,7 +21,7 @@ export async function getClinicServices({page,specializations,sort}) {
 
 
 export async function createEditClinicService(newClinicService, id) {
-    console.log(newClinicService)
+    console.log("NEW CLINIC",newClinicService)
     try {
         let response = {}
         if (id) {

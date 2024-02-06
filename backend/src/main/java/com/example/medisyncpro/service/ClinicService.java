@@ -7,13 +7,14 @@ import com.example.medisyncpro.model.dto.ClinicResultDto;
 import com.example.medisyncpro.model.dto.UpdateClinicDto;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ClinicService {
 
     Clinic getById(Long id);
+
     ClinicDto getByIdDto(Long id);
+
     ClinicResultDto getAll(PageRequest pageable, String specializations, String service, String byDate);
 
     List<ClinicServices> getClinicServicesById(Long id);
@@ -22,7 +23,7 @@ public interface ClinicService {
 
     void delete(Long id);
 
-    long getTotalClinicCount(String specialization,String status);
+    long getTotalClinicCount(String specialization, String status);
 
     Clinic updateClinic(UpdateClinicDto dto);
 }

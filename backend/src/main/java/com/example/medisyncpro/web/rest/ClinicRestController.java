@@ -1,12 +1,10 @@
 package com.example.medisyncpro.web.rest;
 
 
-
 import com.example.medisyncpro.model.Clinic;
 import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.dto.ClinicDto;
 import com.example.medisyncpro.model.dto.ClinicResultDto;
-import com.example.medisyncpro.model.dto.ReceptionistDto;
 import com.example.medisyncpro.model.dto.UpdateClinicDto;
 import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.DoctorService;
@@ -19,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -35,12 +32,12 @@ public class ClinicRestController {
 
     @GetMapping
     public Page<ClinicDto> listClinics(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "all") String specializations,
-                                                           @RequestParam(defaultValue = "all") String service,
-                                                            @RequestParam(defaultValue = "all") String byDate) {
+                                       @RequestParam(defaultValue = "all") String specializations,
+                                       @RequestParam(defaultValue = "all") String service,
+                                       @RequestParam(defaultValue = "all") String byDate) {
 
         PageRequest pageable = PageRequest.of(page - 1, 15);
-        ClinicResultDto clinicDtoList = clinicService.getAll(pageable,specializations,service, byDate);
+        ClinicResultDto clinicDtoList = clinicService.getAll(pageable, specializations, service, byDate);
 
         return new PageImpl<>(clinicDtoList.getClinics(), pageable, clinicDtoList.getTotalElements());
     }
@@ -58,14 +55,20 @@ public class ClinicRestController {
     }
 
     @PutMapping()
-    public ResponseEntity<Clinic> updateClinic(@RequestBody UpdateClinicDto dto){
-        return new ResponseEntity<>(clinicService.updateClinic(dto),HttpStatus.ACCEPTED);
+    public ResponseEntity<Clinic> updateClinic(@RequestBody UpdateClinicDto dto) {
+        return new ResponseEntity<>(clinicService.updateClinic(dto), HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Void> saveClinic(@RequestBody Clinic clinic) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClinic(@PathVariable Long id) {
+        clinicService.delete(id);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    /*@PostMapping("/save")
+    public ResponseEntity<Void> saveClinic(@RequestBody CreateClinicDto clinic) {
         clinicService.save(clinic);
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+    }*/
 
 }

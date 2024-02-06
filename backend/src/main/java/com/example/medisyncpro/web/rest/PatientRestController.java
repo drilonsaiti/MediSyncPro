@@ -1,10 +1,8 @@
 package com.example.medisyncpro.web.rest;
 
 
-import com.example.medisyncpro.model.dto.CreatePatientDto;
 import com.example.medisyncpro.model.Patient;
-
-import com.example.medisyncpro.model.dto.MedicalReportResultDto;
+import com.example.medisyncpro.model.dto.CreatePatientDto;
 import com.example.medisyncpro.model.dto.PatientResultDto;
 import com.example.medisyncpro.model.dto.UpdatePatientDto;
 import com.example.medisyncpro.service.PatientService;
@@ -26,9 +24,9 @@ public class PatientRestController {
 
     @GetMapping
     public Page<Patient> listPatients(@RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "all") String nameOrEmail) {
+                                      @RequestParam(defaultValue = "all") String nameOrEmail) {
         PageRequest pageable = PageRequest.of(page - 1, 15);
-        PatientResultDto patients = patientService.getAll(pageable,nameOrEmail);
+        PatientResultDto patients = patientService.getAll(pageable, nameOrEmail);
         return new PageImpl<>(patients.getPatients(), pageable, patients.getTotalElements());
     }
 
@@ -52,7 +50,7 @@ public class PatientRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePatient(@PathVariable Long id){
+    public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
         patientService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);

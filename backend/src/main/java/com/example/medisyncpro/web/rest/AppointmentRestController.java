@@ -1,8 +1,8 @@
 package com.example.medisyncpro.web.rest;
 
-import com.example.medisyncpro.model.dto.*;
 import com.example.medisyncpro.model.Appointment;
-import com.example.medisyncpro.service.*;
+import com.example.medisyncpro.model.dto.*;
+import com.example.medisyncpro.service.AppointmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -10,8 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -23,9 +21,9 @@ public class AppointmentRestController {
 
     @GetMapping
     public Page<AppointmentDto> listAppointments(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "all") String nameOrEmail) {
+                                                 @RequestParam(defaultValue = "all") String nameOrEmail) {
         PageRequest pageable = PageRequest.of(page - 1, 15);
-        AppointmentResultDto appointments = appointmentService.getAll(pageable,nameOrEmail);
+        AppointmentResultDto appointments = appointmentService.getAll(pageable, nameOrEmail);
         return new PageImpl<>(appointments.getAppointments(), pageable, appointments.getTotalElements());
     }
 
@@ -50,8 +48,6 @@ public class AppointmentRestController {
     }
 
 
-
-
     @PostMapping
     public ResponseEntity<Void> createAppointments(@RequestBody CreateAppointmentDto dto) {
         this.appointmentService.save(dto);
@@ -65,7 +61,7 @@ public class AppointmentRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAppointments(@PathVariable Long id){
+    public ResponseEntity<Void> deleteAppointments(@PathVariable Long id) {
         appointmentService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -85,9 +81,9 @@ public class AppointmentRestController {
     }
 
     @PostMapping("changeAttended/{id}")
-    public ResponseEntity<Void> changeAttended(@PathVariable Long id,@RequestBody ChangeAttendedDto attended){
+    public ResponseEntity<Void> changeAttended(@PathVariable Long id, @RequestBody ChangeAttendedDto attended) {
         System.out.println(attended);
-        this.appointmentService.changeAttended(id,attended.isAttended());
+        this.appointmentService.changeAttended(id, attended.isAttended());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

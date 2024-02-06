@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class GroupedClinicSchedule {
+    private Long clinicId;
     private Date date;
     List<ClinicScheduleDto> scheduleDtos;
 }

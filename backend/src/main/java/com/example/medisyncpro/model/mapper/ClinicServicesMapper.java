@@ -1,15 +1,14 @@
 package com.example.medisyncpro.model.mapper;
 
-import com.example.medisyncpro.model.dto.ClinicDto;
-import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
 import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.Specializations;
+import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClinicServicesMapper {
 
-    public ClinicServices createClinicServices(CreateClinicServicesDto dto, Specializations specializations){
+    public ClinicServices createClinicServices(CreateClinicServicesDto dto, Specializations specializations) {
         return new ClinicServices(
                 dto.getServiceName(),
                 dto.getDurationMinutes(),
@@ -18,7 +17,7 @@ public class ClinicServicesMapper {
         );
     }
 
-    public ClinicServices updateClinicServices(ClinicServices old,ClinicServices newServices){
+    public ClinicServices updateClinicServices(ClinicServices old, ClinicServices newServices) {
         old.setServiceName(newServices.getServiceName());
         old.setDurationMinutes(newServices.getDurationMinutes());
         old.setPrice(newServices.getPrice());

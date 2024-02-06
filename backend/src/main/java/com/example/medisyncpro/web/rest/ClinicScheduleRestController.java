@@ -1,11 +1,9 @@
 package com.example.medisyncpro.web.rest;
 
 
-
-import com.example.medisyncpro.model.dto.ClinicScheduleDto;
+import com.example.medisyncpro.model.ClinicSchedule;
 import com.example.medisyncpro.model.dto.ClinicScheduleResultDto;
 import com.example.medisyncpro.model.dto.CreateClinicSchedulesDto;
-import com.example.medisyncpro.model.ClinicSchedule;
 import com.example.medisyncpro.model.dto.GroupedClinicSchedule;
 import com.example.medisyncpro.service.ClinicScheduleService;
 import com.example.medisyncpro.service.DoctorService;
@@ -18,9 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -57,7 +54,7 @@ public class ClinicScheduleRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClinicSchedules(@PathVariable Long id){
+    public ResponseEntity<Void> deleteClinicSchedules(@PathVariable Long id) {
         clinicScheduleService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -72,10 +69,17 @@ public class ClinicScheduleRestController {
     @GetMapping("/grouped/{id}")
     public Page<GroupedClinicSchedule> getAllByClinicGroupedByDate(@PathVariable Long id,
                                                                    @RequestParam(defaultValue = "1") int page,
-                                                                   @RequestParam(defaultValue = "startDate-asc") String sort){
+                                                                   @RequestParam(defaultValue = "startDate-asc") String sort) {
         PageRequest pageable = PageRequest.of(page - 1, 15);
-        ClinicScheduleResultDto results = clinicScheduleService.getAllByClinicGroupedByDate(id,pageable,sort);
-        return new PageImpl<>(results.getClinicSchedule(),pageable,results.getTotalElements());
+        ClinicScheduleResultDto results = clinicScheduleService.getAllByClinicGroupedByDate(id, pageable, sort);
+        return new PageImpl<>(results.getClinicSchedule(), pageable, results.getTotalElements());
+    }
+
+    @DeleteMapping("/grouped/{id}/{date}")
+    public ResponseEntity<Void> deleteClinicSchedulesGrouped(@PathVariable Long id, @PathVariable String date) throws ParseException {
+        clinicScheduleService.deleteGrouped(id, date);
+
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
 }

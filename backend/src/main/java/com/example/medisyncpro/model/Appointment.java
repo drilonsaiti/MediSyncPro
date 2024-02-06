@@ -1,13 +1,11 @@
 package com.example.medisyncpro.model;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CollectionId;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -48,7 +46,7 @@ public class Appointment {
         this.attended = false;
     }
 
-    public void setAllServicesIds(List<Long> serviceIds){
+    public void setAllServicesIds(List<Long> serviceIds) {
         this.serviceIds.addAll(serviceIds);
     }
 }

@@ -1,9 +1,9 @@
 package com.example.medisyncpro.model.mapper;
 
+import com.example.medisyncpro.model.ClinicSchedule;
 import com.example.medisyncpro.model.Doctor;
 import com.example.medisyncpro.model.dto.ClinicScheduleDto;
 import com.example.medisyncpro.model.dto.CreateClinicSchedulesDto;
-import com.example.medisyncpro.model.ClinicSchedule;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -16,7 +16,7 @@ public class ClinicScheduleMapper {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-    public ClinicSchedule createClinicSchedule(CreateClinicSchedulesDto dto){
+    public ClinicSchedule createClinicSchedule(CreateClinicSchedulesDto dto) {
         return new ClinicSchedule(
                 dto.getDoctorId(),
                 dto.getClinicId(),
@@ -26,7 +26,7 @@ public class ClinicScheduleMapper {
         );
     }
 
-    public ClinicSchedule updateClinicSchedule(ClinicSchedule old,ClinicSchedule newSchedule){
+    public ClinicSchedule updateClinicSchedule(ClinicSchedule old, ClinicSchedule newSchedule) {
         old.setDoctorId(newSchedule.getDoctorId());
         old.setClinicId(newSchedule.getClinicId());
         old.setDate(newSchedule.getDate());
@@ -54,12 +54,12 @@ public class ClinicScheduleMapper {
         return formattedStartTime + "-" + formattedEndTime;
     }
 
-    public ClinicScheduleDto clinicScheduleToDto(ClinicSchedule schedule,String doctorName){
+    public ClinicScheduleDto clinicScheduleToDto(ClinicSchedule schedule, String doctorName) {
         return new ClinicScheduleDto(
                 schedule.getScheduleId(),
                 schedule.getDate(),
                 doctorName,
-                formatTimeSlot(schedule.getStartTime(),schedule.getEndTime()),
+                formatTimeSlot(schedule.getStartTime(), schedule.getEndTime()),
                 schedule.getIsBooked()
         );
     }

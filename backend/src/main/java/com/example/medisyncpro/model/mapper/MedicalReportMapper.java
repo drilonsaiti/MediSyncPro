@@ -1,13 +1,12 @@
 package com.example.medisyncpro.model.mapper;
 
-import com.example.medisyncpro.model.dto.CreateMedicalReportDto;
-import com.example.medisyncpro.model.dto.MedicalReportDto;
 import com.example.medisyncpro.model.Doctor;
 import com.example.medisyncpro.model.MedicalReport;
+import com.example.medisyncpro.model.dto.CreateMedicalReportDto;
+import com.example.medisyncpro.model.dto.MedicalReportDto;
 import com.example.medisyncpro.model.dto.ServiceDto;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
 public class MedicalReportMapper {
 
 
-    public MedicalReportDto getMedicalReport(MedicalReport report, Long patientId, String patientName, String patientEmail, List<ServiceDto> services, int totalPrice){
+    public MedicalReportDto getMedicalReport(MedicalReport report, Long patientId, String patientName, String patientEmail, List<ServiceDto> services, int totalPrice) {
         return new MedicalReportDto(
                 report.getReportId(),
                 report.getDisease(),
@@ -33,7 +32,7 @@ public class MedicalReportMapper {
         );
     }
 
-    public MedicalReport createMedicalReport(CreateMedicalReportDto dto, Doctor doctor,LocalDateTime date){
+    public MedicalReport createMedicalReport(CreateMedicalReportDto dto, Doctor doctor, LocalDateTime date) {
         return new MedicalReport(
                 25L,
                 doctor,
@@ -46,7 +45,7 @@ public class MedicalReportMapper {
         );
     }
 
-    public MedicalReport updateMedicalReport(MedicalReport old,MedicalReport newReport){
+    public MedicalReport updateMedicalReport(MedicalReport old, MedicalReport newReport) {
         old.setMedicineName(newReport.getMedicineName());
         old.setDisease(newReport.getDisease());
         old.setNextAppointmentDate(newReport.getNextAppointmentDate());

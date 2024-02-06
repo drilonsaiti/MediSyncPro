@@ -1,9 +1,12 @@
 package com.example.medisyncpro.service.impl;
 
-import com.example.medisyncpro.model.dto.*;
-import com.example.medisyncpro.model.mapper.ClinicServicesMapper;
 import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.Specializations;
+import com.example.medisyncpro.model.dto.ClinicServicesResultDto;
+import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
+import com.example.medisyncpro.model.dto.ServiceForClinicsDto;
+import com.example.medisyncpro.model.excp.ClinicServicesException;
+import com.example.medisyncpro.model.mapper.ClinicServicesMapper;
 import com.example.medisyncpro.repository.ServiceRepository;
 import com.example.medisyncpro.repository.SpecializationRepository;
 import com.example.medisyncpro.service.ClinicServicesService;
@@ -43,50 +46,75 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
                 throw new IllegalArgumentException("Invalid field for sorting: " + field);
         }
     }
+
     @Override
     public ClinicServicesResultDto getAll(PageRequest pageable, String specialization, String sort) {
-        String [] specs = specialization.split(",");
-        List<ClinicServices> services = serviceRepository.findAll().stream().filter(service ->
-                (specialization.equals("all") || Arrays.asList(specs).contains(service.getSpecializations().getSpecializationName())))
-                .sorted((a, b) -> {
-                    String[] sortBy = sort.split("-");
-                    String field = sortBy[0];
-                    String direction = sortBy[1];
-                    Comparable fieldA = getFieldValue(a, field);
-                    Comparable fieldB = getFieldValue(b, field);
+        try {
+            String[] specs = specialization.split(",");
+            List<ClinicServices> services = serviceRepository.findAll().stream().filter(service ->
+                            (specialization.equals("all") || Arrays.asList(specs).contains(service.getSpecializations().getSpecializationName())))
+                    .sorted((a, b) -> {
+                        String[] sortBy = sort.split("-");
+                        String field = sortBy[0];
+                        String direction = sortBy[1];
+                        Comparable fieldA = getFieldValue(a, field);
+                        Comparable fieldB = getFieldValue(b, field);
 
-                    return direction.equals("asc") ? fieldA.compareTo(fieldB) : fieldB.compareTo(fieldA);
-                }).toList();
+                        return direction.equals("asc") ? fieldA.compareTo(fieldB) : fieldB.compareTo(fieldA);
+                    }).toList();
 
-        return new ClinicServicesResultDto(services.stream().skip(pageable.getOffset()).limit(pageable.getPageSize()).toList(),services.size());
+            return new ClinicServicesResultDto(services.stream().skip(pageable.getOffset()).limit(pageable.getPageSize()).toList(), services.size());
+        } catch (Exception e) {
+            throw new ClinicServicesException("Error getting clinic services", e);
+        }
     }
 
     @Override
     public ClinicServices save(CreateClinicServicesDto clinicServices) {
-        Specializations specializations = specializationRepository.getById(clinicServices.getSpecializationsId());
-        return serviceRepository.save(servicesMapper.createClinicServices(clinicServices,specializations));
+        try {
+            Specializations specializations = specializationRepository.getById(clinicServices.getSpecializationsId());
+            return serviceRepository.save(servicesMapper.createClinicServices(clinicServices, specializations));
+        } catch (Exception e) {
+            throw new ClinicServicesException("Error saving clinic service", e);
+        }
     }
 
     @Override
     public ClinicServices update(ClinicServices clinicServices) {
-        ClinicServices old = this.getById(clinicServices.getServiceId());
-        return serviceRepository.save(servicesMapper.updateClinicServices(old,clinicServices));
+        try {
+            ClinicServices old = this.getById(clinicServices.getServiceId());
+            return serviceRepository.save(servicesMapper.updateClinicServices(old, clinicServices));
+        } catch (Exception e) {
+            throw new ClinicServicesException("Error updating clinic service", e);
+        }
     }
 
     @Override
     public void delete(Long id) {
-        serviceRepository.deleteById(id);
+        try {
+            serviceRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new ClinicServicesException("Error deleting clinic service", e);
+        }
     }
 
     @Override
     public List<ClinicServices> findAllBySpecializationsId(Long id) {
-        return serviceRepository.findAllBySpecializations_SpecializationId(id);
+        try {
+            return serviceRepository.findAllBySpecializations_SpecializationId(id);
+        } catch (Exception e) {
+            throw new ClinicServicesException("Error finding clinic services by specialization ID", e);
+        }
     }
 
 
     @Override
-    public List<ServiceForClinicsDto> getClinicServiceForClinic(){
-        return serviceRepository.findAll().stream().map(service -> new ServiceForClinicsDto(service.getServiceId(),service.getServiceName())).toList();
+    public List<ServiceForClinicsDto> getClinicServiceForClinic() {
+        try {
+            return serviceRepository.findAll().stream().map(service -> new ServiceForClinicsDto(service.getServiceId(), service.getServiceName())).toList();
+        } catch (Exception e) {
+            throw new ClinicServicesException("Error getting clinic services for clinic", e);
+        }
     }
 
 }

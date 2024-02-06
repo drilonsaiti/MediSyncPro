@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -57,7 +55,7 @@ public class Settings {
     @JsonIgnore
     private List<Doctor> afternoonDoctors;
 
-    public Settings (){
+    public Settings() {
         morningDoctors = new ArrayList<>();
         afternoonDoctors = new ArrayList<>();
     }

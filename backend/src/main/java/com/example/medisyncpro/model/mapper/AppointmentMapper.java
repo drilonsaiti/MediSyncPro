@@ -1,17 +1,16 @@
 package com.example.medisyncpro.model.mapper;
 
+import com.example.medisyncpro.model.Appointment;
 import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.Doctor;
 import com.example.medisyncpro.model.Patient;
 import com.example.medisyncpro.model.dto.AppointmentDto;
 import com.example.medisyncpro.model.dto.CreateAppointmentDto;
-import com.example.medisyncpro.model.Appointment;
 import com.example.medisyncpro.model.dto.MedicalReportDto;
 import com.example.medisyncpro.repository.ServiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -44,7 +43,7 @@ public class AppointmentMapper {
         return old;
     }
 
-    public AppointmentDto getAppointment(Appointment appm, Patient patient, Doctor doctor, List<String> services, MedicalReportDto report){
+    public AppointmentDto getAppointment(Appointment appm, Patient patient, Doctor doctor, List<String> services, MedicalReportDto report) {
         return new AppointmentDto(
                 appm.getAppointmentId(),
                 appm.getDate(),

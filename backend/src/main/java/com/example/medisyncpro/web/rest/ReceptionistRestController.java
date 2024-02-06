@@ -1,11 +1,11 @@
 package com.example.medisyncpro.web.rest;
 
 
-import com.example.medisyncpro.model.dto.CreateReceptionistDto;
 import com.example.medisyncpro.model.Receptionist;
+import com.example.medisyncpro.model.dto.CreateReceptionistDto;
 import com.example.medisyncpro.model.dto.ReceptionistDto;
-import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.ClinicService;
+import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.ReceptionistService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,9 +48,15 @@ public class ReceptionistRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReceptionist(@PathVariable Long id){
+    public ResponseEntity<Void> deleteReceptionist(@PathVariable Long id) {
         receptionistService.delete(id);
 
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/clinic/{id}")
+    public ResponseEntity<Void> deleteReceptionistFromClinic(@PathVariable Long id) {
+        receptionistService.deleteReceptionistFromClinic(id);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

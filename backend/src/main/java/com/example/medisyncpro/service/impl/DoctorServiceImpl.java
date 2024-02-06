@@ -1,13 +1,12 @@
 package com.example.medisyncpro.service.impl;
 
-import com.example.medisyncpro.model.dto.ClinicDto;
-import com.example.medisyncpro.model.dto.ClinicResultDto;
-import com.example.medisyncpro.model.dto.CreateDoctorDto;
-import com.example.medisyncpro.model.dto.DoctorResultDto;
-import com.example.medisyncpro.model.mapper.DoctorMapper;
 import com.example.medisyncpro.model.Clinic;
 import com.example.medisyncpro.model.Doctor;
 import com.example.medisyncpro.model.Specializations;
+import com.example.medisyncpro.model.dto.CreateDoctorDto;
+import com.example.medisyncpro.model.dto.DoctorResultDto;
+import com.example.medisyncpro.model.excp.DoctorException;
+import com.example.medisyncpro.model.mapper.DoctorMapper;
 import com.example.medisyncpro.repository.ClinicRepository;
 import com.example.medisyncpro.repository.DoctorRepository;
 import com.example.medisyncpro.repository.SpecializationRepository;
@@ -36,42 +35,72 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorResultDto getAll(PageRequest pageable, String specializations, String service) {
-        String [] specs = specializations.split(",");
-        String [] services = service.split(",");
+        try {
+            String[] specs = specializations.split(",");
+            String[] services = service.split(",");
 
-        List<Doctor> doctors =  doctorRepository.findAll()
-                .stream()
-                .filter(doctor ->
-                        (specializations.equals("all") || Arrays.asList(specs).contains(doctor.getSpecialization().getSpecializationName()))
+            List<Doctor> doctors = doctorRepository.findAll()
+                    .stream()
+                    .filter(doctor ->
+                            (specializations.equals("all") || Arrays.asList(specs).contains(doctor.getSpecialization().getSpecializationName()))
 
-                ).toList();
+                    ).toList();
 
-        int totalElements = doctors.size();
-        System.out.println("=====TOTAL ELEMENTS=======");
-        System.out.println(totalElements);
-        return new DoctorResultDto(doctors
-                .stream()
-                .skip(pageable.getOffset())
-                .limit(pageable.getPageSize()).toList(),totalElements
-        );
+            int totalElements = doctors.size();
+            System.out.println("=====TOTAL ELEMENTS=======");
+            System.out.println(totalElements);
+            return new DoctorResultDto(doctors
+                    .stream()
+                    .skip(pageable.getOffset())
+                    .limit(pageable.getPageSize()).toList(), totalElements
+            );
+        } catch (Exception e) {
+            throw new DoctorException("Error getting all doctors", e);
+        }
     }
 
     @Override
     public Doctor save(CreateDoctorDto doctor) {
-        Specializations specializations = specializationRepository.getById(doctor.getSpecializationId());
-        Clinic clinic = clinicRepository.getById(doctor.getClinicId());
-        return doctorRepository.save(doctorMapper.createDoctor(doctor,specializations,clinic));
+        try {
+            Specializations specializations = specializationRepository.getById(doctor.getSpecializationId());
+            Clinic clinic = clinicRepository.getById(doctor.getClinicId());
+            return doctorRepository.save(doctorMapper.createDoctor(doctor, specializations, clinic));
+        } catch (Exception e) {
+            throw new DoctorException("Error saving doctor", e);
+        }
     }
 
     @Override
     public Doctor update(Doctor doctor) {
-        Doctor old = this.getById(doctor.getDoctorId());
-        return doctorRepository.save(doctorMapper.updateDoctor(old,doctor));
+        try {
+            Doctor old = this.getById(doctor.getDoctorId());
+            return doctorRepository.save(doctorMapper.updateDoctor(old, doctor));
+        } catch (Exception e) {
+            throw new DoctorException("Error updating doctor", e);
+        }
     }
 
     @Override
     public void delete(Long id) {
-        doctorRepository.deleteById(id);
+        try {
+            doctorRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new DoctorException("Error deleting doctor", e);
+        }
+    }
+
+    @Override
+    public void deleteDoctorFromClinic(Long id, Long clinicId) {
+        try {
+            System.out.println("ITS HERE DUDE");
+            Clinic clinic = clinicRepository.getById(clinicId);
+            Doctor doctor = this.getById(id);
+            clinic.getDoctors().remove(doctor);
+            doctor.setClinic(null);
+            clinicRepository.save(clinic);
+            doctorRepository.save(doctor);
+        } catch (Exception e) {
+            throw new DoctorException("Error deleting doctor from clinic", e);
+        }
     }
 }
-

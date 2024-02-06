@@ -1,10 +1,9 @@
 package com.example.medisyncpro.web.rest;
 
 
-import com.example.medisyncpro.model.dto.ClinicResultDto;
+import com.example.medisyncpro.model.MedicalReport;
 import com.example.medisyncpro.model.dto.CreateMedicalReportDto;
 import com.example.medisyncpro.model.dto.MedicalReportDto;
-import com.example.medisyncpro.model.MedicalReport;
 import com.example.medisyncpro.model.dto.MedicalReportResultDto;
 import com.example.medisyncpro.service.MedicalReportService;
 import lombok.AllArgsConstructor;
@@ -14,8 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -32,7 +29,7 @@ public class MedicalReportRestController {
     ) {
 
         PageRequest pageable = PageRequest.of(page - 1, 15);
-        MedicalReportResultDto report = medicalReportService.getAll(pageable,nameOrEmail, byDate);
+        MedicalReportResultDto report = medicalReportService.getAll(pageable, nameOrEmail, byDate);
 
         return new PageImpl<>(report.getMedicalReport(), pageable, report.getTotalElements());
     }
@@ -57,7 +54,7 @@ public class MedicalReportRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMedicalReport(@PathVariable Long id){
+    public ResponseEntity<Void> deleteMedicalReport(@PathVariable Long id) {
         medicalReportService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);

@@ -35,7 +35,7 @@ public class Doctor {
     @Column(name = "working_days")
     private String workingDays;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "clinic_id")
     private Clinic clinic;
 

@@ -1,10 +1,9 @@
 package com.example.medisyncpro.web.rest;
 
 
+import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.dto.ClinicServicesResultDto;
 import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
-import com.example.medisyncpro.model.ClinicServices;
-import com.example.medisyncpro.model.dto.ServiceBySpecializationIdDto;
 import com.example.medisyncpro.model.dto.ServiceForClinicsDto;
 import com.example.medisyncpro.service.ClinicServicesService;
 import com.example.medisyncpro.service.SpecializationService;
@@ -33,8 +32,8 @@ public class ClinicServiceRestController {
                                              @RequestParam(defaultValue = "all") String specializations,
                                              @RequestParam(defaultValue = "id-asc") String sort) {
         PageRequest pageable = PageRequest.of(page - 1, 15);
-       ClinicServicesResultDto services = clinicServicesService.getAll(pageable,specializations,sort);
-        return new PageImpl<>(services.getServices(), pageable,services.getTotalElements());
+        ClinicServicesResultDto services = clinicServicesService.getAll(pageable, specializations, sort);
+        return new PageImpl<>(services.getServices(), pageable, services.getTotalElements());
     }
 
     @GetMapping("/{id}")
@@ -50,7 +49,6 @@ public class ClinicServiceRestController {
     }
 
 
-
     @PostMapping
     public ResponseEntity<Void> createClinicServices(@RequestBody CreateClinicServicesDto dto) {
         this.clinicServicesService.save(dto);
@@ -64,7 +62,7 @@ public class ClinicServiceRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClinicServices(@PathVariable Long id){
+    public ResponseEntity<Void> deleteClinicServices(@PathVariable Long id) {
         clinicServicesService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);

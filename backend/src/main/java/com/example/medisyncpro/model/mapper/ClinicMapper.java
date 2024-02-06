@@ -1,24 +1,25 @@
 package com.example.medisyncpro.model.mapper;
 
-import com.example.medisyncpro.model.*;
+import com.example.medisyncpro.model.Clinic;
+import com.example.medisyncpro.model.ClinicServices;
+import com.example.medisyncpro.model.Doctor;
+import com.example.medisyncpro.model.Settings;
 import com.example.medisyncpro.model.dto.ClinicDto;
 import com.example.medisyncpro.model.dto.ServiceBySpecializationIdDto;
 import com.example.medisyncpro.model.dto.UpdateClinicDto;
-import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.ClinicServicesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class ClinicMapper {
 
     private final ClinicServicesService service;
-    private List<ServiceBySpecializationIdDto> services(List<ClinicServices> services){
+
+    private List<ServiceBySpecializationIdDto> services(List<ClinicServices> services) {
 
         return services.stream().map(s -> new ServiceBySpecializationIdDto(
                 s.getSpecializations().getSpecializationId(),
@@ -26,7 +27,7 @@ public class ClinicMapper {
         )).toList();
     }
 
-    public ClinicDto getClinicDto(Clinic clinic, Settings settings){
+    public ClinicDto getClinicDto(Clinic clinic, Settings settings) {
         return new ClinicDto(
                 clinic.getClinicId(),
                 clinic.getClinicName(),
@@ -34,13 +35,13 @@ public class ClinicMapper {
                 clinic.getSpecializations(),
                 services(clinic.getServices()),
                 clinic.getDoctors(),
-                settings.getMorningStartTime().toString() + "-" + settings.getMorningEndTime(),
-                settings.getAfternoonStartTime().toString() + "-" + settings.getAfternoonEndTime()
+                settings != null ? settings.getMorningStartTime().toString() + "-" + settings.getMorningEndTime() : null,
+                settings != null ? settings.getAfternoonStartTime().toString() + "-" + settings.getAfternoonEndTime() : null
         );
     }
 
     public Clinic updateClinic(Clinic old, UpdateClinicDto newClinic,
-                               List<ClinicServices> clinicServices,List<Doctor> doctors){
+                               List<ClinicServices> clinicServices, List<Doctor> doctors) {
         old.setClinicName(newClinic.getClinicName());
         old.setAddress(newClinic.getAddress());
         old.getSpecializations().clear();

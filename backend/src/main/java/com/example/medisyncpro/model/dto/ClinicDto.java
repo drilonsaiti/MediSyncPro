@@ -2,9 +2,6 @@ package com.example.medisyncpro.model.dto;
 
 import com.example.medisyncpro.model.Doctor;
 import com.example.medisyncpro.model.Specializations;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

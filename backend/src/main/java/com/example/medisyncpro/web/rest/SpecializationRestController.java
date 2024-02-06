@@ -1,7 +1,7 @@
 package com.example.medisyncpro.web.rest;
 
-import com.example.medisyncpro.model.dto.CreateSpecializationDto;
 import com.example.medisyncpro.model.Specializations;
+import com.example.medisyncpro.model.dto.CreateSpecializationDto;
 import com.example.medisyncpro.service.SpecializationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,7 +43,7 @@ public class SpecializationRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSpecialization(@PathVariable Long id){
+    public ResponseEntity<Void> deleteSpecialization(@PathVariable Long id) {
         specializationService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);

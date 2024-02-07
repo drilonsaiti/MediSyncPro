@@ -5,6 +5,8 @@ import com.example.medisyncpro.model.Specializations;
 import com.example.medisyncpro.model.dto.ClinicServicesResultDto;
 import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
 import com.example.medisyncpro.model.dto.ServiceForClinicsDto;
+import com.example.medisyncpro.model.excp.ClinicException;
+import com.example.medisyncpro.model.excp.ClinicScheduleException;
 import com.example.medisyncpro.model.excp.ClinicServicesException;
 import com.example.medisyncpro.model.mapper.ClinicServicesMapper;
 import com.example.medisyncpro.repository.ServiceRepository;
@@ -28,7 +30,11 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
 
     @Override
     public ClinicServices getById(Long id) {
-        return serviceRepository.findById(id).orElse(null);
+        try {
+            return serviceRepository.findById(id).orElseThrow(() -> new ClinicScheduleException("Clinic service with ID " + id + " not found"));
+        }catch (Exception e) {
+            throw new ClinicException("Failed to retrieve clinic service by ID", e);
+        }
     }
 
     private Comparable getFieldValue(
@@ -64,8 +70,8 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
                     }).toList();
 
             return new ClinicServicesResultDto(services.stream().skip(pageable.getOffset()).limit(pageable.getPageSize()).toList(), services.size());
-        } catch (Exception e) {
-            throw new ClinicServicesException("Error getting clinic services", e);
+        }  catch (Exception e) {
+            throw new ClinicException("Failed to retrieve all clinics services", e);
         }
     }
 
@@ -75,7 +81,7 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
             Specializations specializations = specializationRepository.getById(clinicServices.getSpecializationsId());
             return serviceRepository.save(servicesMapper.createClinicServices(clinicServices, specializations));
         } catch (Exception e) {
-            throw new ClinicServicesException("Error saving clinic service", e);
+            throw new ClinicServicesException("Failed to save clinic service", e);
         }
     }
 
@@ -85,7 +91,7 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
             ClinicServices old = this.getById(clinicServices.getServiceId());
             return serviceRepository.save(servicesMapper.updateClinicServices(old, clinicServices));
         } catch (Exception e) {
-            throw new ClinicServicesException("Error updating clinic service", e);
+            throw new ClinicServicesException("Failed to update clinic service", e);
         }
     }
 
@@ -94,7 +100,7 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
         try {
             serviceRepository.deleteById(id);
         } catch (Exception e) {
-            throw new ClinicServicesException("Error deleting clinic service", e);
+            throw new ClinicServicesException("Failed to delete clinic service", e);
         }
     }
 
@@ -103,7 +109,7 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
         try {
             return serviceRepository.findAllBySpecializations_SpecializationId(id);
         } catch (Exception e) {
-            throw new ClinicServicesException("Error finding clinic services by specialization ID", e);
+            throw new ClinicServicesException("Failed to find clinic services by specialization ID", e);
         }
     }
 

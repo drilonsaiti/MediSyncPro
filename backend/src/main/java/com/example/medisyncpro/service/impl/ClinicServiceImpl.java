@@ -35,14 +35,22 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     public Clinic getById(Long id) {
-        return clinicRepository.findById(id).orElseThrow(() -> new ClinicException("Clinic with ID " + id + " not found"));
+        try {
+            return clinicRepository.findById(id).orElseThrow(() -> new ClinicException("Clinic with ID " + id + " not found"));
+        } catch (Exception e) {
+            throw new ClinicException("Failed to retrieve clinic by ID", e);
+        }
     }
 
     @Override
     public ClinicDto getByIdDto(Long id) {
-        Clinic clinic = this.getById(id);
-        Settings settings = settingsRepository.getById(clinic.getSettingsId());
-        return clinicMapper.getClinicDto(clinic, settings);
+        try {
+            Clinic clinic = this.getById(id);
+            Settings settings = settingsRepository.getById(clinic.getSettingsId());
+            return clinicMapper.getClinicDto(clinic, settings);
+        } catch (Exception e) {
+            throw new ClinicException("Failed to retrieve clinic DTO by ID", e);
+        }
     }
 
     @Override
@@ -82,7 +90,7 @@ public class ClinicServiceImpl implements ClinicService {
                     .limit(pageable.getPageSize()).toList(), totalElements
             );
         } catch (Exception e) {
-            throw new ClinicException("Failed to retrieve clinics", e);
+            throw new ClinicException("Failed to retrieve all clinics", e);
         }
     }
 

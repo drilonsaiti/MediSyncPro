@@ -1,8 +1,7 @@
 package com.example.medisyncpro.service;
 
 import com.example.medisyncpro.model.Receptionist;
-import com.example.medisyncpro.model.dto.CreateReceptionistDto;
-import com.example.medisyncpro.model.dto.ReceptionistDto;
+import com.example.medisyncpro.model.dto.*;
 
 import java.util.List;
 
@@ -13,6 +12,12 @@ public interface ReceptionistService {
     ReceptionistDto getByIdDto(Long id);
 
     List<Receptionist> getAll();
+
+    List<Receptionist> getAllByClinicId(Long clinicId);
+
+    List<SearchReceptionistDto> getAllReceptionistSearch(Long clinicId);
+
+    void addReceptionistToClinic(List<AddReceptionistToClinicDto> dto,Long clinicId);
 
     Receptionist save(CreateReceptionistDto dto);
 

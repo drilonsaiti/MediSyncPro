@@ -5,6 +5,7 @@ import com.example.medisyncpro.model.ClinicSchedule;
 import com.example.medisyncpro.model.dto.ClinicScheduleResultDto;
 import com.example.medisyncpro.model.dto.CreateClinicSchedulesDto;
 import com.example.medisyncpro.model.dto.GroupedClinicSchedule;
+import com.example.medisyncpro.model.excp.ClinicScheduleException;
 import com.example.medisyncpro.service.ClinicScheduleService;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.SettingsService;
@@ -30,56 +31,85 @@ public class ClinicScheduleRestController {
     private final SettingsService service;
 
     @GetMapping
-    public ResponseEntity<List<ClinicSchedule>> listClinicSchedules() {
-        return new ResponseEntity<>(clinicScheduleService.getAll(), HttpStatus.OK);
+    public ResponseEntity<?> listClinicSchedules() {
+        try {
+            List<ClinicSchedule> clinicSchedules = clinicScheduleService.getAll();
+            return new ResponseEntity<>(clinicSchedules, HttpStatus.OK);
+        } catch (ClinicScheduleException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClinicSchedule> getClinicSchedulesById(@PathVariable Long id) {
-
-        return new ResponseEntity<>(clinicScheduleService.getById(id), HttpStatus.OK);
+    public ResponseEntity<?> getClinicSchedulesById(@PathVariable Long id) {
+        try {
+            ClinicSchedule clinicSchedule = clinicScheduleService.getById(id);
+            return new ResponseEntity<>(clinicSchedule, HttpStatus.OK);
+        } catch (ClinicScheduleException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
-
     @PostMapping
-    public ResponseEntity<Void> createClinicSchedules(@RequestBody CreateClinicSchedulesDto dto) {
-        this.clinicScheduleService.save(dto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> createClinicSchedules(@RequestBody CreateClinicSchedulesDto dto) {
+        try {
+            clinicScheduleService.save(dto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ClinicScheduleException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping()
-    public ResponseEntity<Void> updateClinicSchedules(@RequestBody ClinicSchedule clinicServices) {
-        clinicScheduleService.update(clinicServices);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> updateClinicSchedules(@RequestBody ClinicSchedule clinicServices) {
+        try {
+            clinicScheduleService.update(clinicServices);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ClinicScheduleException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClinicSchedules(@PathVariable Long id) {
-        clinicScheduleService.delete(id);
-
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public ResponseEntity<?> deleteClinicSchedules(@PathVariable Long id) {
+        try {
+            clinicScheduleService.delete(id);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (ClinicScheduleException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/generate/{id}")
-    public ResponseEntity<Iterable<ClinicSchedule>> generateClinicSchedules(@PathVariable Long id) {
-        Iterable<ClinicSchedule> clinicSchedules = clinicScheduleService.generateSchedules(id);
-        return new ResponseEntity<>(clinicSchedules, HttpStatus.OK);
+    public ResponseEntity<?> generateClinicSchedules(@PathVariable Long id) {
+        try {
+            Iterable<ClinicSchedule> clinicSchedules = clinicScheduleService.generateSchedules(id);
+            return new ResponseEntity<>(clinicSchedules, HttpStatus.OK);
+        } catch (ClinicScheduleException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/grouped/{id}")
-    public Page<GroupedClinicSchedule> getAllByClinicGroupedByDate(@PathVariable Long id,
-                                                                   @RequestParam(defaultValue = "1") int page,
-                                                                   @RequestParam(defaultValue = "startDate-asc") String sort) {
-        PageRequest pageable = PageRequest.of(page - 1, 15);
-        ClinicScheduleResultDto results = clinicScheduleService.getAllByClinicGroupedByDate(id, pageable, sort);
-        return new PageImpl<>(results.getClinicSchedule(), pageable, results.getTotalElements());
+    public ResponseEntity<?> getAllByClinicGroupedByDate(@PathVariable Long id,
+                                                         @RequestParam(defaultValue = "1") int page,
+                                                         @RequestParam(defaultValue = "startDate-asc") String sort) {
+        try {
+            PageRequest pageable = PageRequest.of(page - 1, 15);
+            ClinicScheduleResultDto results = clinicScheduleService.getAllByClinicGroupedByDate(id, pageable, sort);
+            return new ResponseEntity<>(new PageImpl<>(results.getClinicSchedule(), pageable, results.getTotalElements()), HttpStatus.OK);
+        } catch (ClinicScheduleException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/grouped/{id}/{date}")
-    public ResponseEntity<Void> deleteClinicSchedulesGrouped(@PathVariable Long id, @PathVariable String date) throws ParseException {
-        clinicScheduleService.deleteGrouped(id, date);
-
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public ResponseEntity<?> deleteClinicSchedulesGrouped(@PathVariable Long id, @PathVariable String date) {
+        try {
+            clinicScheduleService.deleteGrouped(id, date);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (ClinicScheduleException | ParseException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
 }

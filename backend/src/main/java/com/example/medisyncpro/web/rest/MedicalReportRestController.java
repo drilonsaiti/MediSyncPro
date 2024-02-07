@@ -1,11 +1,12 @@
 package com.example.medisyncpro.web.rest;
 
-
 import com.example.medisyncpro.model.MedicalReport;
 import com.example.medisyncpro.model.dto.CreateMedicalReportDto;
 import com.example.medisyncpro.model.dto.MedicalReportDto;
 import com.example.medisyncpro.model.dto.MedicalReportResultDto;
+import com.example.medisyncpro.model.excp.DoctorException;
 import com.example.medisyncpro.service.MedicalReportService;
+import com.example.medisyncpro.model.excp.MedicalReportException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,41 +24,55 @@ public class MedicalReportRestController {
     private final MedicalReportService medicalReportService;
 
     @GetMapping
-    public Page<MedicalReportDto> listMedicalReports(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<?> listMedicalReports(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "all") String nameOrEmail,
                                                      @RequestParam(defaultValue = "all") String byDate
     ) {
-
-        PageRequest pageable = PageRequest.of(page - 1, 15);
-        MedicalReportResultDto report = medicalReportService.getAll(pageable, nameOrEmail, byDate);
-
-        return new PageImpl<>(report.getMedicalReport(), pageable, report.getTotalElements());
+        try {
+            PageRequest pageable = PageRequest.of(page - 1, 15);
+            MedicalReportResultDto report = medicalReportService.getAll(pageable, nameOrEmail, byDate);
+            return new ResponseEntity(new PageImpl<>(report.getMedicalReport(), pageable, report.getTotalElements()), HttpStatus.OK);
+        } catch (MedicalReportException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicalReportDto> getMedicalReportById(@PathVariable Long id) {
-
-        return new ResponseEntity<>(medicalReportService.getById(id), HttpStatus.OK);
+    public ResponseEntity<?> getMedicalReportById(@PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(medicalReportService.getById(id), HttpStatus.OK);
+        } catch (MedicalReportException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
-
     @PostMapping
-    public ResponseEntity<Void> createMedicalReport(@RequestBody CreateMedicalReportDto dto) {
-        this.medicalReportService.save(dto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> createMedicalReport(@RequestBody CreateMedicalReportDto dto) {
+        try {
+            this.medicalReportService.save(dto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (MedicalReportException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping()
-    public ResponseEntity<Void> updateMedicalReport(@RequestBody MedicalReport patient) {
-        medicalReportService.update(patient);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> updateMedicalReport(@RequestBody MedicalReport patient) {
+        try {
+            medicalReportService.update(patient);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (MedicalReportException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMedicalReport(@PathVariable Long id) {
-        medicalReportService.delete(id);
-
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public ResponseEntity<?> deleteMedicalReport(@PathVariable Long id) {
+        try {
+            medicalReportService.delete(id);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (MedicalReportException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
 }

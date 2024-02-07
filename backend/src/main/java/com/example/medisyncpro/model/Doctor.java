@@ -24,6 +24,8 @@ public class Doctor {
     private String doctorName;
 
     // TODO - Add email to doctor
+    @Column(name = "doctor_email")
+    private String email;
 
     @ManyToOne
     @JoinColumn(name = "specialization_id")

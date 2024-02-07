@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,62 +33,67 @@ public class MedicalReportServiceImpl implements MedicalReportService {
 
     @Override
     public MedicalReportDto getById(Long id) {
-        try {
-            MedicalReport report = medicalReportRepository.findById(id).orElse(null);
-            if (report != null) {
-                Patient patient = patientRepository.getById(report.getPatientId());
-                Appointment appointment = this.appointmentRepository.findByDateAndPatientId(report.getAppointmentDate(), patient.getPatientId());
-                AtomicInteger totalPrice = new AtomicInteger();
-                List<ServiceDto> services = appointment.getServiceIds().stream().map(service -> {
-                    ClinicServices s = this.serviceRepository.getById(service);
-                    totalPrice.addAndGet(s.getPrice().intValue());
-                    return new ServiceDto(s.getServiceName(), s.getDurationMinutes(), s.getPrice());
-                }).toList();
-
-                return reportMapper.getMedicalReport(report, patient.getPatientId(), patient.getPatientName(), patient.getEmail(), services, totalPrice.get());
-            }
+        if (id == null) {
             return null;
-        } catch (Exception e) {
-            throw new MedicalReportException("Error retrieving medical report by id", e);
         }
+        return medicalReportRepository.findById(id)
+                .map(report -> {
+                    Patient patient = patientRepository.getById(report.getPatientId());
+                    Appointment appointment = appointmentRepository.findByDateAndPatientId(report.getAppointmentDate(), patient.getPatientId());
+                    AtomicInteger totalPrice = new AtomicInteger();
+                    List<ServiceDto> services = appointment.getServiceIds().stream()
+                            .map(service -> {
+                                ClinicServices s = serviceRepository.getById(service);
+                                totalPrice.addAndGet(s.getPrice().intValue());
+                                return new ServiceDto(s.getServiceName(), s.getDurationMinutes(), s.getPrice());
+                            }).collect(Collectors.toList());
+                    return reportMapper.getMedicalReport(report, patient.getPatientId(), patient.getPatientName(), patient.getEmail(), services, totalPrice.get());
+
+                })
+                .orElse(null);
     }
 
     @Override
     public MedicalReportResultDto getAll(PageRequest page, String nameOrEmail, String byDate) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)");
-
             LocalDateTime dateTime = !byDate.equals("all") ? LocalDateTime.parse(byDate, formatter) : LocalDateTime.now();
 
             List<MedicalReportDto> reports = medicalReportRepository.findAll().stream()
                     .filter(report -> {
-                        Patient p = this.patientRepository.getById(report.getPatientId());
-                        return (((nameOrEmail.equals("all") || p.getPatientName().toLowerCase().contains(nameOrEmail.toLowerCase())
-                                || p.getEmail().toLowerCase().contains(nameOrEmail.toLowerCase())))
-                                && (byDate.equals("all") || (
-                                !dateTime.toLocalTime().isAfter(LocalTime.of(0, 0)) ?
-                                        report.getAppointmentDate().toLocalDate().isEqual(dateTime.toLocalDate()) :
-                                        report.getAppointmentDate().isEqual(dateTime)
-                        )));
+                        try {
+                            Patient p = patientRepository.getById(report.getPatientId());
+                            return (((nameOrEmail.equals("all") || p.getPatientName().toLowerCase().contains(nameOrEmail.toLowerCase()) || p.getEmail().toLowerCase().contains(nameOrEmail.toLowerCase())))
+                                    && (byDate.equals("all") || (
+                                    !dateTime.toLocalTime().isAfter(LocalTime.of(0, 0)) ?
+                                            report.getAppointmentDate().toLocalDate().isEqual(dateTime.toLocalDate()) :
+                                            report.getAppointmentDate().isEqual(dateTime)
+                            )));
+                        } catch (Exception e) {
+                            throw new MedicalReportException("Error filtering medical reports", e);
+                        }
                     })
                     .map(report -> {
-                        Patient patient = patientRepository.getById(report.getPatientId());
-                        Appointment appointment = this.appointmentRepository.findByDateAndPatientId(report.getAppointmentDate(), patient.getPatientId());
-                        AtomicInteger totalPrice = new AtomicInteger();
-                        List<ServiceDto> services = appointment.getServiceIds().stream().map(service -> {
-                            ClinicServices s = this.serviceRepository.getById(service);
-                            totalPrice.addAndGet(s.getPrice().intValue());
-                            return new ServiceDto(s.getServiceName(), s.getDurationMinutes(), s.getPrice());
-                        }).toList();
-                        return reportMapper.getMedicalReport(report, patient.getPatientId(), patient.getPatientName(), patient.getEmail(), services, totalPrice.get());
-                    }).toList();
-
-            int totalElements = reports.size();
+                        try {
+                            Patient patient = patientRepository.getById(report.getPatientId());
+                            Appointment appointment = appointmentRepository.findByDateAndPatientId(report.getAppointmentDate(), patient.getPatientId());
+                            AtomicInteger totalPrice = new AtomicInteger();
+                            List<ServiceDto> services = appointment.getServiceIds().stream()
+                                    .map(service -> {
+                                        ClinicServices s = serviceRepository.getById(service);
+                                        totalPrice.addAndGet(s.getPrice().intValue());
+                                        return new ServiceDto(s.getServiceName(), s.getDurationMinutes(), s.getPrice());
+                                    }).collect(Collectors.toList());
+                            return reportMapper.getMedicalReport(report, patient.getPatientId(), patient.getPatientName(), patient.getEmail(), services, totalPrice.get());
+                        } catch (Exception e) {
+                            throw new MedicalReportException("Error mapping medical reports", e);
+                        }
+                    }).collect(Collectors.toList());
 
             return new MedicalReportResultDto(
                     reports.stream()
                             .skip(page.getOffset())
-                            .limit(page.getPageSize()).toList(), totalElements
+                            .limit(page.getPageSize()).collect(Collectors.toList()), reports.size()
             );
         } catch (Exception e) {
             throw new MedicalReportException("Error retrieving medical reports", e);
@@ -96,23 +102,29 @@ public class MedicalReportServiceImpl implements MedicalReportService {
 
     @Override
     public MedicalReport save(CreateMedicalReportDto medicalReport) {
-        try {
-            Doctor doctor = doctorRepository.getById(1L);
-            Appointment appointment = appointmentRepository.getById(medicalReport.getAppointmentId());
-            return medicalReportRepository.save(reportMapper.createMedicalReport(medicalReport, doctor, appointment.getDate()));
-        } catch (Exception e) {
-            throw new MedicalReportException("Error saving medical report", e);
-        }
+        return doctorRepository.findById(1L)
+                .map(doctor -> {
+                    try {
+                        Appointment appointment = appointmentRepository.getById(medicalReport.getAppointmentId());
+                        return medicalReportRepository.save(reportMapper.createMedicalReport(medicalReport, doctor, appointment.getDate()));
+                    } catch (Exception e) {
+                        throw new MedicalReportException("Error saving medical report", e);
+                    }
+                })
+                .orElseThrow(() -> new MedicalReportException("Doctor with id 1 not found"));
     }
 
     @Override
     public MedicalReport update(MedicalReport medicalReport) {
-        try {
-            MedicalReport old = this.medicalReportRepository.getById(medicalReport.getReportId());
-            return medicalReportRepository.save(reportMapper.updateMedicalReport(old, medicalReport));
-        } catch (Exception e) {
-            throw new MedicalReportException("Error updating medical report", e);
-        }
+        return medicalReportRepository.findById(medicalReport.getReportId())
+                .map(old -> {
+                    try {
+                        return medicalReportRepository.save(reportMapper.updateMedicalReport(old, medicalReport));
+                    } catch (Exception e) {
+                        throw new MedicalReportException("Error updating medical report", e);
+                    }
+                })
+                .orElseThrow(() -> new MedicalReportException("Medical report with id " + medicalReport.getReportId() + " not found"));
     }
 
     @Override

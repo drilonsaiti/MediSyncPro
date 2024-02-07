@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface MedicalReportRepository extends JpaRepository<MedicalReport, Long> {
 
     Optional<MedicalReport> findByAppointmentId(Long id);
+    Optional<MedicalReport> findByReportId(Long id);
 }

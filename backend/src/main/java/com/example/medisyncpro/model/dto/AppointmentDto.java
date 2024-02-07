@@ -28,6 +28,7 @@ public class AppointmentDto {
     private String doctorSpecializations;
 
     private Long clinicId;
+    private String clinicName;
 
     private LocalDateTime date;
 

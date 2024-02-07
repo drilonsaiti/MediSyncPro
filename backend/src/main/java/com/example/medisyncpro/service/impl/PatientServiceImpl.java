@@ -23,7 +23,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient getById(Long id) {
-        return patientRepository.findById(id).orElse(null);
+        return patientRepository.findById(id).orElseThrow(() -> new PatientException("Patient not found with ID: " + id));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PatientServiceImpl implements PatientService {
                     .skip(pageable.getOffset())
                     .limit(pageable.getPageSize()).toList(), totalElements);
         } catch (Exception e) {
-            throw new PatientException("Error retrieving all patients", e);
+            throw new PatientException("Error retrieving all patients");
         }
     }
 

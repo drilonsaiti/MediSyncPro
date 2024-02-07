@@ -43,7 +43,7 @@ public class AppointmentMapper {
         return old;
     }
 
-    public AppointmentDto getAppointment(Appointment appm, Patient patient, Doctor doctor, List<String> services, MedicalReportDto report) {
+    public AppointmentDto getAppointment(Appointment appm, Patient patient, Doctor doctor, List<String> services, MedicalReportDto report,String clinicName) {
         return new AppointmentDto(
                 appm.getAppointmentId(),
                 appm.getDate(),
@@ -57,6 +57,7 @@ public class AppointmentMapper {
                 doctor.getDoctorName(),
                 doctor.getSpecialization().getSpecializationName(),
                 appm.getClinicId(),
+                clinicName,
                 appm.getDate(),
                 services,
                 false,

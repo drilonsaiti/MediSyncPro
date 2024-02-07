@@ -5,6 +5,8 @@ import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.dto.ClinicServicesResultDto;
 import com.example.medisyncpro.model.dto.CreateClinicServicesDto;
 import com.example.medisyncpro.model.dto.ServiceForClinicsDto;
+import com.example.medisyncpro.model.excp.ClinicScheduleException;
+import com.example.medisyncpro.model.excp.ClinicServicesException;
 import com.example.medisyncpro.service.ClinicServicesService;
 import com.example.medisyncpro.service.SpecializationService;
 import lombok.AllArgsConstructor;
@@ -28,44 +30,66 @@ public class ClinicServiceRestController {
 
 
     @GetMapping
-    public Page<ClinicServices> listServices(@RequestParam(defaultValue = "1") int page,
+    public ResponseEntity<?> listServices(@RequestParam(defaultValue = "1") int page,
                                              @RequestParam(defaultValue = "all") String specializations,
                                              @RequestParam(defaultValue = "id-asc") String sort) {
-        PageRequest pageable = PageRequest.of(page - 1, 15);
-        ClinicServicesResultDto services = clinicServicesService.getAll(pageable, specializations, sort);
-        return new PageImpl<>(services.getServices(), pageable, services.getTotalElements());
+        try {
+            PageRequest pageable = PageRequest.of(page - 1, 15);
+            ClinicServicesResultDto services = clinicServicesService.getAll(pageable, specializations, sort);
+            return new ResponseEntity<>(new PageImpl<>(services.getServices(), pageable, services.getTotalElements()),HttpStatus.OK);
+        }catch (ClinicServicesException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClinicServices> getClinicServiceById(@PathVariable Long id) {
-
-        return new ResponseEntity<>(clinicServicesService.getById(id), HttpStatus.OK);
+    public ResponseEntity<?> getClinicServiceById(@PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(clinicServicesService.getById(id), HttpStatus.OK);
+        }catch (ClinicServicesException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/clinic")
-    public ResponseEntity<List<ServiceForClinicsDto>> getClinicServiceForClinic() {
-
-        return new ResponseEntity<>(clinicServicesService.getClinicServiceForClinic(), HttpStatus.OK);
+    public ResponseEntity<?> getClinicServiceForClinic() {
+        try {
+            return new ResponseEntity<>(clinicServicesService.getClinicServiceForClinic(), HttpStatus.OK);
+        }catch (ClinicServicesException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
     @PostMapping
-    public ResponseEntity<Void> createClinicServices(@RequestBody CreateClinicServicesDto dto) {
-        this.clinicServicesService.save(dto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> createClinicServices(@RequestBody CreateClinicServicesDto dto) {
+        try {
+            this.clinicServicesService.save(dto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (ClinicServicesException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping()
-    public ResponseEntity<Void> updateClinicServices(@RequestBody ClinicServices clinicServices) {
-        clinicServicesService.update(clinicServices);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> updateClinicServices(@RequestBody ClinicServices clinicServices) {
+        try {
+            clinicServicesService.update(clinicServices);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (ClinicServicesException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClinicServices(@PathVariable Long id) {
-        clinicServicesService.delete(id);
+    public ResponseEntity<?> deleteClinicServices(@PathVariable Long id) {
+        try {
+            clinicServicesService.delete(id);
 
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }catch (ClinicServicesException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

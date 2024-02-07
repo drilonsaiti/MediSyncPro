@@ -20,13 +20,21 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public List<SettingsDTO> getAllSettings() {
-        return settingsRepository.findAll().stream().map(settings -> settingsMapper.toDTO(settings)).toList();
+        try {
+            return settingsRepository.findAll().stream().map(settings -> settingsMapper.toDTO(settings)).toList();
+        } catch (Exception e) {
+            throw new SettingsException("Error retrieving all settings");
+        }
     }
 
     @Override
     public Settings getSettingsById(Long id) {
-        return settingsRepository.findById(id)
-                .orElseThrow(() -> new SettingsException("Settings not found with id: " + id));
+        try {
+            return settingsRepository.findById(id)
+                    .orElseThrow(() -> new SettingsException("Settings not found with id: " + id));
+        } catch (Exception e) {
+            throw new SettingsException("Error retrieving settings by id: " + id, e);
+        }
     }
 
     @Override
@@ -41,8 +49,10 @@ public class SettingsServiceImpl implements SettingsService {
     @Override
     public SettingsDTO updateSettings(SettingsDTO dto) {
         try {
-            Settings settings = settingsMapper.updateSettings(dto, this.getSettingsById(dto.getId()));
-            settingsRepository.save(settings);
+            Settings settings = settingsRepository.findById(dto.getId())
+                    .orElseThrow(() -> new SettingsException("Settings not found with id: " + dto.getId()));
+            Settings updatedSettings = settingsMapper.updateSettings(dto, settings);
+            settingsRepository.save(updatedSettings);
             return dto;
         } catch (Exception e) {
             throw new SettingsException("Error updating settings", e);

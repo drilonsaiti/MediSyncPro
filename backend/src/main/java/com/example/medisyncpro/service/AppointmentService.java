@@ -10,7 +10,7 @@ public interface AppointmentService {
 
     Appointment getById(Long id);
 
-    AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail);
+    AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail,String types);
 
     List<AppointmentDto> getAllByPatient(Long id);
 
@@ -27,5 +27,7 @@ public interface AppointmentService {
     Appointment createAppointmentByReceptionist(AppointmentByReceptionistDto dto) throws Exception;
 
     void changeAttended(Long id, boolean attended);
+
+    AppointmentDto nexAppointment(Long id);
 }
 

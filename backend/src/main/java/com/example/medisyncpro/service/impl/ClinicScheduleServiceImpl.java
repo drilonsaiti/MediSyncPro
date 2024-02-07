@@ -38,12 +38,20 @@ public class ClinicScheduleServiceImpl implements ClinicScheduleService {
 
     @Override
     public ClinicSchedule getById(Long id) {
-        return clinicScheduleRepository.findById(id).orElse(null);
+        try {
+            return clinicScheduleRepository.findById(id).orElseThrow(() -> new ClinicScheduleException("Clinic schedule with ID " + id + " not found"));
+        } catch (Exception e) {
+            throw new ClinicScheduleException("Failed to retrieve clinic schedule by ID", e);
+        }
     }
 
     @Override
     public List<ClinicSchedule> getAll() {
-        return clinicScheduleRepository.findAll();
+        try{
+            return clinicScheduleRepository.findAll();
+        }catch (Exception e){
+            throw new ClinicScheduleException("Failed to retrive all clinic schedules");
+        }
     }
 
     private Comparable getFieldValue(

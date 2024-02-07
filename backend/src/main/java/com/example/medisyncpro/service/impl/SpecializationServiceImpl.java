@@ -20,12 +20,17 @@ public class SpecializationServiceImpl implements SpecializationService {
 
     @Override
     public Specializations getById(Long id) {
-        return specializationRepository.findById(id).orElse(null);
+        return specializationRepository.findById(id)
+                .orElseThrow(() -> new SpecializationException("Specialization not found with id: " + id));
     }
 
     @Override
     public List<Specializations> getAll() {
-        return specializationRepository.findAll();
+        try {
+            return specializationRepository.findAll();
+        } catch (Exception e) {
+            throw new SpecializationException("Error retrieving all specializations", e);
+        }
     }
 
     @Override
@@ -40,9 +45,9 @@ public class SpecializationServiceImpl implements SpecializationService {
     @Override
     public Specializations update(Specializations specializations) {
         try {
-            Specializations s = this.getById(specializations.getSpecializationId());
-            s.setSpecializationName(specializations.getSpecializationName());
-            return specializationRepository.save(s);
+            Specializations existingSpecialization = getById(specializations.getSpecializationId());
+            existingSpecialization.setSpecializationName(specializations.getSpecializationName());
+            return specializationRepository.save(existingSpecialization);
         } catch (Exception e) {
             throw new SpecializationException("Error updating specialization", e);
         }

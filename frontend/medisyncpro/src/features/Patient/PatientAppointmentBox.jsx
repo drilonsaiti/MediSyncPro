@@ -1,7 +1,7 @@
 import styled, {createGlobalStyle} from "styled-components";
 import {StyledBox} from "./PatientHeaderBox.jsx";
 import {FaFilePdf} from "react-icons/fa";
-import {HiEye, HiPencil} from "react-icons/hi";
+import {HiEye, HiPencil, HiTrash} from "react-icons/hi";
 import Heading from "../../ui/Heading.jsx";
 import {useState} from "react";
 import DatePicker from "react-datepicker";
@@ -11,10 +11,15 @@ import Stacked from "../../ui/Stacked.jsx";
 import {useAppointmentsByPatient} from "../Appointment/useAppointments.js";
 import {formatDateMonth} from "../../utils/helpers.js";
 import Spinner from "../../ui/Spinner.jsx";
-import {Link} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import DownloadButton from "../MedicalReport/DownloadButton.jsx";
 import Modal from "../../ui/Modal.jsx";
 import CreateAppointmentForm from "../Appointment/CreateAppointmentForm.jsx";
+import PatientDetailsTableOperations from "./PatientDetailsTableOperations.jsx";
+import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
+import {useDeleteAppointment} from "../Appointment/useDeleteAppointment.js";
+import AppointmentTable from "../Appointment/AppointmentTable.jsx";
+import AppointmentPatientTable from "../Appointment/AppontmentPatientTable.jsx";
 
 const CustomStyledDatePicker = styled.div`
     .react-datepicker {
@@ -165,31 +170,34 @@ const Avatar = styled.img`
 const PatientAppointmentBox = ({patientId}) => {
     const [startDate, setStartDate] = useState(new Date());
     const {isLoading, appointments} = useAppointmentsByPatient(patientId);
+    const {deleteMutate,isDeleting} = useDeleteAppointment();
+    const [searchParams] = useSearchParams();
+
+    const types = searchParams.get('types') ?? 'calendar';
 
     if (isLoading) return <Spinner/>
 
-    let filteredAppointments = appointments.filter(app => {
+    let filteredAppointments = appointments?.filter(app => {
         const appDate = new Date(app.date).toDateString();
         const startDateString = startDate.toDateString();
-        console.log(appDate, startDateString);
-        console.log(appDate === startDateString);
         return appDate === startDateString;
     });
 
-    // TODO button nav next and past appointments for past buttons check and download report for next update appointment
-    console.log(filteredAppointments);
     return (
         <StyledBox>
+            <PatientDetailsTableOperations/>
+
+            {types === 'calendar' ?
             <Container>
                 <Appointments>
-                    {filteredAppointments.map(app => {
+                    {filteredAppointments?.map(app => {
                         return (
                             <AppointmentsItem key={app.appointmentId}>
 
                                 <Heading type="h2" style={{marginTop: '2rem'}}>{app.serviceName}</Heading>
 
                                 <Icons>
-                                    {app.report &&
+                                    {app?.report !== null &&
                                         <><ButtonIcon type="icon"><Link to={`/medicalReports/${app.reportId}`} target="_blank"><FaFilePdf /></Link></ButtonIcon>
                                     <ButtonIcon type="icon">
                                         <DownloadButton  medicalReport={app.report} isDownload/>
@@ -197,15 +205,27 @@ const PatientAppointmentBox = ({patientId}) => {
                                     </ButtonIcon>
                                         </>
                                     }
+
+                                    {app?.report === null &&
                                     <Modal>
                                         <Modal.Open opens="edit">
                                             <ButtonIcon type="icon"><HiPencil/></ButtonIcon>
+                                        </Modal.Open>
+                                        <Modal.Open opens="delete">
+                                            <ButtonIcon type="icon"><HiTrash/></ButtonIcon>
+
                                         </Modal.Open>
 
                                         <Modal.Window name="edit">
                                             <CreateAppointmentForm appointmentToEdit={app} clinicId={app.clinicId} />
                                         </Modal.Window>
+
+                                        <Modal.Window name="delete">
+                                            <ConfirmDelete resource="appointment" disabled={isDeleting}
+                                                           onConfirm={() => deleteMutate({appointmentId:app.appointmentId})}/>
+                                        </Modal.Window>
                                     </Modal>
+                                    }
 
                                 </Icons>
 
@@ -240,7 +260,9 @@ const PatientAppointmentBox = ({patientId}) => {
 
 
                 </Calendar>
-            </Container>
+            </Container> :
+                <AppointmentPatientTable appointment={appointments.sort((a,b) => b.appointmentId - a.appointmentId)} />
+            }
         </StyledBox>
     );
 };

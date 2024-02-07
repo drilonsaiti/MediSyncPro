@@ -7,11 +7,12 @@ export function useAppointments() {
     const [searchParams] = useSearchParams();
 
     const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+    const types = searchParams.get('types') ?? '';
     const nameOrEmail = searchParams.get('nameOrEmail') || '';
 
     const {data, isLoading} = useQuery({
-        queryFn: () => getAppointments({page, nameOrEmail}),
-        queryKey: ["appointments", page, nameOrEmail]
+        queryFn: () => getAppointments({page, nameOrEmail,types}),
+        queryKey: ["appointments", page, nameOrEmail,types]
     })
 
     const appointments = data?.content;
@@ -21,16 +22,16 @@ export function useAppointments() {
 
     if (page < pageCount)
         queryClient.prefetchQuery({
-            queryKey: ["appointments", page + 1, nameOrEmail],
-            queryFn: () => getAppointments({page: page - 1, nameOrEmail}),
+            queryKey: ["appointments", page + 1, nameOrEmail,types],
+            queryFn: () => getAppointments({page: page - 1, nameOrEmail,types}),
 
         });
 
     if (page > 1)
         queryClient.prefetchQuery({
-            queryKey: ["appointments", page - 1, nameOrEmail],
+            queryKey: ["appointments", page - 1, nameOrEmail,types],
 
-            queryFn: () => getAppointments({page: page - 1, nameOrEmail}),
+            queryFn: () => getAppointments({page: page - 1, nameOrEmail,types}),
 
         });
 
@@ -38,12 +39,19 @@ export function useAppointments() {
 }
 
 export function useAppointmentsByPatient(id) {
-    const {data: appointments, isLoading} = useQuery({
+    const { data: appointments, isLoading, error } = useQuery({
         queryFn: () => getAppointmentsByPatient(id),
-        queryKey: ["appointmentPatient", id]
-    })
+        queryKey: ["appointmentPatient", id],
+        onSuccess: (data) => {
+            console.log("Appointments data:", data); // Log the data received from the server
+        },
+    });
 
-    return {appointments, isLoading};
+    if (error) {
+        console.error("Error fetching appointments:", error);
+    }
+
+    return { appointments, isLoading, error };
 }
 
 export function useAppointmentsByDoctor() {

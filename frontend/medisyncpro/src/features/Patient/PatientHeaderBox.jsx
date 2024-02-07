@@ -4,6 +4,9 @@ import {HiLocationMarker} from "react-icons/hi";
 import Heading from "../../ui/Heading.jsx";
 import {FaCalendarCheck, FaClipboardList, FaEnvelope} from "react-icons/fa";
 import {FaCakeCandles, FaMarsAndVenus} from "react-icons/fa6";
+import {useNextAppointment} from "../Appointment/useNextAppointment.js";
+import Spinner from "../../ui/Spinner.jsx";
+import AppointmentReminderCard from "../Appointment/AppointmentReminderCard.jsx";
 
 
 export const StyledBox = styled.div`
@@ -34,7 +37,7 @@ const HeaderProfile = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #087f5b;
+    background-color: var(--color-brand-500);
     margin: auto;
 `
 
@@ -77,7 +80,7 @@ const QuickActionsButton = styled.button`
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
-    background-color: #087f5b;
+    background-color: var(--color-brand-500);
     color: white;
     font-family: Arial, sans-serif;
     font-size: 16px;
@@ -107,9 +110,20 @@ const Title = styled.div`
 
 const PatientHeaderBox = ({patient}) => {
     const {patientId, patientName: name, gender, address, contactNumber, email, birthDay} = patient;
+    const {nextAppointments,isLoading} = useNextAppointment(patientId);
+
 
     return (
+        <>
+            {nextAppointments && (
+                <StyledBox style={{marginBottom: '2rem'}}>
+                    <AppointmentReminderCard nextAppointments={nextAppointments} />
+                </StyledBox>
+            )}
+
+
         <StyledBox>
+
             <HeaderProfile>
                 <Heading type="h1">{name} #{patientId}</Heading>
                 <Title>User</Title>
@@ -164,6 +178,7 @@ const PatientHeaderBox = ({patient}) => {
                 </QuickActions>
             </Container>
         </StyledBox>
+        </>
     );
 };
 

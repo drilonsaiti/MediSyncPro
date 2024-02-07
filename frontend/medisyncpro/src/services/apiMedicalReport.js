@@ -9,32 +9,25 @@ export async function getMedicalReports({page,nameOrEmail,byDate}) {
             nameOrEmail: nameOrEmail,
             byDate: byDate
         });
-        console.log(response.data)
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Medical reports could not be loaded');
+        throw new Error(e);
 
     }
 }
 
 
 export async function getMedicalReportById(id) {
-    console.log("=====ID====")
-    console.log(id);
     try {
         const response = await apiRequest('GET', `medicalReports/${id}`);
-        console.log(response.data)
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Medical report could not be loaded');
+        throw new Error(e);
 
     }
 }
 
 export async function createEditMedicalReport(newMedicalReport, id) {
-    console.log(newMedicalReport)
     try {
         let response = {}
         if (id) {
@@ -46,8 +39,7 @@ export async function createEditMedicalReport(newMedicalReport, id) {
         }
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Medical report could not be updated/created');
+        throw new Error(e);
 
     }
 }
@@ -57,8 +49,7 @@ export async function deleteMedicalReport(id) {
         const response = await apiRequest('DELETE', `medicalReports/${id}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Medical report could not be deleted');
+        throw new Error(e);
 
     }
 }

@@ -6,7 +6,8 @@ import {useDoctors} from "./useDoctors.js";
 import Spinner from "../../ui/Spinner.jsx";
 import Pagination from "../../ui/Pagination.jsx";
 
-const DoctorTable = () => {
+const DoctorTable = ({doctorsByClinic,forClinic}) => {
+
     const {isLoading, doctors,totalElements} = useDoctors();
 
 
@@ -24,11 +25,11 @@ const DoctorTable = () => {
                     <div></div>
 
                 </Table.Header>
-                <Table.Body data={doctors} render={
+                <Table.Body data={forClinic ? doctorsByClinic : doctors} render={
                     spc => <DoctorRow doctor={spc} key={spc.doctorId}/>
                 }/>
                 <Table.Footer>
-                    <Pagination count={totalElements} />
+                    <Pagination count={forClinic ? doctorsByClinic.length : totalElements} />
                 </Table.Footer>
             </Table>
         </Menus>

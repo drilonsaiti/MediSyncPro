@@ -2,17 +2,16 @@ import {apiRequest} from "../utils/services.js";
 import error from "eslint-plugin-react/lib/util/error.js";
 
 
-export async function getAppointments({page,nameOrEmail}) {
+export async function getAppointments({page,nameOrEmail,types}) {
     try {
         const response = await apiRequest('GET', 'appointments',null,{
             page: page,
             nameOrEmail: nameOrEmail,
+            types: types
         });
-        console.log(response.data)
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Appointments could not be loaded');
+        throw new Error(e);
 
     }
 }
@@ -22,8 +21,7 @@ export async function getAppointmentsByPatient(id) {
         const response = await apiRequest('GET', `appointments/patient/${id}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Appointment could not be loaded');
+        throw new Error(e);
 
     }
 }
@@ -33,16 +31,13 @@ export async function getAppointmentsByDoctor(id) {
         const response = await apiRequest('GET', `appointments/doctor/${id}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Appointment could not be loaded');
+        throw new Error(e);
 
     }
 }
 
 
 export async function createEditAppointment(newAppointment, id) {
-    console.log("EDIT EDIT")
-    console.log(newAppointment)
     try {
         let response = {}
         if (id) {
@@ -54,8 +49,7 @@ export async function createEditAppointment(newAppointment, id) {
         }
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Appointment could not be updated/created');
+        throw new Error(e);
 
     }
 }
@@ -65,8 +59,7 @@ export async function deleteAppointment(id) {
         const response = await apiRequest('DELETE', `appointments/${id}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Appointment could not be deleted');
+        throw new Error(e);
 
     }
 }
@@ -74,11 +67,9 @@ export async function deleteAppointment(id) {
 export async function getAppointmentDates() {
     try {
         const response = await apiRequest('GET', `appointments/dates`);
-        console.log(response.data);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Appointment dates could not be deleted');
+        throw new Error(e);
     }
 }
 
@@ -87,26 +78,29 @@ export async function createAppointmentByReceptionist({...data}) {
 
     try {
         const response = await apiRequest('POST', `appointments/byReceptionist`, data.newData);
-        console.log(response.data);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Appointment cannot created');
+        throw new Error(e);
     }
 }
 
 
 export async function changeAttended(data) {
-
-
     try {
         const response = await apiRequest('POST', `appointments/changeAttended/${data.appointmentId}`, {
             attended: data.attended
         });
-        console.log(response.data);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Appointment cannot created');
+        throw new Error(e);
+    }
+}
+
+export async function getNextAppointment(id) {
+    try {
+        const response = await apiRequest('GET', `appointments/nextAppointment/${id}`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
     }
 }

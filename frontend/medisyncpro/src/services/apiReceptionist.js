@@ -5,29 +5,56 @@ import error from "eslint-plugin-react/lib/util/error.js";
 export async function getReceptionist() {
     try {
         const response = await apiRequest('GET', 'receptionists');
-        console.log(response.data)
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Receptionists could not be loaded');
+        throw new Error(e);
 
     }
 }
 
+export async function getReceptionistByClinicId() {
+    try {
+        const response = await apiRequest('GET', 'receptionists/clinic/1');
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+
+    }
+}
+
+export async function getReceptionistSearch() {
+    try {
+        const response = await apiRequest('GET', 'receptionists/search/1');
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+
+    }
+}
+
+export async function addReceptionistToClinic(data) {
+
+    try {
+        const response = await apiRequest('POST', 'receptionists/addReceptionistToClinic/1', data);
+
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+    }
+}
+
+
 export async function getReceptionistById(id) {
     try {
         const response = await apiRequest('GET', `receptionists/${id}`);
-        console.log("=====PATIENT=====");
-        console.log(response.data);
         return response.data;
-    } catch (error) {
-        throw new Error('Receptionist could not be loaded');
+    } catch (e) {
+        throw new Error(e);
     }
 }
 
 
 export async function createEditReceptionist(newReceptionist, id) {
-    console.log(newReceptionist)
     try {
         let response = {}
         if (id) {
@@ -39,8 +66,7 @@ export async function createEditReceptionist(newReceptionist, id) {
         }
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Receptionist could not be updated/created');
+        throw new Error(e);
 
     }
 }
@@ -50,8 +76,7 @@ export async function deleteReceptionist(receptionistId) {
         const response = await apiRequest('DELETE', `receptionists/${receptionistId}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Receptionist could not be deleted');
+        throw new Error(e);
 
     }
 }
@@ -61,8 +86,7 @@ export async function deleteReceptionistFromClinic(receptionistId) {
         const response = await apiRequest('DELETE', `receptionists/clinic/${receptionistId}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Receptionist could not be deleted');
+        throw new Error(e);
 
     }
 }

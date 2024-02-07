@@ -9,7 +9,7 @@ export function useCreateClinic() {
     const {mutate: createClinic, isPending: isCreating} = useMutation({
         mutationFn: createEditClinic,
         onSuccess: () => {
-            toast.success("New patient successfully created");
+            toast.success("New clinic successfully created");
             queryClient.invalidateQueries({
                 queryKey: ['patients'],
             });

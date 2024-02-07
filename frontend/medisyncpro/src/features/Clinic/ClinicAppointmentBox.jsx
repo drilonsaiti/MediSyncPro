@@ -4,6 +4,7 @@ import Heading from "../../ui/Heading.jsx";
 import Modal from "../../ui/Modal.jsx";
 import CreateAppointmentForm from "../Appointment/CreateAppointmentForm.jsx";
 import React from "react";
+import {useNavigate} from "react-router-dom";
 
 
 const Container = styled.div`
@@ -92,7 +93,7 @@ const FlexGroup = styled.div`
 `
 
 const ClinicAppointmentBox = ({doctors, forUsers}) => {
-
+    const navigate = useNavigate();
     console.log(forUsers);
 
     return (
@@ -103,7 +104,7 @@ const ClinicAppointmentBox = ({doctors, forUsers}) => {
                 {
                     doctors?.map(doctor => (
                         <ProfileCard key={doctor.doctorId}>
-                            <Button variation="secondary" size="small"
+                            <Button variation="secondary" size="small" onClick={() => navigate(`/doctors/${doctor.doctorId}`)}
                                     style={{alignSelf: "self-end", marginTop: "1rem"}}>view profile</Button>
                             <Avatar>
                                 <AvatarImg src="http://localhost:5173/michele.jpg"/>

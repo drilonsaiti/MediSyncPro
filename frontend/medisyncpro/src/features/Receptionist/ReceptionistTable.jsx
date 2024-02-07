@@ -5,7 +5,7 @@ import ReceptionistRow from "./ReceptionistRow.jsx";
 import {useReceptionist} from "./useReceptionist.js";
 import Spinner from "../../ui/Spinner.jsx";
 
-const ReceptionistTable = () => {
+const ReceptionistTable = ({receptionistsByClinic,forClinic}) => {
     const {isLoading, receptionist} = useReceptionist();
 
 
@@ -23,7 +23,7 @@ const ReceptionistTable = () => {
                     <div></div>
 
                 </Table.Header>
-                <Table.Body data={receptionist} render={
+                <Table.Body data={forClinic ? receptionistsByClinic : receptionist} render={
                     spc => <ReceptionistRow receptionist={spc} key={spc.receptionistId}/>
                 }/>
 

@@ -8,18 +8,15 @@ export async function getClinicSchedules({page,sort}) {
             page:page,
             sort:sort
         });
-        console.log(response.data)
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Clinic schedules could not be loaded');
+        throw new Error(e);
 
     }
 }
 
 
 export async function createEditClinicSchedule(newClinicSchedule, id) {
-    console.log(newClinicSchedule)
     try {
         let response = {}
         if (id) {
@@ -31,8 +28,7 @@ export async function createEditClinicSchedule(newClinicSchedule, id) {
         }
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Clinic schedule could not be updated/created');
+        throw new Error(e);
 
     }
 }
@@ -42,33 +38,27 @@ export async function deleteClinicSchedule(id) {
         const response = await apiRequest('DELETE', `clinicSchedules/${id}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Clinic schedule could not be deleted');
+        throw new Error(e);
 
     }
 }
 
 export async function deleteClinicScheduleGrouped(id,date) {
-    console.log(date);
     try {
         const response = await apiRequest('DELETE', `clinicSchedules/grouped/${id}/${date}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Clinic schedule could not be deleted');
+        throw new Error(e);
 
     }
 }
 
 export async function generateSchedules(clinicId) {
-    console.log(clinicId)
     try {
         const response = await apiRequest('POST', `clinicSchedules/generate/${clinicId}`);
-        console.log(response.data)
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Clinic schedule could not be updated/created');
+        throw new Error(e);
 
     }
 }

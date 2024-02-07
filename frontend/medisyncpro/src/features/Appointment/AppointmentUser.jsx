@@ -6,7 +6,7 @@ import Heading from "../../ui/Heading.jsx";
 import Modal from "../../ui/Modal.jsx";
 import CreateAppointmentForm from "./CreateAppointmentForm.jsx";
 import Spinner from "../../ui/Spinner.jsx";
-import {useSearchParams} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import AppointmentUserTableOperations from "./AppointmentUserTableOperations.jsx";
 import SearchInput from "../../ui/SearchInput.jsx";
 import Row from "../../ui/Row.jsx";
@@ -168,7 +168,7 @@ const getServiceText = (specializationId, serviceDto) => {
     const specializationServices = serviceDto.filter(service => service.specializationId === specializationId);
 
     if (specializationServices.length === 0) {
-        return ''; // Return empty string if no services found for the specialization
+        return '';
     }
 
     const services = specializationServices.map(service => service.services.split(", ")).flat();
@@ -179,10 +179,10 @@ const getServiceText = (specializationId, serviceDto) => {
         chunks.push(services.slice(i, i + maxServicePerLine).join(', '));
     }
 
-    const displayedServices = chunks.slice(0, 2).join(', '); // Limit displayed services to 2 lines
+    const displayedServices = chunks.slice(0, 2).join(', ');
 
     if (chunks.length > 2) {
-        return displayedServices + ', and more...'; // Indicate that there are more services available
+        return displayedServices + ', and more...';
     } else {
         return displayedServices;
     }
@@ -193,6 +193,7 @@ const AppointmentUser = () => {
     const [searchParams] = useSearchParams();
     const [searchInput, setSearchInput] = useState('');
     const [types, setTypes] = React.useState('clinic');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const searchTypes = searchParams.get('types');
@@ -210,7 +211,7 @@ const AppointmentUser = () => {
     };
 
     const filteredClinics = clinics.filter((clinic) => {
-        const searchField = types === 'clinics' ? clinic.clinicName : 'unknown'; // Update 'unknown' with the appropriate property for doctors
+        const searchField = types === 'clinics' ? clinic.clinicName : 'unknown';
         return searchField.toLowerCase().includes(searchInput.toLowerCase());
     });
 
@@ -237,7 +238,7 @@ const AppointmentUser = () => {
                                 </Avatar>
                                 <Heading type="h3">{clinic.clinicName}</Heading>
                                 <ButtonWrapper>
-                                    <Button variation="secondary" size="small">View Profile</Button>
+                                    <Button variation="secondary" size="small" onClick={() => navigate(`/clinics/${clinic.clinicId}`)}>View Profile</Button>
                                 </ButtonWrapper>
                             </Header>
                             <FlexGroup>

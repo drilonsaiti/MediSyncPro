@@ -7,6 +7,7 @@ import React from "react";
 import {useDoctors} from "../Doctor/useDoctors.js";
 import Spinner from "../../ui/Spinner.jsx";
 import Pagination from "../../ui/Pagination.jsx";
+import {useNavigate} from "react-router-dom";
 
 
 const Container = styled.div`
@@ -103,13 +104,15 @@ const Footer = styled.footer`
 
 const ClinicDoctorsBox = ({value}) => {
     const {doctors, isLoading, totalElements} = useDoctors()
-
+    const navigate = useNavigate();
 
     if (isLoading) return <Spinner/>
 
     const filteredDoctors = doctors.filter((doctor) =>
         doctor.doctorName.toLowerCase().includes(value.toLowerCase())
-    );
+    ).filter(doctor => doctor.clinic !== null);
+
+    console.log(filteredDoctors);
 
     return (
         <StyledBoxDoctors>
@@ -117,7 +120,7 @@ const ClinicDoctorsBox = ({value}) => {
                 {
                     filteredDoctors?.map(doctor => (
                         <ProfileCard key={doctor.doctorId}>
-                            <Button variation="secondary" size="small"
+                            <Button variation="secondary" size="small" onClick={() => navigate(`/doctors/${doctor.doctorId}`)}
                                     style={{alignSelf: "self-end", marginTop: "1rem"}}>view profile</Button>
                             <Avatar>
                                 <AvatarImg src="http://localhost:5173/michele.jpg"/>
@@ -125,7 +128,7 @@ const ClinicDoctorsBox = ({value}) => {
                             <Status/>
                             <FlexGroup>
                                 <Heading type="h3">{doctor.doctorName}</Heading>
-                                <P style={{fontWeight: "bold"}}>{doctor.clinic.clinicName}</P>
+                                <P style={{fontWeight: "bold"}}>{doctor.clinic?.clinicName ?? ''}</P>
                                 <P>{doctor.specialization.specializationName}</P>
 
                             </FlexGroup>
@@ -135,7 +138,7 @@ const ClinicDoctorsBox = ({value}) => {
                                 </Modal.Open>
 
                                 <Modal.Window name="appointment">
-                                    <CreateAppointmentForm clinicId={doctor.clinic.clinicId}/>
+                                    <CreateAppointmentForm clinicId={doctor.clinic?.clinicId ?? ''}/>
                                 </Modal.Window>
                             </Modal>
                         </ProfileCard>

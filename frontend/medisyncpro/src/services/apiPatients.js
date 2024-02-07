@@ -8,11 +8,9 @@ export async function getPatients({page,nameOrEmail}) {
             page:page,
             nameOrEmail: nameOrEmail
         });
-        console.log(response.data)
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Patients could not be loaded');
+        throw new Error(e);
 
     }
 }
@@ -20,17 +18,14 @@ export async function getPatients({page,nameOrEmail}) {
 export async function getPatientById(id) {
     try {
         const response = await apiRequest('GET', `patients/${id}`);
-        console.log("=====PATIENT=====");
-        console.log(response.data);
         return response.data;
-    } catch (error) {
-        throw new Error('Patient could not be loaded');
+    } catch (e) {
+        throw new Error(e);
     }
 }
 
 
 export async function createEditPatient(newPatient, id) {
-    console.log(newPatient)
     try {
         let response = {}
         if (id) {
@@ -42,8 +37,7 @@ export async function createEditPatient(newPatient, id) {
         }
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Patient could not be updated/created');
+        throw new Error(e);
 
     }
 }
@@ -53,8 +47,7 @@ export async function deletePatient(id) {
         const response = await apiRequest('DELETE', `patients/${id}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Patient could not be deleted');
+        throw new Error(e);
 
     }
 }

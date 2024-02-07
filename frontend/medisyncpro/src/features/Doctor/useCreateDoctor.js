@@ -9,7 +9,7 @@ export function useCreateDoctor() {
     const {mutate: createDoctor, isPending: isCreating} = useMutation({
         mutationFn: createEditDoctor,
         onSuccess: () => {
-            toast.success("New patient successfully created");
+            toast.success("New doctor successfully created");
             queryClient.invalidateQueries({
                 queryKey: ['doctors'],
             });

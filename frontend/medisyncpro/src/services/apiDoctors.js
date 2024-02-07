@@ -9,12 +9,33 @@ export async function getDoctors({page, specializations, service}) {
             specializations: specializations,
             service: service
         });
-        console.log("DOCTORS",response.data)
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Doctors could not be loaded');
+        throw new Error(e);
 
+    }
+}
+
+export async function getDoctorsByClinicId({page, specializations, service}) {
+    try {
+        const response = await apiRequest('GET', 'doctors/clinic/1', null, {
+            page: page,
+            specializations: specializations,
+            service: service
+        });
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+
+    }
+}
+
+export async function getDoctorSearch() {
+    try {
+        const response = await apiRequest('GET', `doctors/allDoctors/1`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
     }
 }
 
@@ -22,14 +43,13 @@ export async function getDoctorById(id) {
     try {
         const response = await apiRequest('GET', `doctors/${id}`);
         return response.data;
-    } catch (error) {
-        throw new Error('Doctor could not be loaded');
+    } catch (e) {
+        throw new Error(e);
     }
 }
 
 
 export async function createEditDoctor(newDoctor, id) {
-    console.log(newDoctor)
     try {
         let response = {}
         if (id) {
@@ -41,8 +61,7 @@ export async function createEditDoctor(newDoctor, id) {
         }
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Doctor could not be updated/created');
+        throw new Error(e);
 
     }
 }
@@ -52,21 +71,28 @@ export async function deleteDoctor(id) {
         const response = await apiRequest('DELETE', `doctors/${id}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Doctor could not be deleted');
+        throw new Error(e);
 
     }
 }
 
 export async function deleteDoctorFromClinic(doctorId,clinicId) {
 
-    console.log("IDS IDS",doctorId,clinicId);
     try {
         const response = await apiRequest('DELETE', `doctors/${doctorId}/${clinicId}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Doctor could not be deleted');
+        throw new Error(e);
 
+    }
+}
+
+export async function addDoctorToClinic(newDoctor) {
+    try {
+           const response = await apiRequest('POST', 'doctors/addDoctorToClinic/1', newDoctor);
+
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
     }
 }

@@ -4,17 +4,14 @@ export async function getSettings() {
     try {
 
         const response = await apiRequest('GET', 'settings')
-        //console.log(response.data[0]);
         return response.data[0];
-    } catch (error) {
-        console.error(error);
-        throw new Error('Settings could not be loaded');
+    } catch (e) {
+        throw new Error(e);
     }
 }
 
 export async function updateSetting(newSetting) {
-    console.log("======nEW SETTINGS=====")
-    console.log(newSetting);
+
     try {
         let response = {};
 
@@ -28,8 +25,7 @@ export async function updateSetting(newSetting) {
         }
         return response.data;
 
-    } catch (error) {
-        console.error(error);
-        throw new Error('Settings could not be loaded');
+    } catch (e) {
+        throw new Error(e);
     }
 }

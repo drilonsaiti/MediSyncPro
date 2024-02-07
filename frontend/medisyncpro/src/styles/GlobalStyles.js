@@ -101,6 +101,7 @@ const GlobalStyles = createGlobalStyle`
         --color-primary-1500: #175C43;
         --color-brand-600: #134F39;
         --color-brand-700: #10412F;
+        --color-brand-500: #087f5b;
 
         --border-radius-tiny: 3px;
         --border-radius-sm: 5px;

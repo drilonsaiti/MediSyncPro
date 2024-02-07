@@ -10,7 +10,6 @@ const ClinicSchedule = () => {
         <>
             <Row type="horizontal" change="yes">
                 <Heading as="h1">All schedule</Heading>
-                <p>Test</p>
 
             </Row>
 

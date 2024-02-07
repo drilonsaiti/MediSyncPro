@@ -8,7 +8,6 @@ const Clinic = () => {
         <>
             <Row type="horizontal" change="yes">
                 <Heading as="h1">All clinics</Heading>
-                <p>Test</p>
 
             </Row>
 

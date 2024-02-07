@@ -3,25 +3,21 @@ import error from "eslint-plugin-react/lib/util/error.js";
 
 
 export async function getClinicServices({page,specializations,sort}) {
-    console.log("Getclinics",page,sort)
     try {
         const response = await apiRequest('GET', 'clinic-services',null,{
             page:page !== 0 ? page : 1,
             specializations: specializations,
             sort:sort
         });
-        console.log(response.data)
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Clinic services could not be loaded');
+        throw new Error(e);
 
     }
 }
 
 
 export async function createEditClinicService(newClinicService, id) {
-    console.log("NEW CLINIC",newClinicService)
     try {
         let response = {}
         if (id) {
@@ -33,8 +29,7 @@ export async function createEditClinicService(newClinicService, id) {
         }
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Clinic service could not be updated/created');
+        throw new Error(e);
 
     }
 }
@@ -44,8 +39,7 @@ export async function deleteClinicService(id) {
         const response = await apiRequest('DELETE', `clinic-services/${id}`);
         return response.data;
     } catch (e) {
-        console.error(error);
-        throw new Error('Clinic service could not be deleted');
+        throw new Error(e);
 
     }
 }

@@ -16,6 +16,20 @@ export async function getClinicSchedules({page,sort}) {
 }
 
 
+export async function getClinicSchedulesByDoctorId(doctorId) {
+
+    if(doctorId) {
+        try {
+            const response = await apiRequest('GET', `clinicSchedules/doctor/${doctorId}`,);
+            console.log("DOCTOR BY ID",response.data);
+            return response.data;
+        } catch (e) {
+            throw new Error(e);
+
+        }
+    }
+}
+
 export async function createEditClinicSchedule(newClinicSchedule, id) {
     try {
         let response = {}

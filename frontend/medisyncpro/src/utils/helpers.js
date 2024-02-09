@@ -1,4 +1,4 @@
-import {format, formatDistance, isToday, parseISO} from 'date-fns';
+import {format, formatDistance, isToday, parseISO, setHours, setMinutes} from 'date-fns';
 import {differenceInDays} from 'date-fns/differenceInDays';
 
 // We want to make this function work for both Date objects and strings (which come from Supabase)
@@ -69,5 +69,31 @@ export const formatDateMonthWithoutHour = (dateString) => {
     const formattedDateTime = utcDate.toLocaleString('en-US', options);
     return formattedDateTime;
 }
+
+export const isAnyDayFullyBooked = (dates) => {
+    // Loop through each date
+    for (let date of dates) {
+        const allTimesForDay = Array.from({ length: 13 }, (_, i) => {
+            const hour = i + 7;
+            return setHours(setMinutes(new Date(date.startDate), 0), hour);
+        });
+
+        const isDayFullyBooked = allTimesForDay.every(time => {
+            return dates.some(booking => {
+                const bookingDateStart = new Date(Date.parse(booking.startDate));
+                return (
+                    bookingDateStart.getHours() === time.getHours() &&
+                    bookingDateStart.getMinutes() === time.getMinutes()
+                );
+            });
+        });
+
+        if (isDayFullyBooked) {
+            return date;
+        }
+    }
+    return [];
+};
+
 
 export const PAGE_SIZE = 15;

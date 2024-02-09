@@ -13,15 +13,12 @@ import {useAppointmentDates} from "./useAppointmentDates.js";
 import CreatePatientForm from "../Patient/CreatePatientForm.jsx";
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
-import {formatCurrency} from "../../utils/helpers.js";
+import {formatCurrency, isAnyDayFullyBooked} from "../../utils/helpers.js";
 import {useClinicServicesById} from "../Clinic/useClinic.js";
 import Spinner from "../../ui/Spinner.jsx";
+import {useScheduleByDoctorId} from "../ClinicSchedule/useClinicSchedule.js";
+import Heading from "../../ui/Heading.jsx";
 
-const TooltipOption = ({ innerProps, label, data }) => (
-    <div {...innerProps} title={`Tooltip: ${data.tooltip}`}>
-        {label}
-    </div>
-);
 const DatePickerWrapperStyles = createGlobalStyle`
     /*.date_picker{
         z-index: 9999 !important; !* Increase the z-index *!
@@ -138,13 +135,13 @@ const DatePickerWrapperStyles = createGlobalStyle`
 `;
 
 const animatedComponents = makeAnimated();
-const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId}) => {
+const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId,doctorId,doctorName,clinicName}) => {
     const {appointmentId, ...editValues} = appointmentToEdit;
     const isEditSession = Boolean(appointmentId);
     const {register, handleSubmit, reset, getValues, setValue, formState} = useForm({
         defaultValues: isEditSession ? editValues : {}
     });
-
+   const {scheduleByDoctor,isLoadingScheduleByDoctor} = useScheduleByDoctorId(doctorId )
     const {errors} = formState;
     const {isCreating, createAppointment} = useCreateAppointment();
     const {isEditing, editAppointment} = useEditAppointment();
@@ -152,14 +149,10 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
     const {isCreating: isCreatingAppointment, createAppointmentByRecep} = useCreateAppointmentByReceptionist();
     const {isLoading, dates} = useAppointmentDates();
     const [bookedDates, setBookedDates] = useState([]);
-    const [refreshKey, setRefreshKey] = useState(100);
+
     const user = "rec";
 
-    useEffect(() => {
-        // Do something that triggers the need to refresh Select
-        // For example, after editing an item
-        setRefreshKey((prevKey) => prevKey + 1);
-    }, []);
+
 
     const currentDateTime = new Date();
     const currentMinutes = currentDateTime.getMinutes();
@@ -203,38 +196,89 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
         setIncludeTimes(generateIncludeTimes());
     }, []);
 
-    const filterPassedTime = (time) => {
-        console.log("TIME:" + time);
-        const currentDate = new Date();
-        const selectedDate = new Date(time);
+    const generateIncludeDates = () => {
+        if (!doctorId || !scheduleByDoctor) return [];
 
-        const startTime = new Date(currentDate);
-        startTime.setHours(7, 0, 0, 0); // Set to 07:00:00.000
+        const dates = new Set();
+        scheduleByDoctor?.forEach(slot => {
+            const slotDate = new Date(slot.startTime);
+            dates.add(slotDate.toDateString());
+        });
+        return Array.from(dates).map(dateString => new Date(dateString));
+    };
 
-        const endTime = new Date(currentDate);
-        endTime.setHours(19, 0, 0, 0); // Set to 19:00:00.000
-
-        const withinTimeRange = currentDate.getTime() >= startTime.getTime() && currentDate.getTime() <= endTime.getTime();
-        const futureDate = selectedDate.getTime() > currentDate.getTime(); // Check if the selected date is in the future
-
-        console.log(withinTimeRange, futureDate);
-        return withinTimeRange || futureDate;
+    const filterDate = (date) => {
+        const includeDates = generateIncludeDates();
+        // Convert date to string for comparison
+        const dateString = date.toDateString();
+        // Check if the date is included in the available dates
+        return includeDates.some(includeDate => includeDate.toDateString() === dateString);
     };
 
     const filterTime = (time) => {
+        const selectedDate = new Date(time);
+        const selectedDay = selectedDate.toDateString();
+        const includeDates = generateIncludeDates();
+        // Check if the selected date is within the available dates
+        console.log(includeDates,time);
+        console.log(includeDates.some(date => date.toDateString() === selectedDay));
+        if (!includeDates.some(date => date.toDateString() === selectedDay)) {
+            return false; // If the selected date is not available, disable the time
+        }
+
+        // Check if the selected time is within the doctor's schedule for the selected date
+        return scheduleByDoctor.some(schedule => {
+            const { startTime } = schedule;
+            const scheduleStart = new Date(startTime);
+            return (
+                selectedDate.getDate() === scheduleStart.getDate() &&
+                selectedDate.getHours() === scheduleStart.getHours() &&
+                selectedDate.getMinutes() === scheduleStart.getMinutes()
+            );
+        });
+    };
+
+    const filterPassedTime = (time) => {
         const currentDate = new Date();
         const selectedDate = new Date(time);
 
         const startTime = new Date(currentDate);
-        startTime.setHours(7, 0, 0, 0); // Set to 07:00:00.000
+        startTime.setHours(7, 0, 0, 0);
 
         const endTime = new Date(currentDate);
-        endTime.setHours(19, 0, 0, 0); // Set to 19:00:00.000
+        endTime.setHours(19, 0, 0, 0);
 
-        const withinTimeRange = selectedDate.getTime() >= startTime.getTime() && selectedDate.getTime() <= endTime.getTime();
+        const withinTimeRange = currentDate.getTime() >= startTime.getTime() && currentDate.getTime() <= endTime.getTime();
+        const futureDate = selectedDate.getTime() > currentDate.getTime();
 
-        return withinTimeRange;
+        // Logic for checking excluded times
+        const excludedTimesForDay = dates?.filter(date => {
+            const startDate = new Date(Date.parse(date.startDate));
+            return startDate.toDateString() === selectedDate.toDateString();
+        });
+
+        const excludedTimes = excludedTimesForDay.some(date => {
+            const startDate = new Date(Date.parse(date.startDate));
+            return startDate.getHours() === selectedDate.getHours() && startDate.getMinutes() === selectedDate.getMinutes();
+        });
+
+        return withinTimeRange && futureDate && !excludedTimes;
     };
+
+    const filterPassedDate = (date) => {
+        const currentDate = new Date();
+        const selectedDate = new Date(date);
+
+        // Set hours, minutes, seconds, and milliseconds to 0 for both dates
+        currentDate.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        // Check if the selected date is today or in the future
+        const futureDate = selectedDate.getTime() >= currentDate.getTime();
+
+        return futureDate;
+    };
+
 
     const servicesGrouped = clinicServices?.map(clinic => {
         return {
@@ -251,8 +295,6 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
                 if(clinic.serviceId === getValues('serviceId')[index])
                     return clinic.serviceName;
             }).filter(s => s !== undefined);
-            console.log("EDIT SESSION");
-            console.log(serviceName);
             editAppointment({newData: {...data, appointmentId,serviceName}, id: appointmentId,}, {
                 onSuccess: () => {
                     reset();
@@ -281,19 +323,15 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
         }
     }
 
+
     useEffect(() => {
         const fetchBookedDates = () => {
             try {
-                const bookedDatesdata = dates?.map(bookingDate => ({
-                    start: new Date(Date.parse(bookingDate.startDate)),
-                }));
-
+                const bookedDatesdata = isAnyDayFullyBooked(dates);
                 const excludedDates = bookedDatesdata?.flatMap((dates) => {
                     return addDays(dates.start, 0);
                 });
-
                 setBookedDates(excludedDates);
-
             } catch (error) {
                 console.error('Error fetching booked dates:', error);
             }
@@ -304,7 +342,6 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
 
     if (isWorking) return <Spinner/>
 
-    console.log(editValues);
 
     const selectedValues = editValues?.serviceName?.map(service => {
         const selectedService = clinicServices.find(srv => srv.serviceName === service);
@@ -313,8 +350,6 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
             label: selectedService ? `${service} - ${formatCurrency(selectedService.price)}` : ''
         };
     });
-
-
 
     const FORM_ROWS = (
         <>
@@ -328,10 +363,7 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
                     wrapperClassName='date_picker full-width'
                     selected={startDate}
                     onChange={(date) => {
-
                         setStartDate(date)
-                        console.log("TRUE");
-
                         filterPassedTime(date)
                     }}
                     peekNextMonth
@@ -342,9 +374,11 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
                     minTime={setHours(setMinutes(new Date(), 0), 7)}
                     maxTime={setHours(setMinutes(new Date(), 0), 19)}
                     dateFormat="MMMM d, yyyy HH:mm"
-                    filterTime={filterPassedTime}
+                    filterTime={doctorId ? filterTime : filterPassedTime}
+                    filterDate={doctorId ? filterDate : filterPassedDate}
                     timeFormat="HH:mm"
                     excludeDates={bookedDates}
+
                     containerStyle={{width: '100%'}}
                     isClearable={true}
                     placeholderText="Click to select a date"
@@ -385,6 +419,7 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId})
 
     return (
         <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
+            {doctorId && <Heading type="h3">The available appointment are only for {doctorName} at {clinicName}</Heading>}
             {FORM_ROWS}
 
             <FormRow>

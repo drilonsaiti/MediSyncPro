@@ -1,6 +1,6 @@
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {useSearchParams} from "react-router-dom";
-import {getClinicSchedules} from "../../services/apiClinicSchedules.js";
+import {getClinicSchedules, getClinicSchedulesByDoctorId} from "../../services/apiClinicSchedules.js";
 
 export function useClinicSchedules() {
     const queryClient = useQueryClient();
@@ -36,4 +36,15 @@ export function useClinicSchedules() {
         });
 
     return {isLoading, clinicSchedules, totalElements}
+}
+
+
+export function useScheduleByDoctorId(doctorId){
+    console.log("DOCTOR DOCTOR",doctorId);
+    const {data:scheduleByDoctor, isLoading:isLoadingScheduleByDoctor} = useQuery({
+        queryFn: () => getClinicSchedulesByDoctorId(doctorId),
+        queryKey: ["scheduleByDoctor", doctorId]
+    })
+
+    return {scheduleByDoctor,isLoadingScheduleByDoctor}
 }

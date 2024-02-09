@@ -5,6 +5,7 @@ export const StyledFormRow = styled.div`
     align-items: center;
     margin-top: 1rem;
     z-index: 1;
+    //grid-template-rows: repeat(2,1fr);
     grid-template-columns: ${(props) =>
             props.orientation === "vertical" ? "1fr" : "24rem 1fr 1.2fr"};
     gap: ${(props) => (props.orientation === "vertical" ? "0.8rem" : "2.4rem")};
@@ -58,6 +59,7 @@ const Error = styled.span`
 function FormRow({label, error, children, orientation, calendar}) {
     return (
         <StyledFormRow orientation={orientation} calendar={calendar}>
+
             {label && <Label htmlFor={children.props.id}>{label}</Label>}
             {children}
             {error && <Error>{error}</Error>}

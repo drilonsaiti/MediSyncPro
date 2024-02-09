@@ -112,7 +112,7 @@ const ClinicDoctorsBox = ({value}) => {
         doctor.doctorName.toLowerCase().includes(value.toLowerCase())
     ).filter(doctor => doctor.clinic !== null);
 
-    console.log(filteredDoctors);
+    console.log("FILTERED DOCTROS",filteredDoctors);
 
     return (
         <StyledBoxDoctors>
@@ -132,15 +132,18 @@ const ClinicDoctorsBox = ({value}) => {
                                 <P>{doctor.specialization.specializationName}</P>
 
                             </FlexGroup>
+                            {doctor.clinic &&
                             <Modal>
+
                                 <Modal.Open opens="appointment">
                                     <Button size="medium">Make Appointment</Button>
                                 </Modal.Open>
 
                                 <Modal.Window name="appointment">
-                                    <CreateAppointmentForm clinicId={doctor.clinic?.clinicId ?? ''}/>
+                                    <CreateAppointmentForm clinicId={doctor.clinic?.clinicId ?? ''} doctorId={doctor.doctorId} doctorName={doctor.doctorName} clinicName={doctor.clinic?.clinicName}/>
                                 </Modal.Window>
                             </Modal>
+                            }
                         </ProfileCard>
                     ))
                 }

@@ -14,7 +14,7 @@ function Logo() {
     return (
         <StyledLogo>
             <Img src="http://localhost:5173/logo.png" alt="Logo"/>
-            <Heading type="h3">Eclectic retreat heaven</Heading>
+            <Heading type="h3">MEDISYNC PRO</Heading>
         </StyledLogo>
     );
 }

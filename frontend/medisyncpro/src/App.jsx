@@ -23,6 +23,8 @@ import AccountDoctorSettings from "./features/Settings/AccountDoctorSettings.jsx
 import AccountReceptionistSettings from "./features/Settings/AccountReceptionistSettings.jsx";
 import {Toaster} from "react-hot-toast";
 import ClinicSettings from "./pages/ClinicSettings.jsx";
+import Signup from "./pages/SignUp.jsx";
+import Login from "./pages/Login.jsx";
 
 
 const queryClient = new QueryClient({
@@ -63,6 +65,8 @@ function App() {
                         <Route path="clinicSettings" element={<ClinicSettings/>}/>
                     </Route>
                     <Route path="medicalReports/:reportId" element={<MedicalReportPDF/>}/>
+                    <Route path="login" element={<Login />} />
+                    <Route path="signup" element={<Signup />} />
 
                     <Route path="*" element={<PageNotFound/>}/>
                 </Routes>

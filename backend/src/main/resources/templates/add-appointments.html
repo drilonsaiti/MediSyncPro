@@ -11,7 +11,7 @@
 
 <form th:object="${appointment}" th:action="${'/appointments/save'}" method="post">
 
-    <input type="hidden" th:field="*{appointmentId}" />
+    <input type="hidden" th:field="*{appointmentId}"/>
 
     <label>Patient ID: </label>
     <input type="text" th:field="*{patientId}" required/><br/>

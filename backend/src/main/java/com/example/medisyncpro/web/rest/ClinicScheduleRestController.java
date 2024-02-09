@@ -4,13 +4,11 @@ package com.example.medisyncpro.web.rest;
 import com.example.medisyncpro.model.ClinicSchedule;
 import com.example.medisyncpro.model.dto.ClinicScheduleResultDto;
 import com.example.medisyncpro.model.dto.CreateClinicSchedulesDto;
-import com.example.medisyncpro.model.dto.GroupedClinicSchedule;
 import com.example.medisyncpro.model.excp.ClinicScheduleException;
 import com.example.medisyncpro.service.ClinicScheduleService;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.SettingsService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -109,6 +107,18 @@ public class ClinicScheduleRestController {
             clinicScheduleService.deleteGrouped(id, date);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (ClinicScheduleException | ParseException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<?> listClinicSchedulesByDoctor(@PathVariable Long doctorId) {
+        try {
+            List<ClinicSchedule> clinicSchedules = clinicScheduleService.getAllByDoctorId(doctorId);
+            System.out.println("=====CLINIC=====");
+            System.out.println(clinicSchedules);
+            return new ResponseEntity<>(clinicSchedules, HttpStatus.OK);
+        } catch (ClinicScheduleException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

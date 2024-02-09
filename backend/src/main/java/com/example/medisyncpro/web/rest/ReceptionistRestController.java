@@ -1,23 +1,17 @@
 package com.example.medisyncpro.web.rest;
 
 
-import com.example.medisyncpro.model.Doctor;
 import com.example.medisyncpro.model.Receptionist;
-import com.example.medisyncpro.model.dto.*;
-import com.example.medisyncpro.model.excp.DoctorException;
+import com.example.medisyncpro.model.dto.CreateReceptionistDto;
+import com.example.medisyncpro.model.dto.SearchReceptionistDto;
 import com.example.medisyncpro.model.excp.ReceptionistException;
 import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.ReceptionistService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @AllArgsConstructor

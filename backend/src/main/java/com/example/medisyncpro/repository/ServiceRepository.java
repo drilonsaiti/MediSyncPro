@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface ServiceRepository extends JpaRepository<ClinicServices, Long> {
 
     List<ClinicServices> findAllBySpecializations_SpecializationId(Long id);
+
     Optional<ClinicServices> findByServiceId(Long id);
 }
 

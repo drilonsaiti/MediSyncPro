@@ -29,13 +29,10 @@ public class AppointmentMapper {
     }
 
     public Appointment updateAppointment(Appointment old, AppointmentDto newAppointment) {
-        System.out.println("================UPDATE================");
-        System.out.println(newAppointment.getServiceName());
         List<Long> servicesId = serviceRepository.findAll().stream()
                 .filter(service -> newAppointment.getServiceName().contains(service.getServiceName()))
                 .map(ClinicServices::getServiceId)
                 .toList();
-        System.out.println(servicesId);
         old.setDate(newAppointment.getDate());
         old.getServiceIds().clear();
         old.getServiceIds().addAll(servicesId);
@@ -43,7 +40,7 @@ public class AppointmentMapper {
         return old;
     }
 
-    public AppointmentDto getAppointment(Appointment appm, Patient patient, Doctor doctor, List<String> services, MedicalReportDto report,String clinicName) {
+    public AppointmentDto getAppointment(Appointment appm, Patient patient, Doctor doctor, List<String> services, MedicalReportDto report, String clinicName) {
         return new AppointmentDto(
                 appm.getAppointmentId(),
                 appm.getDate(),

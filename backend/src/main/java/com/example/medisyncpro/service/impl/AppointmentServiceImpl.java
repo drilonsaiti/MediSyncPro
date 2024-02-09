@@ -43,32 +43,32 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail,String types) throws ClinicAppointmentException {
+    public AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail, String types) throws ClinicAppointmentException {
 
-            List<AppointmentDto> appointment = appointmentRepository.findAll().stream()
-                    .filter(a -> {
-                        Patient p = this.patientService.getById(a.getPatientId());
-                        return ((nameOrEmail.equals("all") || p.getPatientName().toLowerCase().contains(nameOrEmail.toLowerCase())
-                                || p.getEmail().toLowerCase().contains(nameOrEmail.toLowerCase())));
-                    })
-                    .filter(a -> types.equals("all") ||
-                            a.getDate().toLocalDate().isEqual(LocalDate.now()))
-                    .map(appm -> {
-                        Optional<Patient> patient = Optional.ofNullable(patientRepository.findById(appm.getPatientId()).orElse(null));
-                        Optional<Clinic> clinic = Optional.ofNullable(clinicRepository.findByClinicId(appm.getClinicId()).orElse(null));
-                        Optional<Doctor> doctor = Optional.ofNullable(this.doctorRepository.findByDoctorId(appm.getDoctorId()).orElse(null));
-                        MedicalReport report = this.reportRepository.findByAppointmentId(appm.getAppointmentId()).orElse(null);
-                        MedicalReportDto reportDto = medicalReportService.getById(report != null ? report.getReportId() : null);
-                        List<String> services = appm.getServiceIds().stream().map(service -> {
-                            Optional<ClinicServices> s = this.serviceRepository.findByServiceId(service);
-                            return s.isPresent() ? s.get().getServiceName() : null;
-                        }).filter(Objects::nonNull).toList();
-                        return appointmentMapper.getAppointment(appm, patient.get(), doctor.get(), services, reportDto,clinic.get().getClinicName());
-                    }).toList();
+        List<AppointmentDto> appointment = appointmentRepository.findAll().stream()
+                .filter(a -> {
+                    Patient p = this.patientService.getById(a.getPatientId());
+                    return ((nameOrEmail.equals("all") || p.getPatientName().toLowerCase().contains(nameOrEmail.toLowerCase())
+                            || p.getEmail().toLowerCase().contains(nameOrEmail.toLowerCase())));
+                })
+                .filter(a -> types.equals("all") ||
+                        a.getDate().toLocalDate().isEqual(LocalDate.now()))
+                .map(appm -> {
+                    Optional<Patient> patient = Optional.ofNullable(patientRepository.findById(appm.getPatientId()).orElse(null));
+                    Optional<Clinic> clinic = Optional.ofNullable(clinicRepository.findByClinicId(appm.getClinicId()).orElse(null));
+                    Optional<Doctor> doctor = Optional.ofNullable(this.doctorRepository.findByDoctorId(appm.getDoctorId()).orElse(null));
+                    MedicalReport report = this.reportRepository.findByAppointmentId(appm.getAppointmentId()).orElse(null);
+                    MedicalReportDto reportDto = medicalReportService.getById(report != null ? report.getReportId() : null);
+                    List<String> services = appm.getServiceIds().stream().map(service -> {
+                        Optional<ClinicServices> s = this.serviceRepository.findByServiceId(service);
+                        return s.isPresent() ? s.get().getServiceName() : null;
+                    }).filter(Objects::nonNull).toList();
+                    return appointmentMapper.getAppointment(appm, patient.get(), doctor.get(), services, reportDto, clinic.get().getClinicName());
+                }).toList();
 
-            return new AppointmentResultDto(appointment.stream()
-                    .skip(pageable.getOffset())
-                    .limit(pageable.getPageSize()).toList(), appointment.size());
+        return new AppointmentResultDto(appointment.stream()
+                .skip(pageable.getOffset())
+                .limit(pageable.getPageSize()).toList(), appointment.size());
 
     }
 
@@ -87,12 +87,11 @@ public class AppointmentServiceImpl implements AppointmentService {
                         ClinicServices s = this.serviceRepository.getById(serviceId);
                         return s != null ? s.getServiceName() : null;
                     }).filter(Objects::nonNull).toList();
-                    return appointmentMapper.getAppointment(appm, patient, doctor, services, reportDto,clinic.get().getClinicName());
+                    return appointmentMapper.getAppointment(appm, patient, doctor, services, reportDto, clinic.get().getClinicName());
                 } catch (Exception e) {
-                    // Log or handle the exception
-                    return null; // Skip this appointment if an exception occurs
+                    return null;
                 }
-            }).filter(Objects::nonNull).toList(); // Filter out null appointment DTOs
+            }).filter(Objects::nonNull).toList();
         } catch (Exception e) {
             throw new ClinicAppointmentException("Failed to retrieve appointments by patient ID " + id, e);
         }
@@ -112,7 +111,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                     ClinicServices s = this.serviceRepository.getById(service);
                     return s.getServiceName();
                 }).toList();
-                return appointmentMapper.getAppointment(appm, patient, doctor, services, reportDto,clinic.get().getClinicName());
+                return appointmentMapper.getAppointment(appm, patient, doctor, services, reportDto, clinic.get().getClinicName());
             }).toList();
         } catch (Exception e) {
             throw new ClinicAppointmentException("Failed to retrieve appointments by doctor ID " + id, e);
@@ -158,11 +157,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             return this.appointmentRepository.findAll()
                     .stream()
                     .map(appm -> {
-                        boolean isBookedForEntireDay = clinicSchedules.stream()
+                        /*boolean isBookedForEntireDay = clinicSchedules.stream()
                                 .filter(cs -> cs.getStartTime().toLocalDate().isEqual(appm.getDate().toLocalDate()))
-                                .allMatch(ClinicSchedule::getIsBooked);
+                                .anyMatch(ClinicSchedule::getIsBooked);
+                        System.out.println(isBookedForEntireDay);
+                        System.out.println(appm.getDate().toLocalDate());
 
-                        return isBookedForEntireDay ? new AppointmentDateDto(appm.getDate()) : null;
+                        return isBookedForEntireDay ? new AppointmentDateDto(appm.getDate()) : null;*/
+                        return new AppointmentDateDto(appm.getDate());
                     })
                     .filter(Objects::nonNull)
                     .toList();
@@ -213,7 +215,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                         ClinicServices s = this.serviceRepository.getById(service);
                         return s.getServiceName();
                     }).toList();
-                    return appointmentMapper.getAppointment(appm, patient, doctor, services, null,clinic.get().getClinicName());
+                    return appointmentMapper.getAppointment(appm, patient, doctor, services, null, clinic.get().getClinicName());
                 }).orElseThrow(() -> new ClinicAppointmentException("Doesn't have any next appointment"));
 
     }

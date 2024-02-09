@@ -1,6 +1,9 @@
 package com.example.medisyncpro.service.impl;
 
-import com.example.medisyncpro.model.*;
+import com.example.medisyncpro.model.Appointment;
+import com.example.medisyncpro.model.ClinicServices;
+import com.example.medisyncpro.model.MedicalReport;
+import com.example.medisyncpro.model.Patient;
 import com.example.medisyncpro.model.dto.CreateMedicalReportDto;
 import com.example.medisyncpro.model.dto.MedicalReportDto;
 import com.example.medisyncpro.model.dto.MedicalReportResultDto;

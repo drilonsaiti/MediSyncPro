@@ -47,9 +47,9 @@ public class ClinicScheduleServiceImpl implements ClinicScheduleService {
 
     @Override
     public List<ClinicSchedule> getAll() {
-        try{
+        try {
             return clinicScheduleRepository.findAll();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ClinicScheduleException("Failed to retrive all clinic schedules");
         }
     }
@@ -175,5 +175,12 @@ public class ClinicScheduleServiceImpl implements ClinicScheduleService {
         } catch (Exception e) {
             throw new ClinicScheduleException("Error getting clinic schedules grouped by date", e);
         }
+    }
+
+
+    @Override
+    public List<ClinicSchedule> getAllByDoctorId(Long doctorId) {
+        return this.clinicScheduleRepository.findAllByDoctorId(doctorId).stream().filter(c -> !c.getIsBooked())
+                .filter(c -> c.getDate().after(new Date())).toList();
     }
 }

@@ -1,11 +1,12 @@
 package com.example.medisyncpro.service.impl;
 
 import com.example.medisyncpro.model.Clinic;
-import com.example.medisyncpro.model.Doctor;
 import com.example.medisyncpro.model.Receptionist;
-import com.example.medisyncpro.model.dto.*;
+import com.example.medisyncpro.model.dto.AddReceptionistToClinicDto;
+import com.example.medisyncpro.model.dto.CreateReceptionistDto;
+import com.example.medisyncpro.model.dto.ReceptionistDto;
+import com.example.medisyncpro.model.dto.SearchReceptionistDto;
 import com.example.medisyncpro.model.excp.ClinicException;
-import com.example.medisyncpro.model.excp.DoctorException;
 import com.example.medisyncpro.model.excp.ReceptionistException;
 import com.example.medisyncpro.model.mapper.ReceptionistMapper;
 import com.example.medisyncpro.repository.ClinicRepository;
@@ -34,7 +35,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     @Override
     public ReceptionistDto getByIdDto(Long id) {
         return receptionistRepository.findById(id).map(receptionist -> {
-            Clinic clinic = clinicRepository.findByClinicId(receptionist.getClinicId()).orElseThrow(() -> new ClinicException(String.format("Clinic with id: %d not found",receptionist.getClinicId())));
+            Clinic clinic = clinicRepository.findByClinicId(receptionist.getClinicId()).orElseThrow(() -> new ClinicException(String.format("Clinic with id: %d not found", receptionist.getClinicId())));
             String clinicName = clinic != null ? clinic.getClinicName() : "Unemployed";
             return receptionistMapper.getReceptionistById(receptionist, clinicName);
         }).orElse(null);
@@ -65,7 +66,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
         try {
             return receptionistRepository.findAll().stream()
                     .filter(r -> !Objects.equals(r.getClinicId(), clinicId))
-                    .map(r -> new SearchReceptionistDto(r.getEmailAddress(),r.getReceptionistName())).toList();
+                    .map(r -> new SearchReceptionistDto(r.getEmailAddress(), r.getReceptionistName())).toList();
         } catch (Exception e) {
             throw new ReceptionistException("Error retrieving all receptionists,try again");
         }
@@ -84,7 +85,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     public Receptionist update(Receptionist receptionist) {
         try {
             Receptionist r = this.receptionistRepository.findByReceptionistId(receptionist.getReceptionistId())
-                    .orElseThrow(() ->new ReceptionistException(String.format("Receptionist with id: %d, not founded",receptionist.getReceptionistId())));
+                    .orElseThrow(() -> new ReceptionistException(String.format("Receptionist with id: %d, not founded", receptionist.getReceptionistId())));
             r.setReceptionistName(receptionist.getReceptionistName());
             r.setEmailAddress(receptionist.getEmailAddress());
             r.setClinicId(receptionist.getClinicId());
@@ -106,7 +107,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     @Override
     public void deleteReceptionistFromClinic(Long id) {
         try {
-            Receptionist receptionist = this.receptionistRepository.findByReceptionistId(id).orElseThrow(() ->new ReceptionistException(String.format("Receptionist with id: %d, not founded",id)));
+            Receptionist receptionist = this.receptionistRepository.findByReceptionistId(id).orElseThrow(() -> new ReceptionistException(String.format("Receptionist with id: %d, not founded", id)));
             receptionist.setClinicId(null);
             receptionistRepository.save(receptionist);
         } catch (Exception e) {
@@ -121,8 +122,8 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 
             for (AddReceptionistToClinicDto add : dto) {
                 Receptionist receptionist = receptionistRepository.findByEmailAddress(add.getEmail())
-                        .orElseThrow(() -> new ReceptionistException(String.format("Doctor with email: %s not found",add.getEmail())));
-                Clinic clinic = clinicRepository.findByClinicId(clinicId).orElseThrow(() -> new ClinicException(String.format("Clinic with id: %d not found",clinicId)));
+                        .orElseThrow(() -> new ReceptionistException(String.format("Doctor with email: %s not found", add.getEmail())));
+                Clinic clinic = clinicRepository.findByClinicId(clinicId).orElseThrow(() -> new ClinicException(String.format("Clinic with id: %d not found", clinicId)));
 
 
                 receptionist.setClinicId(clinic.getClinicId());
@@ -130,7 +131,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new ReceptionistException("Error adding doctor to clinic: " + e.getMessage());
         }
     }

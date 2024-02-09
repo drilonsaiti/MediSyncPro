@@ -15,12 +15,13 @@ public interface DoctorService {
 
     DoctorResultDto getAll(PageRequest pageable, String specializations, String service);
 
-    DoctorResultDto getAllByClinicId(Long clinicId,PageRequest pageable, String specializations, String service);
+    DoctorResultDto getAllByClinicId(Long clinicId, PageRequest pageable, String specializations, String service);
 
     List<SearchDoctorDto> getAllDoctors(Long clinicId);
+
     Doctor save(CreateDoctorDto doctor);
 
-    void addDoctorToClinic(List<AddDoctorToClinicDto> dto,Long clinicId);
+    void addDoctorToClinic(List<AddDoctorToClinicDto> dto, Long clinicId);
 
     Doctor update(Doctor doctor);
 

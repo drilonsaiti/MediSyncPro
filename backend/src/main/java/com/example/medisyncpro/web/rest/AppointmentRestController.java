@@ -5,7 +5,6 @@ import com.example.medisyncpro.model.dto.*;
 import com.example.medisyncpro.model.excp.ClinicAppointmentException;
 import com.example.medisyncpro.service.AppointmentService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -25,9 +24,9 @@ public class AppointmentRestController {
                                               @RequestParam(defaultValue = "all") String nameOrEmail,
                                               @RequestParam(defaultValue = "all") String types) {
 
-            PageRequest pageable = PageRequest.of(page - 1, 15);
-            AppointmentResultDto appointments = appointmentService.getAll(pageable, nameOrEmail,types);
-            return new ResponseEntity<>(new PageImpl<>(appointments.getAppointments(), pageable, appointments.getTotalElements()), HttpStatus.OK);
+        PageRequest pageable = PageRequest.of(page - 1, 15);
+        AppointmentResultDto appointments = appointmentService.getAll(pageable, nameOrEmail, types);
+        return new ResponseEntity<>(new PageImpl<>(appointments.getAppointments(), pageable, appointments.getTotalElements()), HttpStatus.OK);
 
     }
 
@@ -123,12 +122,10 @@ public class AppointmentRestController {
     }
 
     @GetMapping("/nextAppointment/{id}")
-    public ResponseEntity<?> nextAppointment(@PathVariable Long id){
+    public ResponseEntity<?> nextAppointment(@PathVariable Long id) {
         try {
-            AppointmentDto next =  appointmentService.nexAppointment(id);
-            System.out.println("============NEXT=============");
-            System.out.println(next);
-            return new ResponseEntity<>(next,HttpStatus.CREATED);
+            AppointmentDto next = appointmentService.nexAppointment(id);
+            return new ResponseEntity<>(next, HttpStatus.CREATED);
         } catch (ClinicAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

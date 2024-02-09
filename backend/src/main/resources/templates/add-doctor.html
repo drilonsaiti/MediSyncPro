@@ -11,13 +11,13 @@
 
 <form th:action="${action}" th:object="${doctor}" method="post">
     <label for="doctorName">Doctor Name:</label>
-    <input type="text" id="doctorName" th:field="*{doctorName}" />
+    <input type="text" id="doctorName" th:field="*{doctorName}"/>
 
     <label for="specializations">Specialization:</label>
-    <input type="text" id="specializations" th:field="*{specializations}" />
+    <input type="text" id="specializations" th:field="*{specializations}"/>
 
     <label for="education">Education:</label>
-    <input type="text" id="education" th:field="*{education}" />
+    <input type="text" id="education" th:field="*{education}"/>
 
     <label for="clinic">Clinic:</label>
     <select id="clinic" th:field="*{clinic}">

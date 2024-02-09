@@ -10,7 +10,7 @@ public interface AppointmentService {
 
     Appointment getById(Long id);
 
-    AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail,String types);
+    AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail, String types);
 
     List<AppointmentDto> getAllByPatient(Long id);
 

@@ -25,5 +25,7 @@ public interface ClinicScheduleService {
     void deleteGrouped(Long id, String date) throws ParseException;
 
     ClinicScheduleResultDto getAllByClinicGroupedByDate(Long clinicId, PageRequest pageable, String sort);
+
+    List<ClinicSchedule> getAllByDoctorId(Long doctorId);
 }
 

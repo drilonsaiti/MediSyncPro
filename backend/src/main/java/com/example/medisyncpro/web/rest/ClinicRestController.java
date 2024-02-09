@@ -11,7 +11,6 @@ import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.SpecializationService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;

@@ -1,26 +1,38 @@
-/*
 package com.example.medisyncpro.model;
 
+
+
 import com.example.medisyncpro.model.enums.Role;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
 
+@Data
+@Entity
+@Table(name = "msp_users")
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class User implements UserDetails {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     private String email;
 
     private String password;
 
-    private String name;
+    private String fullName;
 
-    private String surname;
+    private String verifyCode;
+
+    private String imageUrl;
+
 
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;
@@ -31,53 +43,47 @@ public class User implements UserDetails {
     private Role role;
 
 
-
     public User() {
     }
 
-    public User(String email, String password, String name, String surname, Role role) {
-        this.email = email;
+    public User( String fullName,String email, String password) {
         this.password = password;
-        this.name = name;
-        this.surname = surname;
-        this.role = role;
+        this.fullName = fullName ;
+        this.email = email;
+        this.role = Role.ROLE_USER;
+        this.verifyCode = "";
+        this.imageUrl = "";
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(role);
     }
 
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
     @Override
     public String getUsername() {
-        return email;
+        return this.email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return isAccountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return isAccountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return isCredentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return isEnabled;
     }
 }
-*/
+
+

@@ -2,13 +2,10 @@ package com.example.medisyncpro.web.rest;
 
 import com.example.medisyncpro.model.MedicalReport;
 import com.example.medisyncpro.model.dto.CreateMedicalReportDto;
-import com.example.medisyncpro.model.dto.MedicalReportDto;
 import com.example.medisyncpro.model.dto.MedicalReportResultDto;
-import com.example.medisyncpro.model.excp.DoctorException;
-import com.example.medisyncpro.service.MedicalReportService;
 import com.example.medisyncpro.model.excp.MedicalReportException;
+import com.example.medisyncpro.service.MedicalReportService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -25,8 +22,8 @@ public class MedicalReportRestController {
 
     @GetMapping
     public ResponseEntity<?> listMedicalReports(@RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam(defaultValue = "all") String nameOrEmail,
-                                                     @RequestParam(defaultValue = "all") String byDate
+                                                @RequestParam(defaultValue = "all") String nameOrEmail,
+                                                @RequestParam(defaultValue = "all") String byDate
     ) {
         try {
             PageRequest pageable = PageRequest.of(page - 1, 15);

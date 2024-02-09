@@ -32,7 +32,7 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
     public ClinicServices getById(Long id) {
         try {
             return serviceRepository.findById(id).orElseThrow(() -> new ClinicScheduleException("Clinic service with ID " + id + " not found"));
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new ClinicException("Failed to retrieve clinic service by ID", e);
         }
     }
@@ -70,7 +70,7 @@ public class ClinicServicesServiceImpl implements ClinicServicesService {
                     }).toList();
 
             return new ClinicServicesResultDto(services.stream().skip(pageable.getOffset()).limit(pageable.getPageSize()).toList(), services.size());
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ClinicException("Failed to retrieve all clinics services", e);
         }
     }

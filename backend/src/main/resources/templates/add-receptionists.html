@@ -11,7 +11,7 @@
 
 <form th:object="${receptionist}" th:action="${'/receptionists/save'}" method="post">
 
-    <input type="hidden" th:field="*{receptionistId}" />
+    <input type="hidden" th:field="*{receptionistId}"/>
 
     <label>Receptionist Name: </label>
     <input type="text" th:field="*{receptionistName}" required/><br/>

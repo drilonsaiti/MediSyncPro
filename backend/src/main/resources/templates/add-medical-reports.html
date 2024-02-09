@@ -20,7 +20,7 @@
 
 <form th:object="${medicalReport}" th:action="${'/medical-reports/save'}" method="post">
 
-    <input type="hidden" th:field="*{reportId}" />
+    <input type="hidden" th:field="*{reportId}"/>
 
     <label>Patient ID: </label>
     <input type="text" th:field="*{patientId}" required/><br/>

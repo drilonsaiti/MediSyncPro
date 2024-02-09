@@ -102,7 +102,7 @@ public class DoctorServiceImpl implements DoctorService {
                     .map(doctor -> new SearchDoctorDto(doctor.getEmail(), doctor.getDoctorName()))
                     .toList();
         } catch (Exception e) {
-            throw new DoctorException("Error getting all doctors by clinic ID " + clinicId );
+            throw new DoctorException("Error getting all doctors by clinic ID " + clinicId);
         }
     }
 

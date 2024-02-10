@@ -38,7 +38,8 @@ export async function getAppointmentsByDoctor(id) {
 
 
 export async function createEditAppointment(newAppointment, id) {
-    try {
+    console.log("APPOINTMENT",newAppointment);
+    /*try {
         let response = {}
         if (id) {
             response = await apiRequest('PUT', `appointments`, newAppointment);
@@ -51,7 +52,7 @@ export async function createEditAppointment(newAppointment, id) {
     } catch (e) {
         throw new Error(e);
 
-    }
+    }*/
 }
 
 export async function deleteAppointment(id) {
@@ -64,9 +65,9 @@ export async function deleteAppointment(id) {
     }
 }
 
-export async function getAppointmentDates() {
+export async function getAppointmentDates(clinicId) {
     try {
-        const response = await apiRequest('GET', `appointments/dates`);
+        const response = await apiRequest('GET', `appointments/dates/${clinicId}`);
         return response.data;
     } catch (e) {
         throw new Error(e);

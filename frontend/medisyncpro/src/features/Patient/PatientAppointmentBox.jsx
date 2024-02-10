@@ -245,7 +245,7 @@ const PatientAppointmentBox = ({patientId}) => {
                 </Appointments>
 
                 <Calendar>
-                    <Heading type="h2">Select date</Heading>
+                    <Heading type="h2" style={{color: 'white'}}>Select date</Heading>
 
                     <CustomStyledDatePicker>
                         <DatePicker

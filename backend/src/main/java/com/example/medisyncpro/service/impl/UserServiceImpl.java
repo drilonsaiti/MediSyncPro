@@ -3,12 +3,15 @@ package com.example.medisyncpro.service.impl;
 
 
 import com.example.medisyncpro.config.JwtService;
+import com.example.medisyncpro.model.Clinic;
+import com.example.medisyncpro.model.ClinicServices;
 import com.example.medisyncpro.model.User;
 import com.example.medisyncpro.model.dto.*;
+import com.example.medisyncpro.model.enums.Role;
 import com.example.medisyncpro.model.excp.*;
 import com.example.medisyncpro.model.mapper.UserUsernameMapper;
-import com.example.medisyncpro.repository.UserRepository;
-import com.example.medisyncpro.service.UserService;
+import com.example.medisyncpro.repository.*;
+import com.example.medisyncpro.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,6 +38,10 @@ public class UserServiceImpl implements UserService {
     private final UserUsernameMapper mapper;
 
     private final JwtService jwtService;
+    private final DoctorService doctorService;
+    private final ClinicService clinicServices;
+    private final PatientService patientService;
+    private final ReceptionistService receptionistService;
    // private JavaMailSender mailSender;
 
 
@@ -54,9 +61,27 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    private Role addUserBasedOnType(User user, String userType) throws Exception {
+        switch (userType){
+            case "clinic":
+                clinicServices.save(new Clinic(user.getEmail(),user.getFullName(),""));
+                return Role.ROLE_OWNER;
+            case "doctor":
+                doctorService.save(new CreateDoctorDto(user.getEmail(),user.getFullName()));
+                return Role.ROLE_DOCTOR;
+            case "patient":
+                patientService.save(new CreatePatientDto(user.getEmail(),user.getFullName()));
+                return Role.ROLE_PATIENT;
+            case "receptionist":
+                receptionistService.save(new CreateReceptionistDto(user.getEmail(),user.getFullName()));
+                return Role.ROLE_RECEPTIONIST;
+            default:
+                throw new Exception("This type of user doesn't exists");
+        }
+    }
 
     @Override
-    public User register(String fullName, String email, String password, String repeatPassword,String userType) {
+    public User register(String fullName, String email, String password, String repeatPassword,String userType) throws Exception {
         if (email == null || email.isEmpty() || password == null || password.isEmpty())
             throw new InvalidEmailOrPasswordException();
         if (!password.equals(repeatPassword))
@@ -66,7 +91,9 @@ public class UserServiceImpl implements UserService {
         if (this.userRepository.findByEmail(email).isPresent())
             throw new EmailAlreadyExistsException(email);
         User user = new User(fullName,email, passwordEncoder.encode(password));
-        // create also user various in type (doctor,clinic,patient,receptionist)
+
+        Role role = addUserBasedOnType(user,userType);
+        user.setRole(role);
         return userRepository.save(user);
     }
 

@@ -50,7 +50,7 @@ public class User implements UserDetails {
         this.password = password;
         this.fullName = fullName ;
         this.email = email;
-        this.role = Role.ROLE_USER;
+        this.role = Role.ROLE_PATIENT;
         this.verifyCode = "";
         this.imageUrl = "";
     }

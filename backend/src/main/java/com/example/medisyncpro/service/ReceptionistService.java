@@ -16,18 +16,18 @@ public interface ReceptionistService {
 
     List<Receptionist> getAll();
 
-    List<Receptionist> getAllByClinicId(Long clinicId);
+    List<Receptionist> getAllByClinicId(Long clinicId,String authHeader) throws Exception;
 
-    List<SearchReceptionistDto> getAllReceptionistSearch(Long clinicId);
+    List<SearchReceptionistDto> getAllReceptionistSearch(Long clinicId,String authHeader) throws Exception;
 
-    void addReceptionistToClinic(List<AddReceptionistToClinicDto> dto, Long clinicId);
+    void addReceptionistToClinic(List<AddReceptionistToClinicDto> dto, Long clinicId,String authHeader) throws Exception;
 
     Receptionist save(CreateReceptionistDto dto);
 
-    Receptionist update(Receptionist receptionist);
+    Receptionist update(Receptionist receptionist,String authHeader) throws Exception;
 
-    void delete(Long id);
+    void delete(Long id,String authHeader) throws Exception;
 
-    void deleteReceptionistFromClinic(Long id);
+    void deleteReceptionistFromClinic(Long id,String authHeader) throws Exception;
 }
 

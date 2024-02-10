@@ -24,6 +24,9 @@ public class MedicalReport {
     @Column(name = "appointment_id")
     private Long appointmentId;
 
+    @Column(name = "clinic_id")
+    private Long clinicId;
+
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
@@ -47,8 +50,9 @@ public class MedicalReport {
     private LocalDateTime reportDate;
 
 
-    public MedicalReport(Long patientId, Doctor doctor, String medicineName, String disease, LocalDateTime nextAppointmentDate, Integer noOfDays, LocalDateTime appointmentDate, Long appointmentId) {
+    public MedicalReport(Long patientId,Long clinicId, Doctor doctor, String medicineName, String disease, LocalDateTime nextAppointmentDate, Integer noOfDays, LocalDateTime appointmentDate, Long appointmentId) {
         this.patientId = patientId;
+        this.clinicId = clinicId;
         this.doctor = doctor;
         this.medicineName = medicineName;
         this.disease = disease;

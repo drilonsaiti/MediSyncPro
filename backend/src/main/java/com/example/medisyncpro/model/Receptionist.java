@@ -15,10 +15,10 @@ public class Receptionist {
     @Column(name = "receptionist_id")
     private Long receptionistId;
 
-    @Column(name = "receptionist_name", nullable = false)
+    @Column(name = "receptionist_name")
     private String receptionistName;
 
-    @Column(name = "email_address", nullable = false)
+    @Column(name = "email_address")
     private String emailAddress;
 
     @Column(name = "clinic_id")

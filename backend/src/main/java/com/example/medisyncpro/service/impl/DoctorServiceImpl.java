@@ -30,6 +30,7 @@ public class DoctorServiceImpl implements DoctorService {
     private final SpecializationRepository specializationRepository;
     private final ClinicRepository clinicRepository;
     private final DoctorMapper doctorMapper;
+    private final AuthHeaderServiceImpl authHeaderService;
 
     @Override
     public Doctor getById(Long id) {
@@ -42,13 +43,16 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorResultDto getAll(PageRequest pageable, String specializations, String service) {
+    public DoctorResultDto getAll(PageRequest pageable, String specializations, String service,String authHeader) throws Exception {
+        Long clinicIdAuth = this.authHeaderService.getClinicId(authHeader);
+
         try {
             String[] specs = specializations.split(",");
             String[] services = service.split(",");
 
             List<Doctor> doctors = doctorRepository.findAll()
                     .stream()
+                    .filter(d -> Objects.equals(d.getClinic().getClinicId(), clinicIdAuth))
                     .filter(doctor ->
                             (specializations.equals("all") || Arrays.asList(specs).contains(doctor.getSpecialization().getSpecializationName()))
 
@@ -91,7 +95,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<SearchDoctorDto> getAllDoctors(Long clinicId) {
+    public List<SearchDoctorDto> getAllDoctors(Long clinicId){
         try {
             return doctorRepository.findAll()
                     .stream()
@@ -104,13 +108,22 @@ public class DoctorServiceImpl implements DoctorService {
         } catch (Exception e) {
             throw new DoctorException("Error getting all doctors by clinic ID " + clinicId);
         }
+
     }
 
     @Override
     public Doctor save(CreateDoctorDto doctor) {
         try {
-            Specializations specializations = specializationRepository.getById(doctor.getSpecializationId());
-            Clinic clinic = clinicRepository.getById(doctor.getClinicId());
+            Specializations specializations = null;
+            Clinic clinic = null;
+
+            if (doctor.getSpecializationId() != null) {
+                specializations = specializationRepository.getById(doctor.getSpecializationId());
+            }
+
+            if (doctor.getClinicId() != null) {
+                clinic = clinicRepository.getById(doctor.getClinicId());
+            }
             return doctorRepository.save(doctorMapper.createDoctor(doctor, specializations, clinic));
         } catch (Exception e) {
             throw new DoctorException("Error saving doctor", e);
@@ -118,26 +131,40 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Doctor update(Doctor doctor) {
-        try {
-            Doctor old = this.getById(doctor.getDoctorId());
-            return doctorRepository.save(doctorMapper.updateDoctor(old, doctor));
-        } catch (Exception e) {
-            throw new DoctorException("Error updating doctor", e);
+    public Doctor update(Doctor doctor,String authHeader) throws Exception {
+        Doctor d = this.doctorRepository.findByEmail(this.authHeaderService.getEmail(authHeader)).orElse(null);
+
+        if(d != null && Objects.equals(d.getDoctorId(), doctor.getDoctorId())) {
+            try {
+                Doctor old = this.getById(doctor.getDoctorId());
+                return doctorRepository.save(doctorMapper.updateDoctor(old, doctor));
+            } catch (Exception e) {
+                throw new DoctorException("Error updating doctor", e);
+            }
         }
+        throw new Exception("You don't have access!");
+
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id,String authHeader) throws Exception {
+        Doctor d = this.doctorRepository.findByEmail(this.authHeaderService.getEmail(authHeader)).orElse(null);
+
+        if(d != null && Objects.equals(d.getDoctorId(), id)) {
         try {
             doctorRepository.deleteById(id);
         } catch (Exception e) {
             throw new DoctorException("Error deleting doctor", e);
         }
+        }
+        throw new Exception("You don't have access!");
     }
 
     @Override
-    public void deleteDoctorFromClinic(Long id, Long clinicId) {
+    public void deleteDoctorFromClinic(Long id, Long clinicId,String authHeader) throws Exception {
+        Long clinicIdAuth = this.authHeaderService.getClinicId(authHeader);
+
+        if (Objects.equals(clinicIdAuth, clinicId)) {
         try {
             Clinic clinic = clinicRepository.getById(clinicId);
             Doctor doctor = this.getById(id);
@@ -147,11 +174,15 @@ public class DoctorServiceImpl implements DoctorService {
             doctorRepository.save(doctor);
         } catch (Exception e) {
             throw new DoctorException("Error deleting doctor from clinic", e);
-        }
+        }}
+        throw new Exception("You don't have access!");
     }
 
     @Override
-    public void addDoctorToClinic(List<AddDoctorToClinicDto> dto, Long clinicId) {
+    public void addDoctorToClinic(List<AddDoctorToClinicDto> dto, Long clinicId,String authHeader) throws Exception {
+        Long clinicIdAuth = this.authHeaderService.getClinicId(authHeader);
+
+        if (Objects.equals(clinicIdAuth, clinicId)) {
         try {
             for (AddDoctorToClinicDto addDoctorToClinicDto : dto) {
                 Doctor doctor = doctorRepository.findByEmail(addDoctorToClinicDto.getDoctorEmail())
@@ -166,6 +197,7 @@ public class DoctorServiceImpl implements DoctorService {
             }
         } catch (Exception e) {
             throw new DoctorException("Error adding doctor to clinic: " + e.getMessage());
-        }
+        }}
+        throw new Exception("You don't have access!");
     }
 }

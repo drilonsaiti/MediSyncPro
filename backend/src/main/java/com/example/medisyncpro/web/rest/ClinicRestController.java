@@ -10,6 +10,7 @@ import com.example.medisyncpro.model.excp.ClinicException;
 import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.SpecializationService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -54,34 +55,38 @@ public class ClinicRestController {
     }
 
     @GetMapping("/services/{id}")
-    public ResponseEntity<?> getClinicServiceById(@PathVariable Long id) {
+    public ResponseEntity<?> getClinicServiceById(@PathVariable Long id, HttpServletRequest request) {
         try {
-            List<ClinicServices> clinicServices = clinicService.getClinicServicesById(id);
+            final String authHeader = request.getHeader("Authorization");
+            List<ClinicServices> clinicServices = clinicService.getClinicServicesById(id,authHeader);
             return new ResponseEntity<>(clinicServices, HttpStatus.OK);
-        } catch (ClinicException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping()
-    public ResponseEntity<?> updateClinic(@RequestBody UpdateClinicDto dto) {
+    public ResponseEntity<?> updateClinic(@RequestBody UpdateClinicDto dto, HttpServletRequest request) {
         try {
-            Clinic updatedClinic = clinicService.updateClinic(dto);
+            final String authHeader = request.getHeader("Authorization");
+            Clinic updatedClinic = clinicService.updateClinic(dto,authHeader);
             return new ResponseEntity<>(updatedClinic, HttpStatus.ACCEPTED);
-        } catch (ClinicException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteClinic(@PathVariable Long id) {
+    public ResponseEntity<?> deleteClinic(@PathVariable Long id, HttpServletRequest request) {
         try {
-            clinicService.delete(id);
+            final String authHeader = request.getHeader("Authorization");
+            clinicService.delete(id,authHeader);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (ClinicException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    // Your existing code...
 }

@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface SettingsRepository extends JpaRepository<Settings, Long> {
 
     Optional<Settings> findById(Long id);
+
+    Optional<Settings> findByClinicId(Long id);
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    User register(String fullName, String email, String password, String repeatPassword,String userType);
+    User register(String fullName, String email, String password, String repeatPassword,String userType) throws Exception;
 
     List<UserUsernameDto> findAll();
 

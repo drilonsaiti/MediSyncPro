@@ -23,7 +23,6 @@ public class Doctor {
     @Column(name = "doctor_name", nullable = false)
     private String doctorName;
 
-    // TODO - Add email to doctor
     @Column(name = "doctor_email")
     private String email;
 
@@ -34,9 +33,6 @@ public class Doctor {
     @Column(name = "education")
     private String education;
 
-    @Column(name = "working_days")
-    private String workingDays;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "clinic_id")
     private Clinic clinic;
@@ -45,11 +41,11 @@ public class Doctor {
     @JsonIgnore
     private List<MedicalReport> medicalReports;
 
-    public Doctor(String doctorName, Specializations specialization, String education, String workingDays, Clinic clinic) {
+    public Doctor(String doctorName, Specializations specialization, String education, String email, Clinic clinic) {
         this.doctorName = doctorName;
         this.specialization = specialization;
         this.education = education;
-        this.workingDays = workingDays;
+        this.email = email;
         this.clinic = clinic;
         this.medicalReports = new ArrayList<>();
     }

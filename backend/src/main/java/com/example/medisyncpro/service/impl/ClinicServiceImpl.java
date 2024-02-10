@@ -19,6 +19,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -32,6 +33,7 @@ public class ClinicServiceImpl implements ClinicService {
     private final ServiceRepository serviceRepository;
     private final ClinicScheduleRepository scheduleRepository;
     private final DoctorRepository doctorRepository;
+    private final AuthHeaderServiceImpl authHeaderService;
 
     @Override
     public Clinic getById(Long id) {
@@ -40,10 +42,12 @@ public class ClinicServiceImpl implements ClinicService {
         } catch (Exception e) {
             throw new ClinicException("Failed to retrieve clinic by ID", e);
         }
+
     }
 
     @Override
     public ClinicDto getByIdDto(Long id) {
+
         try {
             Clinic clinic = this.getById(id);
             Settings settings = settingsRepository.getById(clinic.getSettingsId());
@@ -105,39 +109,51 @@ public class ClinicServiceImpl implements ClinicService {
 
 
     @Override
-    public Clinic updateClinic(UpdateClinicDto dto) {
-        try {
-            List<Long> serviceIds = dto.getServiceDto().stream()
-                    .map(ServiceForClinicsDto::getServiceId)
-                    .toList();
+    public Clinic updateClinic(UpdateClinicDto dto, String auth) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(auth);
 
-            List<ClinicServices> clinicServices = serviceRepository.findAll().stream()
-                    .filter(srv -> serviceIds.contains(srv.getServiceId()))
-                    .toList();
+        if (Objects.equals(clinicId, dto.getClinicId())) {
 
-            List<Long> doctorIds = dto.getDoctors().stream()
-                    .map(DoctorForClinicDto::getDoctorId)
-                    .toList();
+            try {
+                List<Long> serviceIds = dto.getServiceDto().stream()
+                        .map(ServiceForClinicsDto::getServiceId)
+                        .toList();
 
-            List<Doctor> doctors = doctorRepository.findAll().stream()
-                    .filter(srv -> doctorIds.contains(srv.getDoctorId()))
-                    .toList();
+                List<ClinicServices> clinicServices = serviceRepository.findAll().stream()
+                        .filter(srv -> serviceIds.contains(srv.getServiceId()))
+                        .toList();
 
-            Clinic clinic = this.getById(dto.getClinicId());
-            return clinicRepository.save(clinicMapper.updateClinic(clinic, dto, clinicServices, doctors));
-        } catch (Exception e) {
-            throw new ClinicException("Failed to update clinic", e);
+                List<Long> doctorIds = dto.getDoctors().stream()
+                        .map(DoctorForClinicDto::getDoctorId)
+                        .toList();
+
+                List<Doctor> doctors = doctorRepository.findAll().stream()
+                        .filter(srv -> doctorIds.contains(srv.getDoctorId()))
+                        .toList();
+
+                Clinic clinic = this.getById(dto.getClinicId());
+                return clinicRepository.save(clinicMapper.updateClinic(clinic, dto, clinicServices, doctors));
+            } catch (Exception e) {
+                throw new ClinicException("Failed to update clinic", e);
+            }
         }
+        throw new ClinicException("You don't have access");
 
     }
 
     @Override
-    public void delete(Long id) {
-        try {
-            clinicRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new ClinicException("Failed to delete clinic", e);
+    public void delete(Long id, String auth) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(auth);
+
+        if (Objects.equals(clinicId, id)) {
+            try {
+                clinicRepository.deleteById(id);
+            } catch (Exception e) {
+                throw new ClinicException("Failed to delete clinic", e);
+            }
         }
+        throw new ClinicException("You don't have access");
+
     }
 
     @Override
@@ -146,9 +162,15 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public List<ClinicServices> getClinicServicesById(Long id) {
-        List<ClinicServices> services = this.getById(id).getServices();
-        return services;
+    public List<ClinicServices> getClinicServicesById(Long id, String auth) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(auth);
+
+        if (Objects.equals(clinicId, id)) {
+            List<ClinicServices> services = this.getById(id).getServices();
+            return services;
+        }
+        throw new ClinicException("You don't have access");
+
     }
 }
 

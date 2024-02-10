@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -35,6 +32,7 @@ public class ClinicScheduleServiceImpl implements ClinicScheduleService {
     private final SettingsRepository settingsRepository;
     private final ClinicScheduleMapper scheduleMapper;
     private final DoctorRepository doctorRepository;
+    private final AuthHeaderServiceImpl authHeaderService;
 
     @Override
     public ClinicSchedule getById(Long id) {
@@ -50,7 +48,7 @@ public class ClinicScheduleServiceImpl implements ClinicScheduleService {
         try {
             return clinicScheduleRepository.findAll();
         } catch (Exception e) {
-            throw new ClinicScheduleException("Failed to retrive all clinic schedules");
+            throw new ClinicScheduleException("Failed to retrieve all clinic schedules");
         }
     }
 
@@ -63,89 +61,115 @@ public class ClinicScheduleServiceImpl implements ClinicScheduleService {
     }
 
     @Override
-    public ClinicSchedule save(CreateClinicSchedulesDto clinicSchedule) {
-        try {
-            return clinicScheduleRepository.save(scheduleMapper.createClinicSchedule(clinicSchedule));
-        } catch (Exception e) {
-            throw new ClinicScheduleException("Error saving clinic schedule", e);
-        }
-    }
+    public ClinicSchedule save(CreateClinicSchedulesDto clinicSchedule,String authHeader) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(authHeader);
 
-    @Override
-    public ClinicSchedule update(ClinicSchedule clinicSchedule) {
-        try {
-            ClinicSchedule old = this.getById(clinicSchedule.getScheduleId());
-            return clinicScheduleRepository.save(scheduleMapper.updateClinicSchedule(old, clinicSchedule));
-        } catch (Exception e) {
-            throw new ClinicScheduleException("Error updating clinic schedule", e);
-        }
-    }
-
-    @Override
-    public void delete(Long id) {
-        try {
-            clinicScheduleRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new ClinicScheduleException("Error deleting clinic schedule", e);
-        }
-    }
-
-    @Override
-    public void deleteGrouped(Long id, String date) {
-        try {
-            OffsetDateTime offsetDateTime = OffsetDateTime.parse(date);
-            Date newDate = Date.from(offsetDateTime.toInstant());
-
-            List<ClinicSchedule> clinicSchedules = clinicScheduleRepository.findAllByClinicIdAndDate(id, newDate);
-
-            for (ClinicSchedule c : clinicSchedules) {
-                this.delete(c.getScheduleId());
+        if (Objects.equals(clinicId, clinicSchedule.getClinicId())) {
+            try {
+                return clinicScheduleRepository.save(scheduleMapper.createClinicSchedule(clinicSchedule));
+            } catch (Exception e) {
+                throw new ClinicScheduleException("Error saving clinic schedule", e);
             }
-        } catch (Exception e) {
-            throw new ClinicScheduleException("Error deleting grouped clinic schedules", e);
+        }
+        throw new Exception("You don't have access!");
+    }
+
+    @Override
+    public ClinicSchedule update(ClinicSchedule clinicSchedule,String authHeader) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(authHeader);
+
+        if (Objects.equals(clinicId, clinicSchedule.getClinicId())) {
+            try {
+                ClinicSchedule old = this.getById(clinicSchedule.getScheduleId());
+                return clinicScheduleRepository.save(scheduleMapper.updateClinicSchedule(old, clinicSchedule));
+            } catch (Exception e) {
+                throw new ClinicScheduleException("Error updating clinic schedule", e);
+            }
+        }
+        throw new Exception("You don't have access!");
+    }
+
+    @Override
+    public void delete(Long id,String authHeader) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(authHeader);
+        ClinicSchedule clinicSchedule = this.clinicScheduleRepository.findByScheduleId(id);
+
+        if (Objects.equals(clinicId, clinicSchedule.getClinicId())) {
+            try {
+                clinicScheduleRepository.deleteById(id);
+            } catch (Exception e) {
+                throw new ClinicScheduleException("Error deleting clinic schedule", e);
+            }
+        }
+        throw new Exception("You don't have access!");
+    }
+
+    @Override
+    public void deleteGrouped(Long id, String date,String authHeader) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(authHeader);
+        if (Objects.equals(clinicId, id)) {
+            try {
+                OffsetDateTime offsetDateTime = OffsetDateTime.parse(date);
+                Date newDate = Date.from(offsetDateTime.toInstant());
+
+                List<ClinicSchedule> clinicSchedules = clinicScheduleRepository.findAllByClinicIdAndDate(id, newDate);
+
+                for (ClinicSchedule c : clinicSchedules) {
+                    this.delete(c.getScheduleId(),authHeader);
+                }
+            } catch (Exception e) {
+                throw new ClinicScheduleException("Error deleting grouped clinic schedules", e);
+            }
         }
     }
 
-    public List<ClinicSchedule> generateSchedules(Long settingsId) {
+    public List<ClinicSchedule> generateSchedules(Long settingsId,String authHeader) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(authHeader);
         try {
             List<ClinicSchedule> schedules = new ArrayList<>();
             Settings settings = settingsRepository.getById(settingsId);
             LocalDate currentDate = LocalDate.now();
 
-            for (int i = 0; i < settings.getDaysToGenerate(); i++) {
-                LocalDateTime currentDateTime = LocalDateTime.of(currentDate, settings.getMorningStartTime());
+            if(clinicId == settings.getClinicId()) {
+                for (int i = 0; i < settings.getDaysToGenerate(); i++) {
+                    LocalDateTime currentDateTime = LocalDateTime.of(currentDate, settings.getMorningStartTime());
 
-                while (currentDateTime.isBefore(LocalDateTime.of(currentDate, settings.getMorningEndTime()))) {
-                    for (Doctor doctor : settings.getMorningDoctors()) {
-                        ClinicSchedule schedule = ClinicScheduleMapper.mapToClinicSchedule(doctor, currentDate, currentDateTime, settings.getAppointmentDurationMinutes());
+                    while (currentDateTime.isBefore(LocalDateTime.of(currentDate, settings.getMorningEndTime()))) {
+                        for (Doctor doctor : settings.getMorningDoctors()) {
+                            ClinicSchedule schedule = ClinicScheduleMapper.mapToClinicSchedule(doctor, currentDate, currentDateTime, settings.getAppointmentDurationMinutes());
 
-                        schedules.add(schedule);
+                            schedules.add(schedule);
+                        }
+                        currentDateTime = currentDateTime.plusMinutes(settings.getAppointmentDurationMinutes());
                     }
-                    currentDateTime = currentDateTime.plusMinutes(settings.getAppointmentDurationMinutes());
-                }
 
-                currentDateTime = LocalDateTime.of(currentDate, settings.getAfternoonStartTime());
+                    currentDateTime = LocalDateTime.of(currentDate, settings.getAfternoonStartTime());
 
-                while (currentDateTime.isBefore(LocalDateTime.of(currentDate, settings.getAfternoonEndTime()))) {
-                    for (Doctor doctor : settings.getAfternoonDoctors()) {
-                        ClinicSchedule schedule = ClinicScheduleMapper.mapToClinicSchedule(doctor, currentDate, currentDateTime, settings.getAppointmentDurationMinutes());
-                        schedules.add(schedule);
+                    while (currentDateTime.isBefore(LocalDateTime.of(currentDate, settings.getAfternoonEndTime()))) {
+                        for (Doctor doctor : settings.getAfternoonDoctors()) {
+                            ClinicSchedule schedule = ClinicScheduleMapper.mapToClinicSchedule(doctor, currentDate, currentDateTime, settings.getAppointmentDurationMinutes());
+                            schedules.add(schedule);
+                        }
+                        currentDateTime = currentDateTime.plusMinutes(settings.getAppointmentDurationMinutes());
                     }
-                    currentDateTime = currentDateTime.plusMinutes(settings.getAppointmentDurationMinutes());
-                }
 
-                currentDate = currentDate.plusDays(1);
+                    currentDate = currentDate.plusDays(1);
+                }
+                this.clinicScheduleRepository.saveAll(schedules);
+                return schedules;
             }
-            this.clinicScheduleRepository.saveAll(schedules);
-            return schedules;
         } catch (Exception e) {
             throw new ClinicScheduleException("Error generating schedules", e);
         }
+        throw new ClinicScheduleException("You don't have access!");
     }
 
 
     @Override
-    public ClinicScheduleResultDto getAllByClinicGroupedByDate(Long clinicId, PageRequest pageable, String sort) {
+    public ClinicScheduleResultDto getAllByClinicGroupedByDate(PageRequest pageable, String sort,String authHeader) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(authHeader);
+
+
         try {
             List<ClinicSchedule> schedules = clinicScheduleRepository.findAllByClinicId(clinicId);
 
@@ -179,8 +203,9 @@ public class ClinicScheduleServiceImpl implements ClinicScheduleService {
 
 
     @Override
-    public List<ClinicSchedule> getAllByDoctorId(Long doctorId) {
-        return this.clinicScheduleRepository.findAllByDoctorId(doctorId).stream().filter(c -> !c.getIsBooked())
+    public List<ClinicSchedule> getAllByDoctorId(Long doctorId,String authHeader) throws Exception {
+        Long clinicId = this.authHeaderService.getClinicId(authHeader);
+        return this.clinicScheduleRepository.findAllByDoctorId(doctorId).stream().filter(c -> !c.getIsBooked() && Objects.equals(c.getClinicId(), clinicId))
                 .filter(c -> c.getDate().after(new Date())).toList();
     }
 }

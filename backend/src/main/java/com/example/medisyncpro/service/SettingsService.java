@@ -8,11 +8,11 @@ import java.util.List;
 public interface SettingsService {
     List<SettingsDTO> getAllSettings();
 
-    Settings getSettingsById(Long id);
+    Settings getSettingsById(String authHeader) throws Exception;
 
-    Settings saveSettings(Settings settings);
+    Settings saveSettings(Settings settings,String authHeader) throws Exception;
 
-    SettingsDTO updateSettings(SettingsDTO settings);
+    SettingsDTO updateSettings(SettingsDTO settings,String authHeader) throws Exception;
 
-    void deleteSettings(Long id);
+    void deleteSettings(String authHeader) throws Exception;
 }

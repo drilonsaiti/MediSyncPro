@@ -14,7 +14,7 @@ public class DoctorMapper {
                 dto.getDoctorName(),
                 specializations,
                 dto.getEducation(),
-                dto.getWorkingDays(),
+                dto.getDoctorEmail(),
                 clinic
         );
     }
@@ -23,7 +23,6 @@ public class DoctorMapper {
         old.setDoctorName(newDoctor.getDoctorName());
         old.setSpecialization(newDoctor.getSpecialization());
         old.setEducation(newDoctor.getEducation());
-        old.setWorkingDays(newDoctor.getWorkingDays());
         old.setClinic(newDoctor.getClinic());
 
         return old;

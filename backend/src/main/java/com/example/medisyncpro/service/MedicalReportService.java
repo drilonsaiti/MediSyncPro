@@ -8,13 +8,13 @@ import org.springframework.data.domain.PageRequest;
 
 public interface MedicalReportService {
 
-    MedicalReportDto getById(Long id);
+    MedicalReportDto getById(Long id,String authHeader) throws Exception ;
 
-    MedicalReportResultDto getAll(PageRequest page, String nameOrEmail, String byDate);
+    MedicalReportResultDto getAll(PageRequest page, String nameOrEmail, String byDate,String authHeader) throws Exception ;
 
-    MedicalReport save(CreateMedicalReportDto medicalReport);
+    MedicalReport save(CreateMedicalReportDto medicalReport,String authHeader) throws Exception ;
 
-    MedicalReport update(MedicalReport medicalReport);
+    MedicalReport update(MedicalReport medicalReport,String authHeader) throws Exception;
 
-    void delete(Long id);
+    void delete(Long id,String authHeader) throws Exception;
 }

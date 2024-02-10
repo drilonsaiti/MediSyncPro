@@ -32,9 +32,10 @@ public class MedicalReportMapper {
         );
     }
 
-    public MedicalReport createMedicalReport(CreateMedicalReportDto dto, Doctor doctor, LocalDateTime date) {
+    public MedicalReport createMedicalReport(CreateMedicalReportDto dto, Doctor doctor, LocalDateTime date,Long patientId,Long clinicId) {
         return new MedicalReport(
-                25L,
+                patientId,
+                clinicId,
                 doctor,
                 dto.getMedicineName(),
                 dto.getDisease(),

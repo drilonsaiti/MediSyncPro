@@ -13,7 +13,7 @@ public interface DoctorService {
 
     Doctor getById(Long id);
 
-    DoctorResultDto getAll(PageRequest pageable, String specializations, String service);
+    DoctorResultDto getAll(PageRequest pageable, String specializations, String service,String authHeader) throws Exception;
 
     DoctorResultDto getAllByClinicId(Long clinicId, PageRequest pageable, String specializations, String service);
 
@@ -21,12 +21,12 @@ public interface DoctorService {
 
     Doctor save(CreateDoctorDto doctor);
 
-    void addDoctorToClinic(List<AddDoctorToClinicDto> dto, Long clinicId);
+    void addDoctorToClinic(List<AddDoctorToClinicDto> dto, Long clinicId,String authHeader) throws Exception;
 
-    Doctor update(Doctor doctor);
+    Doctor update(Doctor doctor,String authHeader) throws Exception;
 
-    void delete(Long id);
+    void delete(Long id,String authHeader) throws Exception;
 
-    void deleteDoctorFromClinic(Long id, Long clinicId);
+    void deleteDoctorFromClinic(Long id, Long clinicId,String authHeader) throws Exception;
 }
 

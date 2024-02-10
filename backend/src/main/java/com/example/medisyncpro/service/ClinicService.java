@@ -17,14 +17,14 @@ public interface ClinicService {
 
     ClinicResultDto getAll(PageRequest pageable, String specializations, String service, String byDate);
 
-    List<ClinicServices> getClinicServicesById(Long id);
+    List<ClinicServices> getClinicServicesById(Long id,String authHeader)throws Exception;
 
     Clinic save(Clinic clinic);
 
-    void delete(Long id);
+    void delete(Long id,String authHeader)throws Exception;
 
     long getTotalClinicCount(String specialization, String status);
 
-    Clinic updateClinic(UpdateClinicDto dto);
+    Clinic updateClinic(UpdateClinicDto dto,String authHeader)throws Exception;
 }
 

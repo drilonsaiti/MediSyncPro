@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CreateMedicalReportDto {
 
-    private Long patientId;
-
-    private Long doctorId;
+    private Long appointmentId;
 
     private String medicineName;
 
@@ -20,5 +18,4 @@ public class CreateMedicalReportDto {
     private LocalDateTime nextAppointmentDate;
     private Integer noOfDays;
 
-    private Long appointmentId;
 }

@@ -14,7 +14,15 @@ public class CreateDoctorDto {
 
     private String education;
 
-    private String workingDays;
-
     private Long clinicId;
+
+    private String doctorEmail;
+
+    public CreateDoctorDto(String doctorEmail,String doctorName) {
+        this.doctorEmail = doctorEmail;
+        this.doctorName = doctorName;
+        this.specializationId = null;
+        this.education = "";
+        this.clinicId = null;
+    }
 }

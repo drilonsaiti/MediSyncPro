@@ -29,7 +29,7 @@ public class AuthenticationService {
 
   private final UserService userService;
 
-  public AuthenticationResponse register(RegisterRequest request) {
+  public AuthenticationResponse register(RegisterRequest request) throws Exception {
     User user = this.userService.register(request.getFullName(),request.getEmail(), request.getPassword(), request.getRepeatPassword(),request.getUserType());
 
     var jwtToken = jwtService.generateToken(user);

@@ -6,6 +6,7 @@ import com.example.medisyncpro.model.dto.PatientResultDto;
 import com.example.medisyncpro.model.dto.UpdatePatientDto;
 import com.example.medisyncpro.model.excp.PatientException;
 import com.example.medisyncpro.service.PatientService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,13 +24,17 @@ public class PatientRestController {
 
     @GetMapping
     public ResponseEntity<?> listPatients(@RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "all") String nameOrEmail) {
+                                          @RequestParam(defaultValue = "all") String nameOrEmail,
+                                          HttpServletRequest request) {
         try {
+            final String authHeader = request.getHeader("Authorization");
             PageRequest pageable = PageRequest.of(page - 1, 15);
-            PatientResultDto patients = patientService.getAll(pageable, nameOrEmail);
+            PatientResultDto patients = patientService.getAll(pageable, nameOrEmail,authHeader);
             return new ResponseEntity<>(new PageImpl<>(patients.getPatients(), pageable, patients.getTotalElements()), HttpStatus.OK);
         } catch (PatientException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -56,22 +61,28 @@ public class PatientRestController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updatePatient(@RequestBody UpdatePatientDto patient) {
+    public ResponseEntity<?> updatePatient(@RequestBody UpdatePatientDto patient,HttpServletRequest request) {
         try {
-            patientService.update(patient);
+            final String authHeader = request.getHeader("Authorization");
+            patientService.update(patient,authHeader);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (PatientException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePatient(@PathVariable Long id) {
+    public ResponseEntity<?> deletePatient(@PathVariable Long id,HttpServletRequest request) {
         try {
-            patientService.delete(id);
+            final String authHeader = request.getHeader("Authorization");
+            patientService.delete(id,authHeader);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (PatientException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -24,10 +24,13 @@ public class Clinic {
     @Column(name = "clinic_id")
     private Long clinicId;
 
-    @Column(name = "clinic_name", nullable = false)
+    @Column(name = "clinic_email")
+    private String emailAddress;
+
+    @Column(name = "clinic_name")
     private String clinicName;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     private String address;
 
     @OneToMany
@@ -51,6 +54,14 @@ public class Clinic {
     public Clinic(String clinicName, String address) {
         this.clinicName = clinicName;
         this.address = address;
+        this.specializations = new HashSet<>();
+        this.doctors = new ArrayList<>();
+    }
+
+    public Clinic(String emailAddress,String clinicName,String address) {
+        this.emailAddress = emailAddress;
+        this.clinicName = clinicName;
+        this.address = "";
         this.specializations = new HashSet<>();
         this.doctors = new ArrayList<>();
     }

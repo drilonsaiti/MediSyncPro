@@ -15,4 +15,9 @@ public class CreateReceptionistDto {
 
     private Long clinicId;
 
+    public CreateReceptionistDto( String emailAddress,String receptionistName) {
+        this.receptionistName = receptionistName;
+        this.emailAddress = emailAddress;
+        this.clinicId = null;
+    }
 }

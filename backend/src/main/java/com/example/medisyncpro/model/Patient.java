@@ -18,10 +18,10 @@ public class Patient {
     @Column(name = "patient_id")
     private Long patientId;
 
-    @Column(name = "patient_name", nullable = false)
+    @Column(name = "patient_name")
     private String patientName;
 
-    @Column(name = "gender", nullable = false)
+    @Column(name = "gender")
     private String gender;
 
     @Column(name = "address")

@@ -21,4 +21,13 @@ public class CreatePatientDto {
     private String email;
 
     private LocalDate birthDay;
+
+    public CreatePatientDto(String email,String patientName) {
+        this.patientName = patientName;
+        this.email = email;
+        this.gender = "";
+        this.address = "";
+        this.contactNumber = "";
+        this.birthDay = null;
+    }
 }

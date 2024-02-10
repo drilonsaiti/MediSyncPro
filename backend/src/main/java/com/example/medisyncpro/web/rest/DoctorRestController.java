@@ -9,6 +9,7 @@ import com.example.medisyncpro.model.dto.SearchDoctorDto;
 import com.example.medisyncpro.model.excp.DoctorException;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.SpecializationService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,14 +31,18 @@ public class DoctorRestController {
     @GetMapping
     public ResponseEntity<?> listDoctors(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "all") String specializations,
-                                         @RequestParam(defaultValue = "all") String service) {
+                                         @RequestParam(defaultValue = "all") String service,
+                                         HttpServletRequest request) {
         try {
+            final String authHeader = request.getHeader("Authorization");
             PageRequest pageable = PageRequest.of(page - 1, 15);
-            DoctorResultDto clinicDtoList = doctorService.getAll(pageable, specializations, service);
+            DoctorResultDto clinicDtoList = doctorService.getAll(pageable, specializations, service,authHeader);
 
             return new ResponseEntity(new PageImpl<>(clinicDtoList.getClinics(), pageable, clinicDtoList.getTotalElements()), HttpStatus.OK);
         } catch (DoctorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -77,12 +82,15 @@ public class DoctorRestController {
     }
 
     @PostMapping("/addDoctorToClinic/{clinicId}")
-    public ResponseEntity<?> addDoctorToClinic(@PathVariable Long clinicId, @RequestBody List<AddDoctorToClinicDto> dto) {
+    public ResponseEntity<?> addDoctorToClinic(@PathVariable Long clinicId, @RequestBody List<AddDoctorToClinicDto> dto, HttpServletRequest request) {
         try {
-            doctorService.addDoctorToClinic(dto, clinicId);
+            final String authHeader = request.getHeader("Authorization");
+            doctorService.addDoctorToClinic(dto, clinicId,authHeader);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DoctorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -97,32 +105,41 @@ public class DoctorRestController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateDoctor(@RequestBody Doctor doctor) {
+    public ResponseEntity<?> updateDoctor(@RequestBody Doctor doctor, HttpServletRequest request) {
         try {
-            doctorService.update(doctor);
+            final String authHeader = request.getHeader("Authorization");
+            doctorService.update(doctor,authHeader);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DoctorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteDoctor(@PathVariable Long id) {
+    public ResponseEntity<?> deleteDoctor(@PathVariable Long id, HttpServletRequest request) {
         try {
-            doctorService.delete(id);
+            final String authHeader = request.getHeader("Authorization");
+            doctorService.delete(id,authHeader);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (DoctorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     @DeleteMapping("/{id}/{clinicId}")
-    public ResponseEntity<?> deleteDoctorFromClinic(@PathVariable Long id, @PathVariable Long clinicId) {
+    public ResponseEntity<?> deleteDoctorFromClinic(@PathVariable Long id, @PathVariable Long clinicId, HttpServletRequest request) {
         try {
-            doctorService.deleteDoctorFromClinic(id, clinicId);
+            final String authHeader = request.getHeader("Authorization");
+            doctorService.deleteDoctorFromClinic(id, clinicId,authHeader);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (DoctorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

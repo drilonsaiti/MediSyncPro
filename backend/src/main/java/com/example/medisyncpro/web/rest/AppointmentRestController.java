@@ -4,6 +4,7 @@ import com.example.medisyncpro.model.Appointment;
 import com.example.medisyncpro.model.dto.*;
 import com.example.medisyncpro.model.excp.ClinicAppointmentException;
 import com.example.medisyncpro.service.AppointmentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,18 +23,20 @@ public class AppointmentRestController {
     @GetMapping
     public ResponseEntity<?> listAppointments(@RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "all") String nameOrEmail,
-                                              @RequestParam(defaultValue = "all") String types) {
-
+                                              @RequestParam(defaultValue = "all") String types,
+                                              HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
         PageRequest pageable = PageRequest.of(page - 1, 15);
-        AppointmentResultDto appointments = appointmentService.getAll(pageable, nameOrEmail, types);
+        AppointmentResultDto appointments = appointmentService.getAll(pageable, nameOrEmail, types,authHeader);
         return new ResponseEntity<>(new PageImpl<>(appointments.getAppointments(), pageable, appointments.getTotalElements()), HttpStatus.OK);
 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAppointmentById(@PathVariable Long id) {
+    public ResponseEntity<?> getAppointmentById(@PathVariable Long id,HttpServletRequest request) {
         try {
-            Appointment appointment = appointmentService.getById(id);
+            final String authHeader = request.getHeader("Authorization");
+            Appointment appointment = appointmentService.getById(id,authHeader);
             return new ResponseEntity<>(appointment, HttpStatus.OK);
         } catch (ClinicAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -41,9 +44,10 @@ public class AppointmentRestController {
     }
 
     @GetMapping("/patient/{id}")
-    public ResponseEntity<?> getAppointmentByPatient(@PathVariable Long id) {
+    public ResponseEntity<?> getAppointmentByPatient(@PathVariable Long id,HttpServletRequest request) {
         try {
-            Iterable<AppointmentDto> appointments = appointmentService.getAllByPatient(id);
+            final String authHeader = request.getHeader("Authorization");
+            Iterable<AppointmentDto> appointments = appointmentService.getAllByPatient(id,authHeader);
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         } catch (ClinicAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -51,9 +55,10 @@ public class AppointmentRestController {
     }
 
     @GetMapping("/doctor/{id}")
-    public ResponseEntity<?> getAppointmentByDoctor(@PathVariable Long id) {
+    public ResponseEntity<?> getAppointmentByDoctor(@PathVariable Long id,HttpServletRequest request) {
         try {
-            Iterable<AppointmentDto> appointments = appointmentService.getAllByDoctor(id);
+            final String authHeader = request.getHeader("Authorization");
+            Iterable<AppointmentDto> appointments = appointmentService.getAllByDoctor(id,authHeader);
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         } catch (ClinicAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,9 +67,10 @@ public class AppointmentRestController {
 
 
     @PostMapping
-    public ResponseEntity<?> createAppointments(@RequestBody CreateAppointmentDto dto) {
+    public ResponseEntity<?> createAppointments(@RequestBody CreateAppointmentDto dto,HttpServletRequest request) {
         try {
-            appointmentService.save(dto);
+            final String authHeader = request.getHeader("Authorization");
+            appointmentService.save(dto,authHeader);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (ClinicAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -72,9 +78,11 @@ public class AppointmentRestController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateAppointments(@RequestBody AppointmentDto appointments) {
+    public ResponseEntity<?> updateAppointments(@RequestBody AppointmentDto appointments,HttpServletRequest request) {
         try {
-            appointmentService.update(appointments);
+            final String authHeader = request.getHeader("Authorization");
+
+            appointmentService.update(appointments,authHeader);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -82,19 +90,23 @@ public class AppointmentRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAppointments(@PathVariable Long id) {
+    public ResponseEntity<?> deleteAppointments(@PathVariable Long id,HttpServletRequest request) {
         try {
-            appointmentService.delete(id);
+            final String authHeader = request.getHeader("Authorization");
+
+            appointmentService.delete(id,authHeader);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (ClinicAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    @GetMapping("/dates")
-    public ResponseEntity<?> getAppointmentDates() {
+    @GetMapping("/dates/{clinicId}")
+    public ResponseEntity<?> getAppointmentDates(@PathVariable Long clinicId) {
         try {
-            Iterable<AppointmentDateDto> appointments = appointmentService.getAppointmentDates();
+            Iterable<AppointmentDateDto> appointments = appointmentService.getAppointmentDates(clinicId);
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         } catch (ClinicAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -102,9 +114,10 @@ public class AppointmentRestController {
     }
 
     @PostMapping("/byReceptionist")
-    public ResponseEntity<?> createAppointmentByReceptionist(@RequestBody AppointmentByReceptionistDto dto) {
+    public ResponseEntity<?> createAppointmentByReceptionist(@RequestBody AppointmentByReceptionistDto dto,HttpServletRequest request) {
         try {
-            appointmentService.createAppointmentByReceptionist(dto);
+            final String authHeader = request.getHeader("Authorization");
+            appointmentService.createAppointmentByReceptionist(dto,authHeader);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,9 +125,11 @@ public class AppointmentRestController {
     }
 
     @PostMapping("/changeAttended/{id}")
-    public ResponseEntity<?> changeAttended(@PathVariable Long id, @RequestBody ChangeAttendedDto attended) {
+    public ResponseEntity<?> changeAttended(@PathVariable Long id, @RequestBody ChangeAttendedDto attended,
+                                            HttpServletRequest request) {
         try {
-            appointmentService.changeAttended(id, attended.isAttended());
+            final String authHeader = request.getHeader("Authorization");
+            appointmentService.changeAttended(id, attended.isAttended(),authHeader);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (ClinicAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -122,9 +137,10 @@ public class AppointmentRestController {
     }
 
     @GetMapping("/nextAppointment/{id}")
-    public ResponseEntity<?> nextAppointment(@PathVariable Long id) {
+    public ResponseEntity<?> nextAppointment(@PathVariable Long id,HttpServletRequest request) {
         try {
-            AppointmentDto next = appointmentService.nexAppointment(id);
+            final String authHeader = request.getHeader("Authorization");
+            AppointmentDto next = appointmentService.nexAppointment(id,authHeader);
             return new ResponseEntity<>(next, HttpStatus.CREATED);
         } catch (ClinicAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

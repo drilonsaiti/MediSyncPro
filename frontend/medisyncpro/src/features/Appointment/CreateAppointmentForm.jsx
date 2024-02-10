@@ -147,10 +147,10 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId,d
     const {isEditing, editAppointment} = useEditAppointment();
     const {isLoading: isLoadingServices, clinicServices} = useClinicServicesById(clinicId);
     const {isCreating: isCreatingAppointment, createAppointmentByRecep} = useCreateAppointmentByReceptionist();
-    const {isLoading, dates} = useAppointmentDates();
+    const {isLoading, dates} = useAppointmentDates(clinicId);
     const [bookedDates, setBookedDates] = useState([]);
 
-    const user = "rec";
+    const user = "";
 
 
 
@@ -209,9 +209,8 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId,d
 
     const filterDate = (date) => {
         const includeDates = generateIncludeDates();
-        // Convert date to string for comparison
+
         const dateString = date.toDateString();
-        // Check if the date is included in the available dates
         return includeDates.some(includeDate => includeDate.toDateString() === dateString);
     };
 
@@ -219,14 +218,11 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId,d
         const selectedDate = new Date(time);
         const selectedDay = selectedDate.toDateString();
         const includeDates = generateIncludeDates();
-        // Check if the selected date is within the available dates
-        console.log(includeDates,time);
-        console.log(includeDates.some(date => date.toDateString() === selectedDay));
+
         if (!includeDates.some(date => date.toDateString() === selectedDay)) {
-            return false; // If the selected date is not available, disable the time
+            return false;
         }
 
-        // Check if the selected time is within the doctor's schedule for the selected date
         return scheduleByDoctor.some(schedule => {
             const { startTime } = schedule;
             const scheduleStart = new Date(startTime);
@@ -269,11 +265,9 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId,d
         const currentDate = new Date();
         const selectedDate = new Date(date);
 
-        // Set hours, minutes, seconds, and milliseconds to 0 for both dates
         currentDate.setHours(0, 0, 0, 0);
         selectedDate.setHours(0, 0, 0, 0);
 
-        // Check if the selected date is today or in the future
         const futureDate = selectedDate.getTime() >= currentDate.getTime();
 
         return futureDate;
@@ -313,7 +307,7 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId,d
                     }
                 )
             } else {
-                createAppointment({...data}, {
+                createAppointment({...data,clinicId,date: adjustedStartDate}, {
                     onSuccess: () => {
                         reset();
                         onCloseModal?.();

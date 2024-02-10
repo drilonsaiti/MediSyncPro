@@ -13,14 +13,13 @@ const Card = styled.div`
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 2rem;
-    margin: 2rem;
+    margin-bottom: 1.5rem;
     text-align: left;
     display: flex;
     align-items: center;
     width: 100%;
     gap: 0.5rem;
     
-
     p {
         color: #666;
         line-height: 1.6;
@@ -97,7 +96,7 @@ const UserTypeCard = ({onUserTypeChange}) => {
     };
     return (
         <Container>
-            <Heading style={{padding: '0 2rem'}}>Choose Your Role
+            <Heading type="h1">Choose Your Role
             </Heading>
             <Card>
                 <div>

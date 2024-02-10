@@ -6,8 +6,8 @@ import {FaHouseMedical} from "react-icons/fa6";
 
 
 export const StyledBox = styled.div`
-    background-color: #fff;
-    border: 1px solid #f3f4f6;
+    background-color: var(--color-grey-0);
+    border: 1px solid var(--color-grey-50);
     border-radius: 7px;
     width: 80%;
     overflow: hidden;
@@ -33,7 +33,7 @@ const HeaderProfile = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #087f5b;
+    background-color: var(--color-brand-500);
     margin: auto;
 `
 
@@ -88,7 +88,7 @@ const QuickActionsButton = styled.button`
     & svg {
         width: 2.4rem;
         height: 2.4rem;
-        color: var(--color-grey-0);
+        color: white;
         transition: all 0.3s;
     }
 `

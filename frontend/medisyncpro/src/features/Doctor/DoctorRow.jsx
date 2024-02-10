@@ -29,8 +29,7 @@ const DoctorRow = ({doctor}) => {
         <Table.Row role="row">
             <Title>{doctorId}</Title>
             <Title>{name}</Title>
-            <Title>{specialization.specializationName}</Title>
-            <Title>{workingDays}</Title>
+            <Title>{specialization?.specializationName ?? ''}</Title>
             <Modal>
                 <ButtonGroup>
 

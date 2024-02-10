@@ -16,6 +16,7 @@ const GlobalStyles = createGlobalStyle`
             --color-grey-700: #1C1F21;
             --color-grey-800: #141618;
             --color-grey-900: #0C0E0F;
+            --color-grey-1000: #141618;
 
 
             --color-blue-100: #e0f2fe;
@@ -38,6 +39,8 @@ const GlobalStyles = createGlobalStyle`
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
+            
+            --hover-doctor-color: #FFF;
 
 
             --image-grayscale: 0;
@@ -45,17 +48,20 @@ const GlobalStyles = createGlobalStyle`
         }
 
         &.dark-mode {
-            --color-grey-0: #18212f;
-            --color-grey-50: #0C0E0F;
+            --color-grey-55: #12171e;
+            --color-grey-0: #0C0E0F;
+            --color-grey-50: #090b0c;
             --color-grey-100: #141618;
+
             --color-grey-200: #1C1F21;
             --color-grey-300: #24282A;
             --color-grey-400: #6b7280;
             --color-grey-500: #9ca3af;
             --color-grey-600: #d1d5db;
             --color-grey-700: #e5e7eb;
-            --color-grey-800: #f3f4f6;
+            --color-grey-800: #141618;
             --color-grey-900: #f9fafb;
+            --color-grey-1000: #fff;
 
             --color-blue-100: #075985;
             --color-blue-700: #e0f2fe;
@@ -68,6 +74,8 @@ const GlobalStyles = createGlobalStyle`
             --color-indigo-100: #3730a3;
             --color-indigo-700: #e0e7ff;
 
+            --color-brand-600: #087f5b;
+            --color-brand-700: #087f5b;
             --color-red-100: #fee2e2;
             --color-red-700: #b91c1c;
             --color-red-800: #991b1b;
@@ -77,6 +85,7 @@ const GlobalStyles = createGlobalStyle`
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
             --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.3);
             --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.4);
+            --hover-doctor-color: #1A1A1AFF;
 
             --image-grayscale: 10%;
             --image-opacity: 90%;

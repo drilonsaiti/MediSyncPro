@@ -1,15 +1,14 @@
 import axios from "axios";
+import Cookies from "universal-cookie";
 
 export const BASE_URL = "http://localhost:9091/api";
 
-/*
 const cookies = new Cookies();
 export const HEADERS = {
     "content-type": "application/json",
     "accept": "application/json",
     "Authorization": `Bearer ${cookies?.get('accessToken') ?? cookies.get("refreshToken")}`
 };
-*/
 
 
 function shouldIncludeHeaders(url) {
@@ -24,6 +23,7 @@ export const apiRequest = async (method, url, data = null, params = null) => {
             method,
             url: `${BASE_URL}/${url}`,
             data: method !== 'GET' ? data : null,
+            headers: shouldIncludeHeaders(url) ? HEADERS : {},
             params: {...params} // Corrected here, no need for an additional 'params' key
         };
 

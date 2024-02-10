@@ -18,8 +18,8 @@ const Container = styled.div`
 `;
 
 const StyledBoxDoctors = styled.div`
-    background-color: #fff;
-    border: ${props => (props.forUsers ? 'none' : '1px solid #f3f4f6')};    
+    background-color: var(--color-grey-0);
+    border: ${props => (props.forUsers ? 'none' : '1px solid var(--color-grey-0)')};    
     border-radius: 7px;
     width: 80%;
     overflow: hidden;
@@ -35,19 +35,24 @@ const ProfileCard = styled.div`
     align-items: center;
     gap: 1rem;
     height: auto;
-    background-color: white;
+    background-color: var(--color-grey-0);
     border: 1px solid var(--color-brand-700);
     /*border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);*/
     
     padding: 2rem 2rem;
     transition: transform 0.3s ease;
-    
-    &:hover{
-        background:
-                linear-gradient(to left top, rgba(16, 65, 47, .05) 0%/*bottom-right color*/, rgba(255, 255, 255, 1) 50% /*middle color*/, rgba(16, 65, 47, .1) 100% /*top-left color*/),
-                linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))/*"faked" black background make sure to add last or it will appear before the transparent/colored layer*/;
+
+    &:hover {
+        background: linear-gradient(to left top, rgba(16, 65, 47, .05) 0% /*bottom-right color*/, var(--hover-doctor-color) 50% /*middle color*/, rgba(16, 65, 47, .1) 100% /*top-left color*/),
+        linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)) /*"faked" black background make sure to add last or it will appear before the transparent/colored layer*/;
     }
+    
+    /*&:hover{
+        background:
+                linear-gradient(to left top, rgba(16, 65, 47, .05) 0%!*bottom-right color*!, rgba(255, 255, 255, 1) 50% !*middle color*!, rgba(16, 65, 47, .1) 100% !*top-left color*!),
+                linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))!*"faked" black background make sure to add last or it will appear before the transparent/colored layer*!;
+    }*/
 `;
 
 const Avatar = styled.div`

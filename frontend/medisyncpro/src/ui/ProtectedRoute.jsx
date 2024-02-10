@@ -14,7 +14,7 @@ height: 100vh;
     justify-content: center;
 `
 
-const ProtectedRoute = ({children, adminOnly, userOnly}) => {
+const ProtectedRoute = ({children, adminOnly, patientOnly,receptionistOnly,ownerOnly}) => {
     const {goToLogin, isLoading, token} = useGetToken();
     const navigate = useNavigate();
 
@@ -31,14 +31,13 @@ const ProtectedRoute = ({children, adminOnly, userOnly}) => {
     }
 
     const hasAdminRole = roles === "ROLE_ADMIN";
-    const hasUserRole = roles === "ROLE_USER";
-    if (adminOnly && !hasAdminRole) {
+    const hasPatientRole = roles === "ROLE_PATIENT";
+    const hasOwnerRole = roles === "ROLE_OWNER";
+    const hasReceptionistRole = roles === "ROLE_RECEPTIONIST";
+    if ((adminOnly && !hasAdminRole) || (patientOnly && !hasPatientRole) || (ownerOnly && !hasOwnerRole) || (receptionistOnly && !hasReceptionistRole)) {
         return <FullPage><AccessDenied/></FullPage>;
     }
 
-    if (userOnly && !hasUserRole) {
-        return <FullPage><AccessDenied/></FullPage>;
-    }
 
     return children;
 

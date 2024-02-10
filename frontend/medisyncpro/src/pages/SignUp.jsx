@@ -12,7 +12,7 @@ const LoginLayout = styled.main`
   grid-template-columns: 58rem;
   align-content: center;
   justify-content: center;
-  gap: 3.2rem;
+  gap: 1rem;
   background-color: var(--color-grey-50);
 `;
 
@@ -28,10 +28,14 @@ function Signup() {
     };
     return <LoginLayout>
         <Logo />
-        <Heading type="login">Create a new account</Heading>
+
         {!userType && <UserTypeCard onUserTypeChange={handleUserTypeChange}/>}
 
-        {userType &&<SignupForm type="signup" getValues={getValues} register={register} reset={reset} handleSubmit={handleSubmit} errors={errors}/>}
+        {userType && (<> <Heading type="login">Create a new account</Heading>
+        <SignupForm type="signup" getValues={getValues} register={register} reset={reset} handleSubmit={handleSubmit} errors={errors}/>
+        </>)
+
+        }
     </LoginLayout>;
 }
 

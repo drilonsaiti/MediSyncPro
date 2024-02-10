@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import ButtonIcon from "./ButtonIcon.jsx";
 import {HiOutlineUser} from 'react-icons/hi2';
+import DarkModeToggle from "./DarkModeToggle.jsx";
+import Logout from "../features/Authentication/Logout.jsx";
 
 
 const StyledHeaderMenu = styled.ul`
@@ -17,13 +19,13 @@ const HeaderMenu = () => {
                     <HiOutlineUser/>
                 </ButtonIcon>
             </li>
-            {/*  <li>
+              <li>
                 <DarkModeToggle />
 
             </li>
             <li>
                 <Logout />
-            </li>*/}
+            </li>
         </StyledHeaderMenu>
     );
 };

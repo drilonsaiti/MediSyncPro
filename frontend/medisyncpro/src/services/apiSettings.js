@@ -3,8 +3,8 @@ import {apiRequest} from "../utils/services.js";
 export async function getSettings() {
     try {
 
-        const response = await apiRequest('GET', 'settings')
-        return response.data[0];
+        const response = await apiRequest('GET', 'settings/id')
+        return response.data;
     } catch (e) {
         throw new Error(e);
     }

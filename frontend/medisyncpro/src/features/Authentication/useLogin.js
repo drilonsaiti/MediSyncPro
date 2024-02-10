@@ -11,7 +11,7 @@ export function useLogin(){
         onSuccess: (data) => {
             queryClient.setQueriesData(["user"],data)
             toast.success("Account successfully log in.")
-            navigate("/")
+            navigate("/appointment")
         },
         onError: error => toast.error(error.message)
     })

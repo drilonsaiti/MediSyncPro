@@ -221,13 +221,13 @@ const DoctorAppointmentBox = ({doctorId}) => {
 
     if (isLoading) return <Spinner/>
 
-    let filteredAppointments = appointments.filter(app => {
+    let filteredAppointments = appointments?.filter(app => {
         const appDate = new Date(app.date).toDateString();
         const startDateString = startDate.toDateString();
         return appDate === startDateString;
     });
 
-    const highlightedDates = appointments.map(app => {
+    const highlightedDates = appointments?.map(app => {
         const appointmentDate = startOfDay(new Date(app.date));
         const dayDifference = differenceInDays(startOfDay(startDate), appointmentDate);
         console.log(dayDifference);
@@ -238,7 +238,7 @@ const DoctorAppointmentBox = ({doctorId}) => {
         <StyledBox>
             <Container>
                 <Appointments>
-                    {filteredAppointments.map(app => {
+                    {filteredAppointments?.map(app => {
                         return (
                             <AppointmentsItem key={app.appointmentId}>
 
@@ -272,7 +272,7 @@ const DoctorAppointmentBox = ({doctorId}) => {
                 </Appointments>
 
                 <Calendar>
-                    <Heading type="h2">Select date</Heading>
+                    <Heading type="h2" style={{color: 'white'}}>Select date</Heading>
                     <DatePicker
                         wrapperClassName='date_picker full-width'
                         selected={startDate}

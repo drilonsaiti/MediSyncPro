@@ -4,7 +4,7 @@ import error from "eslint-plugin-react/lib/util/error.js";
 
 export async function getClinicSchedules({page,sort}) {
     try {
-        const response = await apiRequest('GET', 'clinicSchedules/grouped/1',null,{
+        const response = await apiRequest('GET', 'clinicSchedules/grouped',null,{
             page:page,
             sort:sort
         });

@@ -12,7 +12,7 @@ export async function signUp(data){
 
     console.log("DATA signup",data);
 
-    /*try {
+    try {
         const response = await apiRequest('POST',`auth/register`,data)
         const cookies = new Cookies();
 
@@ -32,7 +32,7 @@ export async function signUp(data){
     } catch (error) {
         console.error(error);
         throw new Error(`Can't signup right now`);
-    }*/
+    }
 }
 
 export async function logIn(data){

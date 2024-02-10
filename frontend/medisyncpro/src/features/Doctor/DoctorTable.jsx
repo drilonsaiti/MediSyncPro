@@ -16,12 +16,11 @@ const DoctorTable = ({doctorsByClinic,forClinic}) => {
     console.log(doctors);
     return (
         <Menus>
-            <Table columns={'0.6fr 3fr repeat(3,1fr)'}>
+            <Table columns={'0.6fr 3fr repeat(2,1fr)'}>
                 <Table.Header>
                     <div>Id</div>
                     <div>Name</div>
                     <div>Specialization</div>
-                    <div>Working time</div>
                     <div></div>
 
                 </Table.Header>

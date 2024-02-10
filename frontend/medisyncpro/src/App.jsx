@@ -25,6 +25,8 @@ import {Toaster} from "react-hot-toast";
 import ClinicSettings from "./pages/ClinicSettings.jsx";
 import Signup from "./pages/SignUp.jsx";
 import Login from "./pages/Login.jsx";
+import {DarkModeProvider} from "./context/DarkModeContext.jsx";
+import ProtectedRoute from "./ui/ProtectedRoute.jsx";
 
 
 const queryClient = new QueryClient({
@@ -39,13 +41,19 @@ const queryClient = new QueryClient({
 function App() {
 
     return (
+        <DarkModeProvider>
         <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false}/>
+
             <GlobalStyles/>
 
             <BrowserRouter>
                 <Routes>
-                    <Route element={<AppLayout/>}>
+                    <Route element={
+                        <ProtectedRoute>
+                            <AppLayout />
+                        </ProtectedRoute>
+                    }>
 
                         <Route index element={<Navigate replace to={"/appointment"}/>}/>
                         <Route index path="appointment" element={<Appointment/>}/>
@@ -88,6 +96,7 @@ function App() {
                          }
                      }}/>
         </QueryClientProvider>
+        </DarkModeProvider>
     )
 }
 

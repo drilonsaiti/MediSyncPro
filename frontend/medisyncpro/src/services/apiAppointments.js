@@ -16,6 +16,18 @@ export async function getAppointments({page,nameOrEmail,types}) {
     }
 }
 
+export async function getMyAppointment({page}) {
+    try {
+        const response = await apiRequest('GET', 'appointments/myAppointment',null,{
+            page:page !== 0 ? page : 1,
+        });
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+
+    }
+}
+
 export async function getAppointmentsByPatient(id) {
     try {
         const response = await apiRequest('GET', `appointments/patient/${id}`);
@@ -39,7 +51,7 @@ export async function getAppointmentsByDoctor(id) {
 
 export async function createEditAppointment(newAppointment, id) {
     console.log("APPOINTMENT",newAppointment);
-    /*try {
+    try {
         let response = {}
         if (id) {
             response = await apiRequest('PUT', `appointments`, newAppointment);
@@ -52,7 +64,7 @@ export async function createEditAppointment(newAppointment, id) {
     } catch (e) {
         throw new Error(e);
 
-    }*/
+    }
 }
 
 export async function deleteAppointment(id) {

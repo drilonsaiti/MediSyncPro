@@ -5,7 +5,7 @@ import GlobalStyles from "../styles/GlobalStyles.js";
 import Button from "./Button.jsx";
 
 const StyledErrorFallback = styled.main`
-  height: 100vh;
+  height: 100lvh;
   background-color: var(--color-grey-50);
   display: flex;
   align-items: center;

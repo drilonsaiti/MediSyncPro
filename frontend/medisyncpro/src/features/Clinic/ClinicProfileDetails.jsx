@@ -4,9 +4,10 @@ import Spinner from "../../ui/Spinner.jsx";
 import ClinicHeaderBox from "./ClinicHeaderBox.jsx";
 import {useClinicById} from "./useClinic.js";
 import ClinicAppointmentBox from "./ClinicAppointmentBox.jsx";
+import {useMyClinicProfile} from "./useMyClinicProfile.js";
 
-const ClinicDetails = () => {
-    const {isLoading, clinic} = useClinicById();
+const ClinicProfileDetails = () => {
+    const {isLoading, clinic} = useMyClinicProfile();
 
     if (isLoading) return <Spinner/>
 
@@ -24,4 +25,4 @@ const ClinicDetails = () => {
     );
 };
 
-export default ClinicDetails;
+export default ClinicProfileDetails;

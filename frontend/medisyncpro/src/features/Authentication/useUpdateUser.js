@@ -1,5 +1,4 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {createEditAccommodation} from "../../services/apiAccommodations.js";
 import toast from "react-hot-toast";
 import {profile, updateCurrentAvatar, updateCurrentFullName, updatePassword} from "../../services/apiAuth.js";
 

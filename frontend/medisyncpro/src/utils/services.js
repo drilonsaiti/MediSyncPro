@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "universal-cookie";
+import {useGetRole} from "../services/useGetRole.js";
 
 export const BASE_URL = "http://localhost:9091/api";
 
@@ -34,7 +35,7 @@ export const apiRequest = async (method, url, data = null, params = null) => {
     }
 };
 
-/*export function Roles(){
+export function Roles(){
     const {roles,isLoading} = useGetRole();
     console.log("ROLES FUNC")
     console.log(roles);
@@ -42,7 +43,8 @@ export const apiRequest = async (method, url, data = null, params = null) => {
         return roles;
 }
 
+
 export const getInitialRoute = () => {
     const roles = Roles();
-    return roles.includes("ADMIN") ? "/dashboard" : "/accommodations";
-};*/
+    return roles.includes("ADMIN") ? "/accommodations" : "/accommodationsUser";
+};

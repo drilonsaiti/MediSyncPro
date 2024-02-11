@@ -89,8 +89,33 @@ const AccountReceptionistSettings = () => {
                                 onBlur={handlerBlurSelect}
                                 closeOnSelect={false}
                                 menuPortalTarget={document.body}
-                                styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                value={selectedOptionsText} // Pass the selectedOptionsText state to control the selected text
+                                styles={{menuPortal: base => ({...base, zIndex: 9999}),
+                                    control: (baseStyles, state) => ({
+                                        ...baseStyles,
+                                        border: '1px solid var(--color-grey-300)',
+                                        borderRadius: 'var(--border-radius-sm)',
+                                        padding:'0.2rem .2rem',
+                                        boxShadow: 'var(--shadow-sm)',
+                                        backgroundColor: 'var(--color-grey-0)',
+                                        color: 'var(--color-grey-600)'
+                                    }),
+                                    option: (base, state) => ({
+                                        ...base,
+                                        color: state.isFocused || state.isSelected ? 'white' : 'var(--color-grey-600)',
+                                    })
+                                }}
+                                theme={(theme) => ({
+                                    ...theme,
+                                    borderRadius: 0,
+
+                                    colors: {
+                                        ...theme.colors,
+                                        primary25: 'var(--color-brand-600)',
+                                        primary: 'var(--color-brand-700)',
+                                        neutral0: 'var(--color-grey-0)', // Background color
+                                        neutral80: 'var(--color-grey-600)', // Text color
+                                    },
+                                })}                            value={selectedOptionsText} // Pass the selectedOptionsText state to control the selected text
                             />
                         </FormRow>
                     </Form>

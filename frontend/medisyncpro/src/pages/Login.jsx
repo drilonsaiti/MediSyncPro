@@ -5,7 +5,7 @@ import Heading from "../ui/Heading.jsx";
 import UserTypeCard from "../ui/UserTypeCard.jsx";
 
 const LoginLayout = styled.main`
-  min-height: 100vh;
+  min-height: 100lvh;
   display: grid;
   grid-template-columns: 48rem;
   align-content: center;

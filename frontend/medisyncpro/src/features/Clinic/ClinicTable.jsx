@@ -23,7 +23,7 @@ const ClinicTable = () => {
                     <div></div>
 
                 </Table.Header>
-                <Table.Body data={clinics.sort((a,b) => a.clinicId - b.clinicId)} render={
+                <Table.Body data={clinics?.sort((a,b) => a.clinicId - b.clinicId)} render={
                     spc => <ClinicRow clinic={spc} key={spc.clinicId}/>
                 }/>
 

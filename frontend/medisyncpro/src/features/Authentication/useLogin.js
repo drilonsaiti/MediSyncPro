@@ -2,6 +2,7 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {logIn} from "../../services/apiAuth.js";
 import toast from "react-hot-toast";
 import {useNavigate} from "react-router-dom";
+import {Roles} from "../../utils/services.js";
 
 export function useLogin(){
     const navigate = useNavigate();
@@ -10,8 +11,14 @@ export function useLogin(){
         mutationFn: logIn,
         onSuccess: (data) => {
             queryClient.setQueriesData(["user"],data)
+
+            console.log("DATA IN LOGIN ROLE",data);
+            data.role.includes("PATIENT") ? navigate("/appointmentUser") : navigate("/appointment")
             toast.success("Account successfully log in.")
-            navigate("/appointment")
+            setTimeout(() => {
+
+                data.role.includes("PATIENT") ? navigate("/appointmentUser") : navigate("/appointment");
+            }, 1500);
         },
         onError: error => toast.error(error.message)
     })

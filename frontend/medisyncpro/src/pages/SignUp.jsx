@@ -7,7 +7,7 @@ import {useForm} from "react-hook-form";
 import {useState} from "react";
 
 const LoginLayout = styled.main`
-  min-height: 100vh;
+  min-height: 100lvh;
   display: grid;
   grid-template-columns: 58rem;
   align-content: center;

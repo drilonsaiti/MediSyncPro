@@ -10,7 +10,7 @@ const ServiceTableOperations = () => {
     
     if (isLoading) return <SpinnerMini/>
     
-    const allSpecializations = specializations.sort((a, b) => a.specializationId - b.specializationId);
+    const allSpecializations = Array.isArray(specializations) ? specializations?.sort((a, b) => a.specializationId - b.specializationId) : [];
 
     const optionsSpecializations = allSpecializations?.map(spec => {
         return {

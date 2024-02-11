@@ -14,10 +14,6 @@ const PatientDetails = () => {
                 <PatientHeaderBox patient={patient}/>
             </Row>
 
-
-            <Row>
-                <PatientAppointmentBox patientId={patient.patientId}/>
-            </Row>
         </>
     );
 };

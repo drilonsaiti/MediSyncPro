@@ -24,6 +24,15 @@ export async function getPatientById(id) {
     }
 }
 
+export async function getPatientForProfile(id) {
+    try {
+        const response = await apiRequest('GET', `patients/profile`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+    }
+}
+
 
 export async function createEditPatient(newPatient, id) {
     try {

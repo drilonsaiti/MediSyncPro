@@ -1,5 +1,5 @@
 import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {getPatientById, getPatients} from "../../services/apiPatients.js";
+import {getPatientById, getPatientForProfile, getPatients} from "../../services/apiPatients.js";
 import {useParams, useSearchParams} from "react-router-dom";
 
 export function usePatients() {
@@ -43,6 +43,17 @@ export function usePatientById() {
     const {data: patient, isLoading} = useQuery({
         queryFn: () => getPatientById(patientId),
         queryKey: ["patient", patientId]
+    })
+
+    return {patient, isLoading};
+}
+
+
+
+export function usePatientForProfile() {
+    const {data: patient, isLoading} = useQuery({
+        queryFn: getPatientForProfile,
+        queryKey: ["profile"]
     })
 
     return {patient, isLoading};

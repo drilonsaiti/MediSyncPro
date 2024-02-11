@@ -39,6 +39,15 @@ export async function getClinicById(id) {
 }
 
 
+export async function getMyClinicProfile() {
+    try {
+        const response = await apiRequest('GET', `clinics/myProfile`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+    }
+}
+
 export async function createEditClinic(newClinic, id) {
     try {
         let response = {}

@@ -26,8 +26,8 @@ const Container = styled.div`
 `;
 
 const StyledBoxDoctors = styled.div`
-    background-color: #fff;
-    border: 1px solid #f3f4f6;
+    background-color: var(--color-grey-0);
+    border: 1px solid var(--color-grey-0);
     border-radius: 7px;
     padding: 2rem;
     z-index: 200;
@@ -39,16 +39,15 @@ const ProfileCard = styled.div`
     gap: 1rem;
     //justify-items: center;
     text-align: center;
-    background-color: white;
+    background-color: var(--color-grey-0);
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
     padding: 2rem;
     transition: transform 0.3s ease;
 
     &:hover {
-        background:
-                linear-gradient(to left top, rgba(16, 65, 47, .05) 0%, rgba(255, 255, 255, 1) 50%, rgba(16, 65, 47, .1) 100%),
-                linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+        background: linear-gradient(to left top, rgba(16, 65, 47, .05) 0% , var(--hover-clinic-color) 50% , rgba(16, 65, 47, .1) 100% ),
+        linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)) 
     }
 `;
 
@@ -154,7 +153,7 @@ const Tooltip = styled.span.attrs(props => ({
 `;
 
 const Footer = styled.footer`
-    height: 20vh;
+    height: 20lvh;
   display: flex;
   justify-content: center;
   padding: 1.2rem;
@@ -165,13 +164,13 @@ const Footer = styled.footer`
 `;
 
 const getServiceText = (specializationId, serviceDto) => {
-    const specializationServices = serviceDto.filter(service => service.specializationId === specializationId);
+    const specializationServices = serviceDto?.filter(service => service.specializationId === specializationId);
 
     if (specializationServices.length === 0) {
         return '';
     }
 
-    const services = specializationServices.map(service => service.services.split(", ")).flat();
+    const services = specializationServices?.map(service => service.services.split(", ")).flat();
     const maxServicePerLine = 2;
     const chunks = [];
 
@@ -210,7 +209,7 @@ const AppointmentUser = () => {
             setSearchInput(event.target.value);
     };
 
-    const filteredClinics = clinics.filter((clinic) => {
+    const filteredClinics = clinics?.filter((clinic) => {
         const searchField = types === 'clinics' ? clinic.clinicName : 'unknown';
         return searchField.toLowerCase().includes(searchInput.toLowerCase());
     });

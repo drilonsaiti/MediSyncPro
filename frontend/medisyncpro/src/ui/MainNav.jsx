@@ -1,8 +1,11 @@
 import styled, {css} from "styled-components";
 
-import {FaCalendarDays, FaGear, FaHouseMedical, FaUserDoctor, FaUserPen} from "react-icons/fa6";
+import {FaCalendarDays, FaGear, FaHouseMedical, FaUser, FaUserDoctor, FaUserPen} from "react-icons/fa6";
 import {NavLink} from "react-router-dom";
 import {FaAtom, FaCalendarCheck, FaClipboardList, FaHospitalUser} from "react-icons/fa";
+import {Roles} from "../utils/services.js";
+import {TbCalendarUser} from "react-icons/tb";
+import {HiOutlineCog6Tooth} from "react-icons/hi2";
 
 const NavList = styled.ul`
     display: flex;
@@ -58,11 +61,16 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 function MainNav() {
-    return (
-        <nav>
 
-            <NavList>
+    const role = Roles();
+    const ROLE_OWNER_DOCTOR_RECP = role?.includes("OWNER") || role?.includes("DOCTOR") || role?.includes("RECEPTIONIST");
+    const ROLE_ADMIN = role.includes("ADMIN");
+    let nav;
 
+
+    if (ROLE_OWNER_DOCTOR_RECP) {
+        nav = (
+            <>
                 <li>
                     <StyledNavLink to="/appointment">
                         <FaCalendarCheck/>
@@ -70,12 +78,7 @@ function MainNav() {
                     </StyledNavLink>
                 </li>
 
-                <li>
-                    <StyledNavLink to="/clinics">
-                        <FaHouseMedical/>
-                        <span>Clinics</span>
-                    </StyledNavLink>
-                </li>
+
                 <li>
                     <StyledNavLink to="/clinic-schedule">
                         <FaCalendarDays/>
@@ -114,12 +117,98 @@ function MainNav() {
                     </StyledNavLink>
                 </li>
 
+
+                <li>
+                    <StyledNavLink to="/profile">
+                        <FaUser/>
+                        <span>Profile</span>
+                    </StyledNavLink>
+                </li>
+
+                {role.includes("OWNER") &&
+                    <li>
+                        <StyledNavLink to="/settings">
+                            <HiOutlineCog6Tooth/>
+                            <span>Settings of Clinic</span>
+                        </StyledNavLink>
+                    </li>
+                }
+
+                <li>
+                    <StyledNavLink to="/settingsProfile">
+                        <HiOutlineCog6Tooth/>
+                        <span>Settings profile</span>
+                    </StyledNavLink>
+                </li>
+            </>
+        )
+    }
+
+    if (!ROLE_OWNER_DOCTOR_RECP) {
+        nav = (
+            <>
+                <li>
+                    <StyledNavLink to="/appointmentUser">
+                        <FaCalendarCheck/>
+                        <span>Appointments</span>
+                    </StyledNavLink>
+                </li>
+
+                <li>
+                    <StyledNavLink to="/myAppointment">
+                        <TbCalendarUser />
+                        <span>My appointments</span>
+                    </StyledNavLink>
+                </li>
+
+                <li>
+                    <StyledNavLink to="/myMedicalReports">
+                        <FaClipboardList/>
+                        <span>My medical reports</span>
+                    </StyledNavLink>
+                </li>
+                <li>
+                    <StyledNavLink to="/profile">
+                        <FaUser/>
+                        <span>Profile</span>
+                    </StyledNavLink>
+                </li>
+
+                <li>
+                    <StyledNavLink to="/settingsProfile">
+                        <HiOutlineCog6Tooth/>
+                        <span>Settings</span>
+                    </StyledNavLink>
+                </li>
+
+
+            </>
+        )
+    }
+
+    if (ROLE_ADMIN){
+        nav = (
+            <>
+                <li>
+                    <StyledNavLink to="/clinics">
+                        <FaHouseMedical/>
+                        <span>Clinics</span>
+                    </StyledNavLink>
+                </li>
                 <li>
                     <StyledNavLink to="/specializations">
                         <FaAtom/>
                         <span>Specializations</span>
                     </StyledNavLink>
                 </li>
+            </>
+        )
+    }
+    return (
+        <nav>
+
+            <NavList>
+                {nav}
 
             </NavList>
         </nav>

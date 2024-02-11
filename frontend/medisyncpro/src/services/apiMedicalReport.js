@@ -16,6 +16,18 @@ export async function getMedicalReports({page,nameOrEmail,byDate}) {
     }
 }
 
+export async function getMyMedicalReports({page}) {
+    try {
+        const response = await apiRequest('GET', 'medicalReports/myReports',null,{
+            page:page !== 0 ? page : 1,
+        });
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+
+    }
+}
+
 
 export async function getMedicalReportById(id) {
     try {

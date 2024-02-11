@@ -7,14 +7,14 @@ import {useGetRole} from "../services/useGetRole.js";
 import AccessDenied from "./AccessDenied.jsx";
 
 const FullPage = styled.div`
-height: 100vh;
+height: 100lvh;
     background-color: var(--color-grey-50);
     display: flex;
     align-items: center;
     justify-content: center;
 `
 
-const ProtectedRoute = ({children, adminOnly, patientOnly,receptionistOnly,ownerOnly}) => {
+const ProtectedRoute = ({children,adminOnly, ownerOnly, receptionistOnly = false, doctorOnly = false,patientOnly=false}) => {
     const {goToLogin, isLoading, token} = useGetToken();
     const navigate = useNavigate();
 
@@ -34,12 +34,25 @@ const ProtectedRoute = ({children, adminOnly, patientOnly,receptionistOnly,owner
     const hasPatientRole = roles === "ROLE_PATIENT";
     const hasOwnerRole = roles === "ROLE_OWNER";
     const hasReceptionistRole = roles === "ROLE_RECEPTIONIST";
-    if ((adminOnly && !hasAdminRole) || (patientOnly && !hasPatientRole) || (ownerOnly && !hasOwnerRole) || (receptionistOnly && !hasReceptionistRole)) {
-        return <FullPage><AccessDenied/></FullPage>;
+    const hasDoctorRole = roles === "ROLE_DOCTOR"
+
+    if (adminOnly && hasAdminRole) {
+        return children;
+    }
+    if (ownerOnly && hasOwnerRole) {
+        return children;
+    }
+    if (patientOnly && hasPatientRole) {
+        return children;
+    }
+    if (receptionistOnly && hasReceptionistRole) {
+        return children;
+    }
+    if (doctorOnly && hasDoctorRole) {
+        return children;
     }
 
-
-    return children;
+    return <FullPage><AccessDenied/></FullPage>;
 
 
 };

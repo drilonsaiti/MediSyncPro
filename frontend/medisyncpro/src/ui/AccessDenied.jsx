@@ -6,7 +6,7 @@ import Button from "../ui/Button.jsx";
 import {HiChevronLeft} from "react-icons/hi2";
 
 const StyledPageNotFound = styled.main`
-  height: 100vh;
+  height: 100lvh;
   background-color: var(--color-grey-50);
   display: flex;
   align-items: center;

@@ -154,7 +154,7 @@ const PatientHeaderBox = ({patient}) => {
                     </ContactItem>
                     <ContactItem type="lg">
                         <FaMarsAndVenus/>
-                        <p>{gender.toString().toLowerCase().at(0).toUpperCase() + gender.toString().slice(1).toLowerCase()}</p>
+                        <p>{gender?.toString()?.toLowerCase()?.at(0)?.toUpperCase() ?? '' + gender?.toString()?.slice(1)?.toLowerCase() ?? ''}</p>
                     </ContactItem>
                     <ContactItem type="lg">
                         <FaClipboardList/>

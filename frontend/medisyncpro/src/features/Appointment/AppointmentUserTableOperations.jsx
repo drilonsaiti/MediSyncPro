@@ -138,14 +138,16 @@ const AccommodationTableOperations = ({types}) => {
         {value: 'clinics', label: "Clinics"},
         {value: 'doctors', label: "Doctors"},
     ]
-    const allSpecializations = specializations.sort((a, b) => a.specializationId - b.specializationId);
+    const allSpecializations = Array.isArray(specializations)
+        ? specializations.sort((a, b) => a.specializationId - b.specializationId)
+        : [];
 
     const optionsSpecializations = allSpecializations?.map(spec => {
         return {
             value: spec.specializationName,
             label: spec.specializationName,
-            services: clinicServices.filter(s => s.specializations.specializationId === spec.specializationId)
-                .flatMap(s => {
+            services: clinicServices?.filter(s => s.specializations.specializationId === spec.specializationId)
+                ?.flatMap(s => {
                     return {
                         value: s.serviceName,
                         label: s.serviceName
@@ -169,14 +171,6 @@ const AccommodationTableOperations = ({types}) => {
 
     }
 
-    /*const optionsSort = [
-        {value: 'name-asc', label: "Sort by name (A-Z)"},
-        {value: 'name-desc', label: "Sort by name (Z-A)"},
-        {value: 'regularPrice-asc', label: "Sort by price low to high"},
-        {value: 'regularPrice-desc', label: "Sort by price high to low"},
-        {value: 'maxCapacity-asc', label: "Sort by capacity low to high"},
-        {value: 'maxCapacity-desc', label: "Sort by capacity high to low"},
-    ]*/
     return (
         <TableOperations>
             <Filter filterField='types' options={optionsTypes}/>

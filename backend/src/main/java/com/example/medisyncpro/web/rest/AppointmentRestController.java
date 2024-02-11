@@ -3,6 +3,7 @@ package com.example.medisyncpro.web.rest;
 import com.example.medisyncpro.model.Appointment;
 import com.example.medisyncpro.model.dto.*;
 import com.example.medisyncpro.model.excp.ClinicAppointmentException;
+import com.example.medisyncpro.model.excp.MedicalReportException;
 import com.example.medisyncpro.service.AppointmentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,21 @@ public class AppointmentRestController {
         AppointmentResultDto appointments = appointmentService.getAll(pageable, nameOrEmail, types,authHeader);
         return new ResponseEntity<>(new PageImpl<>(appointments.getAppointments(), pageable, appointments.getTotalElements()), HttpStatus.OK);
 
+    }
+
+    @GetMapping("/myAppointment")
+    public ResponseEntity<?> getMyAppointment(@RequestParam(defaultValue = "0") int page,
+                                                       HttpServletRequest request) {
+        try {
+            final String authHeader = request.getHeader("Authorization");
+            PageRequest pageable = PageRequest.of(page - 1, 15);
+            AppointmentResultDto report = appointmentService.getMyAppointment(pageable,authHeader);
+            return new ResponseEntity<>(new PageImpl<>(report.getAppointments(), pageable, report.getTotalElements()), HttpStatus.OK);
+        } catch (ClinicAppointmentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @GetMapping("/{id}")

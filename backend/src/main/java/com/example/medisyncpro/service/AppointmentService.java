@@ -12,6 +12,9 @@ public interface AppointmentService {
 
     AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail, String types,String authHeader);
 
+    AppointmentResultDto getMyAppointment(PageRequest pageable,String authHeader);
+
+
     List<AppointmentDto> getAllByPatient(Long id,String authHeader);
 
     List<AppointmentDto> getAllByDoctor(Long id,String authHeader);

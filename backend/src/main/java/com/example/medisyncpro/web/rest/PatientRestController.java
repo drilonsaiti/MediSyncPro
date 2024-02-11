@@ -48,6 +48,17 @@ public class PatientRestController {
         }
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<?> getPatientProfile(HttpServletRequest request) {
+        try {
+            final String authHeader = request.getHeader("Authorization");
+            Patient patient = patientService.getPatientProfile(authHeader);
+            return new ResponseEntity<>(patient, HttpStatus.OK);
+        } catch (PatientException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> createPatient(@RequestBody CreatePatientDto dto) {
         try {

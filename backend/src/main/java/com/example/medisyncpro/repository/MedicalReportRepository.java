@@ -12,4 +12,6 @@ public interface MedicalReportRepository extends JpaRepository<MedicalReport, Lo
 
     Optional<MedicalReport> findByReportId(Long id);
     List<MedicalReport> findAllByClinicId(Long id);
+
+    List<MedicalReport> findAllByPatientId(Long id);
 }

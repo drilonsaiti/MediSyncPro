@@ -53,6 +53,16 @@ public class ClinicRestController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/myProfile")
+    public ResponseEntity<?> getMyProfile(HttpServletRequest request) {
+        try {
+            final String authHeader = request.getHeader("Authorization");
+            ClinicDto clinicDto = clinicService.getMyProfile(authHeader);
+            return new ResponseEntity<>(clinicDto, HttpStatus.OK);
+        } catch (ClinicException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     @GetMapping("/services/{id}")
     public ResponseEntity<?> getClinicServiceById(@PathVariable Long id, HttpServletRequest request) {

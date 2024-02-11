@@ -95,6 +95,35 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    public AppointmentResultDto getMyAppointment(PageRequest pageable, String authHeader) {
+        String email = authHeaderService.getEmail(authHeader);
+        Patient patient = this.patientRepository.findByEmail(email);
+
+        List<AppointmentDto> appointment = this.appointmentRepository.findAllByPatientId(patient.getPatientId())
+                .stream()
+                .map(appm -> {
+                    Optional<Clinic> clinic = Optional.ofNullable(clinicRepository.findByClinicId(appm.getClinicId()).orElse(null));
+                    Optional<Doctor> doctor = Optional.ofNullable(this.doctorRepository.findByDoctorId(appm.getDoctorId()).orElse(null));
+                    MedicalReport report = this.reportRepository.findByAppointmentId(appm.getAppointmentId()).orElse(null);
+                    MedicalReportDto reportDto = null;
+                    try {
+                        reportDto = medicalReportService.getById(report != null ? report.getReportId() : null,authHeader);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    List<String> services = appm.getServiceIds().stream().map(service -> {
+                        Optional<ClinicServices> s = this.serviceRepository.findByServiceId(service);
+                        return s.isPresent() ? s.get().getServiceName() : null;
+                    }).filter(Objects::nonNull).toList();
+                    return appointmentMapper.getAppointment(appm, patient, doctor.get(), services, reportDto, clinic.get().getClinicName());
+                }).toList();
+
+        return new AppointmentResultDto(appointment.stream()
+                .skip(pageable.getOffset())
+                .limit(pageable.getPageSize()).toList(), appointment.size());
+    }
+
+    @Override
     public List<AppointmentDto> getAllByPatient(Long id,String authHeader) throws ClinicAppointmentException {
         Patient p = this.patientRepository.findByEmail(this.authHeaderService.getEmail(authHeader));
         if(p.getPatientId() == id) {

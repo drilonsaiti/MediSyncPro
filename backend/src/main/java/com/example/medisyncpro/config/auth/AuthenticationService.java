@@ -1,4 +1,5 @@
 package com.example.medisyncpro.config.auth;
+import com.example.medisyncpro.model.enums.Role;
 import com.example.medisyncpro.model.enums.TokenType;
 
 import com.example.medisyncpro.config.JwtService;
@@ -28,6 +29,7 @@ public class AuthenticationService {
   private final BlackListedTokenService blacklistedTokenService;
 
   private final UserService userService;
+  private final UserRepository userRepository;
 
   public AuthenticationResponse register(RegisterRequest request) throws Exception {
     User user = this.userService.register(request.getFullName(),request.getEmail(), request.getPassword(), request.getRepeatPassword(),request.getUserType());
@@ -58,10 +60,10 @@ public class AuthenticationService {
     var jwtToken = jwtService.generateToken(user);
     System.out.println("JWT TOKEN: " + jwtToken);
     var jwtRefreshToken = jwtService.generateRefreshToken(user);
-
+    Role role = this.userRepository.findByEmail(request.getEmail()).get().getRole();
 
     return AuthenticationResponse.builder()
-        .token(jwtToken).refreshToken(jwtRefreshToken)
+        .token(jwtToken).refreshToken(jwtRefreshToken).role(role)
         .build();
   }
 

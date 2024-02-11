@@ -17,4 +17,6 @@ public interface MedicalReportService {
     MedicalReport update(MedicalReport medicalReport,String authHeader) throws Exception;
 
     void delete(Long id,String authHeader) throws Exception;
+
+    MedicalReportResultDto getMedicalReportByPatient(PageRequest page,String authHeader);
 }

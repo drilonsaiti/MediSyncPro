@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 public interface PatientService {
 
     Patient getById(Long id);
+    Patient getPatientProfile(String authHeader);
 
     PatientResultDto getAll(PageRequest pageable, String nameOrEmail,String authHeader) throws Exception;
 

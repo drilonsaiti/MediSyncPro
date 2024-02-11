@@ -93,4 +93,10 @@ public class PatientServiceImpl implements PatientService {
         }
         throw new PatientException("You don't have access");
     }
+
+    @Override
+    public Patient getPatientProfile(String authHeader) {
+        String email = authHeaderService.getEmail(authHeader);
+        return patientRepository.findByEmail(email);
+    }
 }

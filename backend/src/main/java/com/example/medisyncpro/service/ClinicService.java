@@ -14,6 +14,7 @@ public interface ClinicService {
     Clinic getById(Long id);
 
     ClinicDto getByIdDto(Long id);
+    ClinicDto getMyProfile(String authHeader);
 
     ClinicResultDto getAll(PageRequest pageable, String specializations, String service, String byDate);
 

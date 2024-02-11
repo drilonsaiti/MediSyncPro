@@ -53,7 +53,22 @@ public class ClinicServiceImpl implements ClinicService {
             Settings settings = settingsRepository.getById(clinic.getSettingsId());
             return clinicMapper.getClinicDto(clinic, settings);
         } catch (Exception e) {
-            throw new ClinicException("Failed to retrieve clinic DTO by ID", e);
+            throw new ClinicException("Failed to retrieve clinic  by ID", e);
+        }
+    }
+
+    @Override
+    public ClinicDto getMyProfile(String authHeader) {
+        String email = this.authHeaderService.getEmail(authHeader);
+        try {
+            Clinic clinic = this.clinicRepository.findByEmailAddress(email);
+            Settings settings = null;
+            if (clinic.getSettingsId() != null) {
+                settings = settingsRepository.getById(clinic.getSettingsId());
+            }
+            return clinicMapper.getClinicDto(clinic, settings);
+        } catch (Exception e) {
+            throw new ClinicException("Failed to retrieve clinic by email:"+email, e);
         }
     }
 

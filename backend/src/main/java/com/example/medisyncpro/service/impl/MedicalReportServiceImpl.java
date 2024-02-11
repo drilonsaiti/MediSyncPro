@@ -114,6 +114,37 @@ public class MedicalReportServiceImpl implements MedicalReportService {
         }
     }
 
+
+    @Override
+    public MedicalReportResultDto getMedicalReportByPatient(PageRequest page, String authHeader) {
+        String email = authHeaderService.getEmail(authHeader);
+        Patient patient = this.patientRepository.findByEmail(email);
+
+        List<MedicalReportDto> reports = this.medicalReportRepository.findAllByPatientId(patient.getPatientId())
+                .stream()
+                .map(report -> {
+                    try {
+                        Appointment appointment = appointmentRepository.findByDateAndPatientId(report.getAppointmentDate(), patient.getPatientId());
+                        AtomicInteger totalPrice = new AtomicInteger();
+                        List<ServiceDto> services = appointment.getServiceIds().stream()
+                                .map(service -> {
+                                    ClinicServices s = serviceRepository.getById(service);
+                                    totalPrice.addAndGet(s.getPrice().intValue());
+                                    return new ServiceDto(s.getServiceName(), s.getDurationMinutes(), s.getPrice());
+                                }).collect(Collectors.toList());
+                        return reportMapper.getMedicalReport(report, patient.getPatientId(), patient.getPatientName(), patient.getEmail(), services, totalPrice.get());
+                    } catch (Exception e) {
+                        throw new MedicalReportException("Error mapping medical reports", e);
+                    }
+                }).toList();
+
+        return new MedicalReportResultDto(
+                reports.stream()
+                        .skip(page.getOffset())
+                        .limit(page.getPageSize()).collect(Collectors.toList()), reports.size()
+        );
+    }
+
     @Override
     public MedicalReport save(CreateMedicalReportDto medicalReport,String authHeader) throws Exception {
         Long clinicId = this.authHeaderService.getClinicId(authHeader);

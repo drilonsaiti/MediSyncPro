@@ -51,6 +51,21 @@ public class MedicalReportRestController {
         }
     }
 
+    @GetMapping("/myReports")
+    public ResponseEntity<?> getMedicalReportByPatient(@RequestParam(defaultValue = "0") int page,
+                                                  HttpServletRequest request) {
+        try {
+            final String authHeader = request.getHeader("Authorization");
+            PageRequest pageable = PageRequest.of(page - 1, 15);
+            MedicalReportResultDto report = medicalReportService.getMedicalReportByPatient(pageable,authHeader);
+            return new ResponseEntity<>(new PageImpl<>(report.getMedicalReport(), pageable, report.getTotalElements()), HttpStatus.OK);
+        } catch (MedicalReportException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> createMedicalReport(@RequestBody CreateMedicalReportDto dto,
                                                  HttpServletRequest request) {

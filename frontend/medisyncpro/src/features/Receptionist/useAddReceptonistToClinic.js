@@ -10,7 +10,7 @@ export function useAddReceptionistToClinic() {
         onSuccess: () => {
             toast.success(`Receptionist successfully added to clinic`);
             queryClient.invalidateQueries({
-                queryKey: ['receptionistByClinic','receptionist'],
+                queryKey: ['receptionistByClinic', 'receptionist'],
             });
         },
         onError: (err) => toast.error(err.message)

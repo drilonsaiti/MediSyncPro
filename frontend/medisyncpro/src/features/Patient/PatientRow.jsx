@@ -1,11 +1,7 @@
-import Menus from "../../ui/Menus.jsx";
 import Table from "../../ui/Table.jsx";
 import Modal from "../../ui/Modal.jsx";
 import ButtonGroup from "../../ui/ButtonGroup.jsx";
-import {HiPencil, HiTrash} from "react-icons/hi";
-import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import styled from "styled-components";
-import CreatePatientForm from "./CreatePatientForm.jsx";
 import {useCreatePatient} from "./useCreatePatient.js";
 import {useDeletePatient} from "./useDeletePatient.js";
 import {Link} from "react-router-dom";

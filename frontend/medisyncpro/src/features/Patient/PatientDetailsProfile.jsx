@@ -1,4 +1,4 @@
-import {usePatientById, usePatientForProfile} from "./usePatient.js";
+import {usePatientForProfile} from "./usePatient.js";
 import Spinner from "../../ui/Spinner.jsx";
 import Row from "../../ui/Row.jsx";
 import PatientHeaderBox from "./PatientHeaderBox.jsx";

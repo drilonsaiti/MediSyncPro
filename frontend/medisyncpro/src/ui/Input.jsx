@@ -12,6 +12,10 @@ const Input = styled.input`
         /*filter: invert(100%) hue-rotate(18deg) brightness(1.7);*/
          accent-color: var(--color-brand-700); 
     }
+    
+    &:focus{
+        background-color: transparent;
+    }
 `;
 
 export default Input;

@@ -76,7 +76,7 @@ export async function deleteDoctor(id) {
     }
 }
 
-export async function deleteDoctorFromClinic(doctorId,clinicId) {
+export async function deleteDoctorFromClinic(doctorId, clinicId) {
 
     try {
         const response = await apiRequest('DELETE', `doctors/${doctorId}/${clinicId}`);
@@ -89,7 +89,7 @@ export async function deleteDoctorFromClinic(doctorId,clinicId) {
 
 export async function addDoctorToClinic(newDoctor) {
     try {
-           const response = await apiRequest('POST', 'doctors/addDoctorToClinic/1', newDoctor);
+        const response = await apiRequest('POST', 'doctors/addDoctorToClinic/1', newDoctor);
 
         return response.data;
     } catch (e) {

@@ -16,8 +16,8 @@ const ClinicScheduleTableOperations = () => {
         </TableOperations>
 
 
-)
-    ;
+    )
+        ;
 };
 
 export default ClinicScheduleTableOperations;

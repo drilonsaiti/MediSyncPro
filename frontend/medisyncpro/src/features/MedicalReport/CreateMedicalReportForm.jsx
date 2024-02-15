@@ -27,10 +27,10 @@ const DatePickerWrapperStyles = createGlobalStyle`
 
     .react-datepicker {
         font-size: 1.3rem !important;
-        
+
     }
 
-    .react-datepicker__day--selected{
+    .react-datepicker__day--selected {
         background-color: var(--color-primary-900);
         text-align: center;
 
@@ -43,15 +43,17 @@ const DatePickerWrapperStyles = createGlobalStyle`
     .react-datepicker__day--selected:hover, .react-datepicker__day--in-selecting-range:hover, .react-datepicker__day--in-range:hover, .react-datepicker__month-text--selected:hover, .react-datepicker__month-text--in-selecting-range:hover, .react-datepicker__month-text--in-range:hover, .react-datepicker__quarter-text--selected:hover, .react-datepicker__quarter-text--in-selecting-range:hover, .react-datepicker__quarter-text--in-range:hover, .react-datepicker__year-text--selected:hover, .react-datepicker__year-text--in-selecting-range:hover, .react-datepicker__year-text--in-range:hover {
         background-color: var(--color-primary-900);
     }
-    .react-datepicker__day--keyboard-selected{
+
+    .react-datepicker__day--keyboard-selected {
         background-color: var(--color-primary-300);
 
     }
+
     .react-datepicker__day--keyboard-selected:hover, .react-datepicker__month-text--keyboard-selected:hover, .react-datepicker__quarter-text--keyboard-selected:hover, .react-datepicker__year-text--keyboard-selected:hover {
         background-color: var(--color-primary-300);
     }
 
-    .react-datepicker__day:hover{
+    .react-datepicker__day:hover {
         background-color: var(--color-primary-900);
         color: var(--color-grey-0);
 
@@ -72,7 +74,7 @@ const DatePickerWrapperStyles = createGlobalStyle`
         background-color: var(--color-brand-700);
         color: #fff;
     }
-    
+
 
     .react-datepicker__day {
         &--outside-month {
@@ -158,7 +160,6 @@ const CreateMedicalReportForm = ({medicalReportToEdit = {}, onCloseModal, appoin
     }, []);
 
     const filterPassedTime = (time) => {
-        console.log("TIME:" + time);
         const currentDate = new Date();
         const selectedDate = new Date(time);
 
@@ -171,7 +172,6 @@ const CreateMedicalReportForm = ({medicalReportToEdit = {}, onCloseModal, appoin
         const withinTimeRange = currentDate.getTime() >= startTime.getTime() && currentDate.getTime() <= endTime.getTime();
         const futureDate = selectedDate.getTime() > currentDate.getTime(); // Check if the selected date is in the future
 
-        console.log(withinTimeRange, futureDate);
         return withinTimeRange || futureDate;
     };
 
@@ -197,7 +197,6 @@ const CreateMedicalReportForm = ({medicalReportToEdit = {}, onCloseModal, appoin
     }, [dates]);
 
     function onSubmit(data) {
-        console.log(appointmentDate);
         if (isEditSession) editMedicalReport({
             newData: {
                 ...data,
@@ -238,10 +237,7 @@ const CreateMedicalReportForm = ({medicalReportToEdit = {}, onCloseModal, appoin
                     wrapperClassName='date_picker full-width'
                     selected={startDate}
                     onChange={(date) => {
-
                         setStartDate(date)
-                        console.log("TRUE");
-
                         filterPassedTime(date)
                     }}
                     peekNextMonth

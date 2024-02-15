@@ -1,24 +1,21 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
-import {useChangeAttended} from "./useChangeAttended.js";
 import Table from "../../ui/Table.jsx";
 import Stacked from "../../ui/Stacked.jsx";
 import {isToday} from "date-fns";
 import Tag from "../../ui/Tag.jsx";
 import {formatDate} from "../../utils/helpers.js";
-import {HiChevronDown, HiChevronUp} from "react-icons/hi2";
 import Modal from "../../ui/Modal.jsx";
 import ButtonGroup from "../../ui/ButtonGroup.jsx";
 import Menus from "../../ui/Menus.jsx";
-import {HiEye, HiPencil, HiTrash} from "react-icons/hi";
-import {FaClipboardList, FaFilePdf} from "react-icons/fa";
+import {HiPencil, HiTrash} from "react-icons/hi";
+import {FaFilePdf} from "react-icons/fa";
 import CreateMedicalReportForm from "../MedicalReport/CreateMedicalReportForm.jsx";
 import MedicalReportTable from "../MedicalReport/MedicalReportTable.jsx";
 import styled from "styled-components";
 import ButtonIcon from "../../ui/ButtonIcon.jsx";
 import CreateAppointmentForm from "./CreateAppointmentForm.jsx";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
-import {deleteAppointment} from "../../services/apiAppointments.js";
 import {useDeleteAppointment} from "./useDeleteAppointment.js";
 import DownloadButton from "../MedicalReport/DownloadButton.jsx";
 
@@ -33,10 +30,21 @@ const Icon = styled.span`
     cursor: pointer;
 `
 const AppointmentForPatientRow = ({appointment}) => {
-    const {appointmentId, patientId, patientName, patientEmail, doctorName, date, serviceName, attended,clinicId,report} = appointment;
+    const {
+        appointmentId,
+        patientId,
+        patientName,
+        patientEmail,
+        doctorName,
+        date,
+        serviceName,
+        attended,
+        clinicId,
+        report
+    } = appointment;
     const navigate = useNavigate();
     const [status, setStatus] = useState(attended ? 'Yes' : 'No');
-    const {deleteMutate,isDeleting} = useDeleteAppointment();
+    const {deleteMutate, isDeleting} = useDeleteAppointment();
 
     const statusToTagName = {
         true: 'green',
@@ -45,7 +53,6 @@ const AppointmentForPatientRow = ({appointment}) => {
     };
 
 
-    console.log("REPORT REPORT " ,appointment)
     return (
         <Table.Row role="row">
             <Title>{appointmentId}</Title>
@@ -66,56 +73,55 @@ const AppointmentForPatientRow = ({appointment}) => {
 
             {report !== null &&
                 <div style={{display: 'flex', gap: '3rem'}}>
-                    <ButtonIcon type="icon"><Link to={`/medicalReports/${report.reportId}`} target="_blank"><FaFilePdf /></Link></ButtonIcon>
+                    <ButtonIcon type="icon"><Link to={`/medicalReports/${report.reportId}`} target="_blank"><FaFilePdf/></Link></ButtonIcon>
                     <ButtonIcon type="icon">
-                        <DownloadButton  medicalReport={report} isDownload/>
+                        <DownloadButton medicalReport={report} isDownload/>
 
                     </ButtonIcon>
                 </div>
             }
 
             {report === null &&
-            <Modal>
-                <ButtonGroup>
-                    <Menus.Menu>
-                        <Menus.Toggle id={appointmentId}/>
-                        <Menus.List id={appointmentId}>
+                <Modal>
+                    <ButtonGroup>
+                        <Menus.Menu>
+                            <Menus.Toggle id={appointmentId}/>
+                            <Menus.List id={appointmentId}>
 
 
+                                <Modal.Open opens="edit">
+                                    <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
+                                </Modal.Open>
 
-                            <Modal.Open opens="edit">
-                                <Menus.Button icon={<HiPencil/>}>Edit</Menus.Button>
-                            </Modal.Open>
+                                <Modal.Open opens="delete">
+                                    <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
 
-                            <Modal.Open opens="delete">
-                                <Menus.Button icon={<HiTrash/>}>Delete</Menus.Button>
+                                </Modal.Open>
 
-                            </Modal.Open>
+                                <Modal.Window name="edit">
+                                    <CreateAppointmentForm appointmentToEdit={appointment} clinicId={clinicId}/>
+                                </Modal.Window>
 
-                            <Modal.Window name="edit">
-                                <CreateAppointmentForm appointmentToEdit={appointment} clinicId={clinicId} />
-                            </Modal.Window>
+                                <Modal.Window name="delete">
+                                    <ConfirmDelete resource="appointment" disabled={isDeleting}
+                                                   onConfirm={() => deleteMutate({appointmentId: appointmentId})}/>
+                                </Modal.Window>
 
-                            <Modal.Window name="delete">
-                                <ConfirmDelete resource="appointment" disabled={isDeleting}
-                                               onConfirm={() => deleteMutate({appointmentId:appointmentId})}/>
-                            </Modal.Window>
-
-                        </Menus.List>
-                    </Menus.Menu>
+                            </Menus.List>
+                        </Menus.Menu>
 
 
-                </ButtonGroup>
+                    </ButtonGroup>
 
-                <Modal.Window name="create">
-                    <CreateMedicalReportForm appointmentId={appointmentId} appointmentDate={date}/>
-                </Modal.Window>
+                    <Modal.Window name="create">
+                        <CreateMedicalReportForm appointmentId={appointmentId} appointmentDate={date}/>
+                    </Modal.Window>
 
-                <Modal.Window name="all-reports">
-                    <MedicalReportTable/>
-                </Modal.Window>
+                    <Modal.Window name="all-reports">
+                        <MedicalReportTable/>
+                    </Modal.Window>
 
-            </Modal>
+                </Modal>
             }
         </Table.Row>
     );

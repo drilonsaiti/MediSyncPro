@@ -7,16 +7,16 @@ import Spinner from "../../ui/Spinner.jsx";
 import {useUpdateSettings} from "./useUpdateSettings.js";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import {HiChevronDown, HiChevronRight, HiChevronUp} from "react-icons/hi2";
+import {HiChevronDown, HiChevronRight} from "react-icons/hi2";
 import Row from "../../ui/Row.jsx";
 import styled from "styled-components";
 
 const animatedComponents = makeAnimated();
 const Title = styled.div`
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: var(--color-grey-600);
-  font-family: "Sono",sans-serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-grey-600);
+    font-family: "Sono", sans-serif;
 `;
 
 const Card = styled.div`
@@ -27,7 +27,7 @@ const Card = styled.div`
 `
 
 function UpdateSettingsForm() {
-    const {isPending, settings: settingsData} = useSettings();
+    const {isLoading, settings: settingsData} = useSettings();
     const {isUpdating, updatedSettings} = useUpdateSettings();
 
     const [selectedMorningDoctors, setSelectedMorningDoctors] = useState(null);
@@ -49,7 +49,7 @@ function UpdateSettingsForm() {
         })));
     }, [settingsData]);
 
-    if (isPending) return <Spinner/>;
+    if (isLoading) return <Spinner/>;
 
 
     function handleUpdate(e, field, doctors, filtered) {
@@ -73,7 +73,6 @@ function UpdateSettingsForm() {
 
         if (!value || typeof settingsData.id === 'undefined') return;
 
-        console.log(value, doctors);
 
         const updatedSettingsData = {
             ...settingsData,
@@ -83,13 +82,13 @@ function UpdateSettingsForm() {
     }
 
     // Prepare options for the morning and afternoon doctors
-    const morningDoctorOptions = settingsData?.morningDoctors
+    const morningDoctorOptions = Array.isArray(settingsData?.morningDoctors) ? settingsData?.morningDoctors
         .filter(doctor => !selectedAfternoonDoctors?.some(selected => selected.value === doctor.doctorId))
-        .map(doctor => ({value: doctor.doctorId, label: doctor.doctorName}));
+        .map(doctor => ({value: doctor.doctorId, label: doctor.doctorName})) : [];
 
-    const afternoonDoctorOptions = settingsData?.afternoonDoctors
+    const afternoonDoctorOptions = Array.isArray(settingsData?.afternoonDoctors) ? settingsData?.afternoonDoctors
         .filter(doctor => !selectedMorningDoctors?.some(selected => selected.value === doctor.doctorId))
-        .map(doctor => ({value: doctor.doctorId, label: doctor.doctorName}));
+        .map(doctor => ({value: doctor.doctorId, label: doctor.doctorName})): [];
     const allDoctorOptions = settingsData ? [...morningDoctorOptions, ...afternoonDoctorOptions] : [];
 
     // Handlers for updating selected doctors
@@ -124,7 +123,7 @@ function UpdateSettingsForm() {
             <Card onClick={toggleAccordion}>
                 <Row type="horizontal">
                     <Title>Settings</Title>
-                    {isOpen ? <HiChevronDown/> : <HiChevronRight/>  }
+                    {isOpen ? <HiChevronDown/> : <HiChevronRight/>}
                 </Row>
             </Card>
 
@@ -168,12 +167,13 @@ function UpdateSettingsForm() {
                         onChange={handleMorningDoctorChange}
 
                         menuPortalTarget={document.body}
-                        styles={{menuPortal: base => ({...base, zIndex: 9999}),
+                        styles={{
+                            menuPortal: base => ({...base, zIndex: 9999}),
                             control: (baseStyles, state) => ({
                                 ...baseStyles,
                                 border: '1px solid var(--color-grey-300)',
                                 borderRadius: 'var(--border-radius-sm)',
-                                padding:'0.2rem .2rem',
+                                padding: '0.2rem .2rem',
                                 boxShadow: 'var(--shadow-sm)',
                                 backgroundColor: 'var(--color-grey-0)',
                                 color: 'var(--color-grey-600)'
@@ -194,7 +194,7 @@ function UpdateSettingsForm() {
                                 neutral0: 'var(--color-grey-0)', // Background color
                                 neutral80: 'var(--color-grey-600)', // Text color
                             },
-                        })}            />
+                        })}/>
                 </FormRow>
 
                 <FormRow label="Afternoon Doctors">
@@ -206,12 +206,13 @@ function UpdateSettingsForm() {
                         value={selectedAfternoonDoctors}
                         onChange={handleAfternoonDoctorChange}
                         menuPortalTarget={document.body}
-                        styles={{menuPortal: base => ({...base, zIndex: 9999}),
+                        styles={{
+                            menuPortal: base => ({...base, zIndex: 9999}),
                             control: (baseStyles, state) => ({
                                 ...baseStyles,
                                 border: '1px solid var(--color-grey-300)',
                                 borderRadius: 'var(--border-radius-sm)',
-                                padding:'0.2rem .2rem',
+                                padding: '0.2rem .2rem',
                                 boxShadow: 'var(--shadow-sm)',
                                 backgroundColor: 'var(--color-grey-0)',
                                 color: 'var(--color-grey-600)'
@@ -232,7 +233,7 @@ function UpdateSettingsForm() {
                                 neutral0: 'var(--color-grey-0)', // Background color
                                 neutral80: 'var(--color-grey-600)', // Text color
                             },
-                        })}            />
+                        })}/>
                 </FormRow>
             </Form>)}
         </>

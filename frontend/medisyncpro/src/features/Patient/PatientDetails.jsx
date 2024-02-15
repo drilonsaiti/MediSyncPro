@@ -1,6 +1,5 @@
 import PatientHeaderBox from "./PatientHeaderBox.jsx";
 import Row from "../../ui/Row.jsx";
-import PatientAppointmentBox from "./PatientAppointmentBox.jsx";
 import {usePatientById} from "./usePatient.js";
 import Spinner from "../../ui/Spinner.jsx";
 

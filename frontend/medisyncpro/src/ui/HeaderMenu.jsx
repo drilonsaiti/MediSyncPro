@@ -19,12 +19,12 @@ const HeaderMenu = () => {
                     <HiOutlineUser/>
                 </ButtonIcon>
             </li>
-              <li>
-                <DarkModeToggle />
+            <li>
+                <DarkModeToggle/>
 
             </li>
             <li>
-                <Logout />
+                <Logout/>
             </li>
         </StyledHeaderMenu>
     );

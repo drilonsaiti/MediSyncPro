@@ -54,8 +54,8 @@ const Button = styled.button`
     box-shadow: var(--shadow-sm);
 
     ${(props) =>
-            props.notFound &&
-            css`
+    props.notFound &&
+    css`
       display: flex;
       align-items: center;
       margin: 0 auto;

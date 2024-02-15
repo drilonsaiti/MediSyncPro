@@ -15,8 +15,8 @@ const Main = styled.main`
     padding: 4rem 4.8rem 6.4rem;
 
     ${(props) =>
-            props.user &&
-            css`
+    props.user &&
+    css`
         grid-column: 1 / -1;
       `}
 `;

@@ -8,12 +8,12 @@ import SearchInput from "../ui/SearchInput.jsx";
 
 const Patient = () => {
     const [searchInput, setSearchInput] = useState('');
-    const [searchParams,setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const handleSearchInputChange = (event) => {
         const newSearchParam = new URLSearchParams(searchParams);
         event === '' ? setSearchInput('') :
             setSearchInput(event.target.value);
-        newSearchParam.set('nameOrEmail',event.target.value)
+        newSearchParam.set('nameOrEmail', event.target.value)
         setSearchParams(newSearchParam);
     };
     return (

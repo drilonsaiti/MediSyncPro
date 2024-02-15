@@ -155,7 +155,6 @@ const AccommodationTableOperations = ({types}) => {
                 })
         }
     })
-    console.log(optionsSpecializations);
     const options = {
         specialization: {
             field: "Specializations",

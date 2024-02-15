@@ -6,7 +6,6 @@ import {
     getReceptionistSearch
 } from "../../services/apiReceptionist.js";
 import {useParams} from "react-router-dom";
-import {getDoctorSearch} from "../../services/apiDoctors.js";
 
 export function useReceptionist() {
     const {data: receptionist, isLoading} = useQuery({
@@ -28,7 +27,6 @@ export function useReceptionistByClinicId() {
 
 export function useReceptionistById() {
     const {receptionistId} = useParams();
-    console.log(receptionistId);
     const {data: receptionist, isLoading} = useQuery({
         queryFn: () => getReceptionistById(receptionistId),
         queryKey: ["receptionist", receptionistId]

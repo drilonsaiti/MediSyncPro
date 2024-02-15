@@ -11,9 +11,6 @@ export function useClinicServices() {
     const sort = searchParams.get('sortBy') || '';
 
 
-    console.log("======PAGEE=====");
-    console.log(specializations);
-
     const {data, isLoading} = useQuery({
         queryFn: () => getClinicServices({page, specializations, sort}),
         queryKey: ["clinicServices", page, specializations, sort]

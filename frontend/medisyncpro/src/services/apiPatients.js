@@ -2,10 +2,10 @@ import {apiRequest} from "../utils/services.js";
 import error from "eslint-plugin-react/lib/util/error.js";
 
 
-export async function getPatients({page,nameOrEmail}) {
+export async function getPatients({page, nameOrEmail}) {
     try {
-        const response = await apiRequest('GET', 'patients',null,{
-            page:page,
+        const response = await apiRequest('GET', 'patients', null, {
+            page: page,
             nameOrEmail: nameOrEmail
         });
         return response.data;
@@ -54,6 +54,19 @@ export async function createEditPatient(newPatient, id) {
 export async function deletePatient(id) {
     try {
         const response = await apiRequest('DELETE', `patients/${id}`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+
+    }
+}
+
+
+
+export async function findByEmailOrContactNumber(emailOrPhoneNumber) {
+    console.log("EMAIL",emailOrPhoneNumber);
+    try {
+        const response = await apiRequest('GET', `patients/findPatient/${emailOrPhoneNumber}`);
         return response.data;
     } catch (e) {
         throw new Error(e);

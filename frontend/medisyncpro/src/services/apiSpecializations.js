@@ -12,6 +12,29 @@ export async function getSpecializations() {
     }
 }
 
+export async function getSpecializationByClinicId() {
+    try {
+        const response = await apiRequest('GET', 'specializations/clinic');
+        console.log("SPEC CL",response.data);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+
+    }
+}
+
+
+export async function addSpecializationToClinic(data) {
+
+    try {
+        const response = await apiRequest('POST', 'specializations/addSpecializationToClinic', data);
+
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+    }
+}
+
 
 export async function createEditSpecializations(newSpecialization, id) {
     try {

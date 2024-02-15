@@ -2,9 +2,9 @@ import {apiRequest} from "../utils/services.js";
 import error from "eslint-plugin-react/lib/util/error.js";
 
 
-export async function getAppointments({page,nameOrEmail,types}) {
+export async function getAppointments({page, nameOrEmail, types}) {
     try {
-        const response = await apiRequest('GET', 'appointments',null,{
+        const response = await apiRequest('GET', 'appointments', null, {
             page: page,
             nameOrEmail: nameOrEmail,
             types: types
@@ -18,8 +18,8 @@ export async function getAppointments({page,nameOrEmail,types}) {
 
 export async function getMyAppointment({page}) {
     try {
-        const response = await apiRequest('GET', 'appointments/myAppointment',null,{
-            page:page !== 0 ? page : 1,
+        const response = await apiRequest('GET', 'appointments/myAppointment', null, {
+            page: page !== 0 ? page : 1,
         });
         return response.data;
     } catch (e) {
@@ -50,7 +50,6 @@ export async function getAppointmentsByDoctor(id) {
 
 
 export async function createEditAppointment(newAppointment, id) {
-    console.log("APPOINTMENT",newAppointment);
     try {
         let response = {}
         if (id) {
@@ -79,7 +78,7 @@ export async function deleteAppointment(id) {
 
 export async function getAppointmentDates(clinicId) {
     try {
-        const response = await apiRequest('GET', `appointments/dates/${clinicId}`);
+        const response = await apiRequest('GET', `appointments/dates`);
         return response.data;
     } catch (e) {
         throw new Error(e);

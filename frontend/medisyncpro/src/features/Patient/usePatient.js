@@ -49,7 +49,6 @@ export function usePatientById() {
 }
 
 
-
 export function usePatientForProfile() {
     const {data: patient, isLoading} = useQuery({
         queryFn: getPatientForProfile,

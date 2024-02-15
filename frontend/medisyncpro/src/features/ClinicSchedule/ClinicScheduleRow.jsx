@@ -2,17 +2,15 @@ import Menus from "../../ui/Menus.jsx";
 import Table from "../../ui/Table.jsx";
 import Modal from "../../ui/Modal.jsx";
 import ButtonGroup from "../../ui/ButtonGroup.jsx";
-import {HiPencil, HiTrash} from "react-icons/hi";
+import {HiTrash} from "react-icons/hi";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import styled from "styled-components";
-import CreateClinicScheduleForm from "./CreateClinicScheduleForm.jsx";
 import {useCreateClinicSchedule} from "./useCreateClinicSchedule.js";
-import {useDeleteClinicSchedule} from "./useDeleteClinicSchedule.js";
-import {formatDateMonth, formatDateMonthWithoutHour} from "../../utils/helpers.js";
+import {formatDateMonthWithoutHour} from "../../utils/helpers.js";
 import React, {useState} from "react";
 import ClinicScheduleDetailedRow from "./ClinicScheduleDetailedRow.jsx";
 import ButtonIcon from "../../ui/ButtonIcon.jsx";
-import {HiChevronDown, HiChevronRight, HiChevronUp} from "react-icons/hi2";
+import {HiChevronDown, HiChevronRight} from "react-icons/hi2";
 import {useDeleteGroupedClinicSchedule} from "./useDeleteGroupedClinicSchedule.js";
 
 const Title = styled.div`
@@ -22,7 +20,7 @@ const Title = styled.div`
   font-family: "Sono",sans-serif;
 `;
 const ClinicScheduleRow = ({clinicSchedule}) => {
-    const {clinicId,date, scheduleDtos} = clinicSchedule;
+    const {clinicId, date, scheduleDtos} = clinicSchedule;
     const [isAccordionOpen, setAccordionOpen] = useState(false);
     const {isCreating, createClinicSchedule} = useCreateClinicSchedule();
     const {isDeleting, deleteMutate} = useDeleteGroupedClinicSchedule();
@@ -40,7 +38,7 @@ const ClinicScheduleRow = ({clinicSchedule}) => {
                 <Modal>
                     <ButtonGroup>
                         <ButtonIcon onClick={toggleAccordion}>
-                            {isAccordionOpen ? <HiChevronDown/> : <HiChevronRight/> }
+                            {isAccordionOpen ? <HiChevronDown/> : <HiChevronRight/>}
                         </ButtonIcon>
 
                         <Menus.Menu>
@@ -59,7 +57,6 @@ const ClinicScheduleRow = ({clinicSchedule}) => {
                     <Modal.Window name="delete">
                         <ConfirmDelete resource="schedule" disabled={isDeleting}
                                        onConfirm={() => {
-                                           console.log("DATE",date)
                                            deleteMutate({clinicId, date})
                                        }}/>
                     </Modal.Window>

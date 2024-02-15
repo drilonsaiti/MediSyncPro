@@ -5,10 +5,10 @@ import SpinnerMini from "../../ui/SpinnerMini.jsx";
 
 const Logout = () => {
 
-    const {logOut,isLoading} = useLogout();
+    const {logOut, isLoading} = useLogout();
     return (
         <ButtonIcon disabled={isLoading} onClick={logOut}>
-            {!isLoading ? <HiArrowRightOnRectangle /> : <SpinnerMini />}
+            {!isLoading ? <HiArrowRightOnRectangle/> : <SpinnerMini/>}
         </ButtonIcon>
     );
 };

@@ -7,8 +7,12 @@ import {useCreatePatient} from "./useCreatePatient.js";
 import {useEditPatient} from "./useEditPatient.js";
 import Select from "../../ui/Select.jsx";
 import {useEffect, useState} from "react";
+import {FindPatientByEmailOrPhone} from "./FindPatientByEmailOrPhone.js";
+import {Roles} from "../../utils/services.js";
+import {findByEmailOrContactNumber, getPatientForProfile} from "../../services/apiPatients.js";
+import {useFindByEmailOrContactNumber} from "./useFindByEmailOrContactNumber.js";
 
-const CreatePatientForm = ({patientToEdit = {}, onCloseModal, registerTest}) => {
+const CreatePatientForm = ({patientToEdit = {}, onCloseModal, registerTest, getValuePatient, setValuePatient}) => {
     const {patientId, ...editValues} = patientToEdit;
     const isEditSession = Boolean(patientId);
     const {register, handleSubmit, reset, getValues, formState} = useForm({
@@ -18,6 +22,8 @@ const CreatePatientForm = ({patientToEdit = {}, onCloseModal, registerTest}) => 
     const {isCreating, createPatient} = useCreatePatient();
     const {isEditing, editPatient} = useEditPatient();
     const [refreshKey, setRefreshKey] = useState(1);
+    const [email, setEmail] = useState("");
+
 
     useEffect(() => {
         // Do something that triggers the need to refresh Select
@@ -29,6 +35,34 @@ const CreatePatientForm = ({patientToEdit = {}, onCloseModal, registerTest}) => 
         {value: "MALE", label: "Male"},
         {value: "FEMALE", label: "Female"}
     ]
+    useEffect(() => {
+        const fetchPatientData = async () => {
+            if (!registerTest || !getValuePatient) return;
+
+            const patientEmail = email;
+            console.log("ITS CALLED CALLED");
+
+            if (patientEmail) {
+                // Call backend to find patient by email
+                const data = await findByEmailOrContactNumber(patientEmail);
+                console.log(data);
+
+                if (data) {
+                    // Populate other input fields with patient data
+                    setValuePatient('patientName', data.patientName);
+                    setValuePatient('gender', data.gender);
+                    setValuePatient('address', data.address);
+                    !email.includes("@") ? setValuePatient('email',data.email) : setValuePatient('contactNumber', data.contactNumber);
+                    setValuePatient('birthDay',data.birthDay)
+                    // Set other fields as needed
+                }
+            }
+        };
+
+        if (email) {
+            fetchPatientData();
+        }
+    }, [setEmail, email]);
 
     function onSubmit(data) {
 
@@ -47,8 +81,7 @@ const CreatePatientForm = ({patientToEdit = {}, onCloseModal, registerTest}) => 
         });
     }
 
-    const user = "RECEPTIONIST";
-    console.log(registerTest)
+    const user = Roles();
 
     const FORM_ROWS = (
         <>
@@ -72,12 +105,15 @@ const CreatePatientForm = ({patientToEdit = {}, onCloseModal, registerTest}) => 
 
             <FormRow label="Contact number" error={errors?.contactNumber?.message}>
                 <Input type="text" disabled={isWorking}
-                       id="contactNumber" {...registerTest("contactNumber", {required: "This field is required"})}/>
+                       id="contactNumber" {...registerTest("contactNumber", {required: "This field is required"})}
+                       onChange={(e) => setEmail(e.target.value)}/>
+
             </FormRow>
 
             <FormRow label="Email" error={errors?.email?.message}>
                 <Input type="email" disabled={isWorking}
-                       id="email" {...registerTest("email", {required: "This field is required"})}/>
+                       id="email" {...registerTest("email", {required: "This field is required"})}
+                       onChange={(e) => setEmail(e.target.value)}/>
             </FormRow>
 
 
@@ -90,7 +126,7 @@ const CreatePatientForm = ({patientToEdit = {}, onCloseModal, registerTest}) => 
 
     return (
         <>
-            {user ? FORM_ROWS :
+            {user.includes("RECEPTIONIST") ? FORM_ROWS :
                 <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
 
 

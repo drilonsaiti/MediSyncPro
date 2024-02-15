@@ -1,6 +1,7 @@
 import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {getClinicById, getClinics, getClinicServiceBy} from "../../services/apiClinics.js";
+import {getClinicById, getClinicByIdAuth, getClinics, getClinicServiceBy} from "../../services/apiClinics.js";
 import {useParams, useSearchParams} from "react-router-dom";
+import {useState} from "react";
 
 export function useClinics() {
     const queryClient = useQueryClient();
@@ -48,6 +49,18 @@ export function useClinicById() {
     })
 
     return {clinic, isLoading};
+}
+
+export function useClinicByIdAuth() {
+    const [refreshKey, setRefreshKey] = useState(0);
+    const {data: clinic, isLoading} = useQuery({
+        queryFn: getClinicByIdAuth,
+        queryKey: ["clinicAuth",refreshKey]
+    })
+    const refreshClinic = () => {
+        setRefreshKey(prevKey => prevKey + 1);
+    };
+    return {clinic, isLoading,refreshClinic};
 }
 
 

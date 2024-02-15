@@ -129,7 +129,6 @@ const SelectMultiple = ({options, types}) => {
 
             const selectedServicesUpdated = {...selectedOptions, [value]: value};
             setSelectedOptions({...selectedOptions, [value]: value});
-            console.log(selectedServicesUpdated);
             newSearchParams.set(field, Object.keys(selectedServicesUpdated).map(s => s));
 
 

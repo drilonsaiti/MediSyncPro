@@ -17,22 +17,22 @@ const LoginLayout = styled.main`
 `;
 
 function Signup() {
-    const {register,formState,getValues,setValue,reset,handleSubmit} = useForm();
+    const {register, formState, getValues, setValue, reset, handleSubmit} = useForm();
     const {errors} = formState;
     const [userType, setUserType] = useState(null);
 
     const handleUserTypeChange = (selectedUserType) => {
-        console.log('Selected User Type:', selectedUserType);
         setUserType(selectedUserType);
-        setValue("userType",selectedUserType);
+        setValue("userType", selectedUserType);
     };
     return <LoginLayout>
-        <Logo />
+        <Logo/>
 
         {!userType && <UserTypeCard onUserTypeChange={handleUserTypeChange}/>}
 
         {userType && (<> <Heading type="login">Create a new account</Heading>
-        <SignupForm type="signup" getValues={getValues} register={register} reset={reset} handleSubmit={handleSubmit} errors={errors}/>
+            <SignupForm type="signup" getValues={getValues} register={register} reset={reset}
+                        handleSubmit={handleSubmit} errors={errors}/>
         </>)
 
         }

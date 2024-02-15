@@ -19,7 +19,7 @@ const AppointmentPatientTable = ({appointment}) => {
 
                 </Table.Header>
                 <Table.Body data={appointment} render={
-                    spc =>  <AppointmentForPatientRow appointment={spc} key={spc.appointmentId} />
+                    spc => <AppointmentForPatientRow appointment={spc} key={spc.appointmentId}/>
                 }/>
 
                 <Table.Footer>

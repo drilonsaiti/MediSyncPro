@@ -2,7 +2,6 @@ import Row from "../../ui/Row.jsx";
 
 import Spinner from "../../ui/Spinner.jsx";
 import ClinicHeaderBox from "./ClinicHeaderBox.jsx";
-import {useClinicById} from "./useClinic.js";
 import ClinicAppointmentBox from "./ClinicAppointmentBox.jsx";
 import {useMyClinicProfile} from "./useMyClinicProfile.js";
 

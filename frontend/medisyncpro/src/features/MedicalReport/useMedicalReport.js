@@ -12,8 +12,8 @@ export function useMedicalReports() {
 
 
     const {data, isLoading} = useQuery({
-        queryFn: () => getMedicalReports({page, nameOrEmail,byDate}),
-        queryKey: ["medicalReport", page, nameOrEmail,byDate]
+        queryFn: () => getMedicalReports({page, nameOrEmail, byDate}),
+        queryKey: ["medicalReport", page, nameOrEmail, byDate]
     })
 
     const medicalReports = data?.content;
@@ -23,16 +23,16 @@ export function useMedicalReports() {
 
     if (page < pageCount)
         queryClient.prefetchQuery({
-            queryKey: ["medicalReport", page + 1, nameOrEmail,byDate],
-            queryFn: () => getMedicalReports({page: page - 1, nameOrEmail,byDate}),
+            queryKey: ["medicalReport", page + 1, nameOrEmail, byDate],
+            queryFn: () => getMedicalReports({page: page - 1, nameOrEmail, byDate}),
 
         });
 
     if (page > 1)
         queryClient.prefetchQuery({
-            queryKey: ["medicalReport", page - 1, nameOrEmail,byDate],
+            queryKey: ["medicalReport", page - 1, nameOrEmail, byDate],
 
-            queryFn: () => getMedicalReports({page: page - 1, nameOrEmail,byDate}),
+            queryFn: () => getMedicalReports({page: page - 1, nameOrEmail, byDate}),
 
         });
 
@@ -83,11 +83,11 @@ export function useGetMedicalReportById() {
 
     return {data, isLoading};
 }
+
 export function useGetMedicalReportByReportId(reportId) {
-    console.log("USE GET ", reportId);
     const {data, isLoading} = useQuery({
-        queryFn:() => getMedicalReportById(reportId),
-        queryKey: ["medicalReport",reportId]
+        queryFn: () => getMedicalReportById(reportId),
+        queryKey: ["medicalReport", reportId]
     })
 
     return {data, isLoading};

@@ -51,7 +51,6 @@ const AppointmentRow = ({appointment}) => {
         }
         attendedMutate(data);
     };
-    console.log(typeof attended);
     return (
         <Table.Row role="row">
             <Title>{appointmentId}</Title>

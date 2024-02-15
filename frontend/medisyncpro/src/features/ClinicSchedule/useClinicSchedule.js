@@ -39,12 +39,11 @@ export function useClinicSchedules() {
 }
 
 
-export function useScheduleByDoctorId(doctorId){
-    console.log("DOCTOR DOCTOR",doctorId);
-    const {data:scheduleByDoctor, isLoading:isLoadingScheduleByDoctor} = useQuery({
+export function useScheduleByDoctorId(doctorId) {
+    const {data: scheduleByDoctor, isLoading: isLoadingScheduleByDoctor} = useQuery({
         queryFn: () => getClinicSchedulesByDoctorId(doctorId),
         queryKey: ["scheduleByDoctor", doctorId]
     })
 
-    return {scheduleByDoctor,isLoadingScheduleByDoctor}
+    return {scheduleByDoctor, isLoadingScheduleByDoctor}
 }

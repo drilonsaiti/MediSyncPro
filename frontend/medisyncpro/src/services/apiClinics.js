@@ -20,14 +20,18 @@ export async function getClinics({page, specializations, service, byDate}) {
 }
 
 export async function getClinicServiceBy(id) {
+
+    const clinicId = id !== undefined ? id : 0;
     try {
-        const response = await apiRequest('GET', `clinics/services/${id}`);
+        const response = await apiRequest('GET', `clinics/services/${clinicId}`);
         return response.data;
     } catch (e) {
         throw new Error(e);
 
     }
 }
+
+
 
 export async function getClinicById(id) {
     try {
@@ -38,6 +42,15 @@ export async function getClinicById(id) {
     }
 }
 
+
+export async function getClinicByIdAuth(id) {
+    try {
+        const response = await apiRequest('GET', `clinics/find`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+    }
+}
 
 export async function getMyClinicProfile() {
     try {

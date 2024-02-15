@@ -6,7 +6,6 @@ import {
     getMyAppointment
 } from "../../services/apiAppointments.js";
 import {useParams, useSearchParams} from "react-router-dom";
-import {getMyMedicalReports} from "../../services/apiMedicalReport.js";
 
 export function useAppointments() {
     const queryClient = useQueryClient();
@@ -17,8 +16,8 @@ export function useAppointments() {
     const nameOrEmail = searchParams.get('nameOrEmail') || '';
 
     const {data, isLoading} = useQuery({
-        queryFn: () => getAppointments({page, nameOrEmail,types}),
-        queryKey: ["appointments", page, nameOrEmail,types]
+        queryFn: () => getAppointments({page, nameOrEmail, types}),
+        queryKey: ["appointments", page, nameOrEmail, types]
     })
 
     const appointments = data?.content;
@@ -28,16 +27,16 @@ export function useAppointments() {
 
     if (page < pageCount)
         queryClient.prefetchQuery({
-            queryKey: ["appointments", page + 1, nameOrEmail,types],
-            queryFn: () => getAppointments({page: page - 1, nameOrEmail,types}),
+            queryKey: ["appointments", page + 1, nameOrEmail, types],
+            queryFn: () => getAppointments({page: page - 1, nameOrEmail, types}),
 
         });
 
     if (page > 1)
         queryClient.prefetchQuery({
-            queryKey: ["appointments", page - 1, nameOrEmail,types],
+            queryKey: ["appointments", page - 1, nameOrEmail, types],
 
-            queryFn: () => getAppointments({page: page - 1, nameOrEmail,types}),
+            queryFn: () => getAppointments({page: page - 1, nameOrEmail, types}),
 
         });
 
@@ -80,11 +79,10 @@ export function useMyAppointment() {
 }
 
 export function useAppointmentsByPatient(id) {
-    const { data: appointments, isLoading, error } = useQuery({
+    const {data: appointments, isLoading, error} = useQuery({
         queryFn: () => getAppointmentsByPatient(id),
         queryKey: ["appointmentPatient", id],
         onSuccess: (data) => {
-            console.log("Appointments data:", data); // Log the data received from the server
         },
     });
 
@@ -92,7 +90,7 @@ export function useAppointmentsByPatient(id) {
         console.error("Error fetching appointments:", error);
     }
 
-    return { appointments, isLoading, error };
+    return {appointments, isLoading, error};
 }
 
 export function useAppointmentsByDoctor() {

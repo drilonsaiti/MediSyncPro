@@ -9,12 +9,12 @@ import {useSearchParams} from "react-router-dom";
 
 const MedicalReport = () => {
     const [searchInput, setSearchInput] = useState('');
-    const [searchParams,setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const handleSearchInputChange = (event) => {
         const newSearchParam = new URLSearchParams(searchParams);
         event === '' ? setSearchInput('') :
             setSearchInput(event.target.value);
-        newSearchParam.set('nameOrEmail',event.target.value)
+        newSearchParam.set('nameOrEmail', event.target.value)
         setSearchParams(newSearchParam);
     };
 
@@ -25,7 +25,7 @@ const MedicalReport = () => {
 
                 <Row type="horizontal" style={{gap: '3rem'}}>
                     <SearchInput value={searchInput} onChange={handleSearchInputChange}/>
-                    <MedicalReportTableOperations />
+                    <MedicalReportTableOperations/>
                 </Row>
 
 

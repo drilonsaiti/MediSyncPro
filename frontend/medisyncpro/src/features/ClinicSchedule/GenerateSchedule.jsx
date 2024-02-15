@@ -13,7 +13,7 @@ const GenerateSchedule = () => {
     const {generateSchedule, isCreating} = useGenerateSchedule();
 
     if (isPending || isCreating) return <Spinner/>
-    const {clinicId} = settingsData;
+    const {clinicId = null} = settingsData || {};
 
     return (
         <Button onClick={() => generateSchedule(clinicId)}>Generate schedule</Button>

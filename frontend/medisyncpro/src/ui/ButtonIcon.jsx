@@ -18,8 +18,8 @@ const ButtonIcon = styled.button`
     }
 
     ${(props) =>
-            props.type === "icon" &&
-            css`
+    props.type === "icon" &&
+    css`
                 border-radius: 50%;
                 padding: 1rem 1rem;
                 background-color: var(--color-green-100);

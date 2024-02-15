@@ -1,6 +1,5 @@
 import React from 'react';
 import TableOperations from "../../ui/TableOperations.jsx";
-import Filter from "../../ui/Filter.jsx";
 import SortBy from "../../ui/SortBy.jsx";
 import {useSpecializations} from "../Specializations/useSpecializations.js";
 import {useClinicServices} from "../ClinicServices/useClinicService.js";
@@ -27,7 +26,6 @@ const DoctorTableOperations = () => {
                 })
         }
     })
-    console.log(optionsSpecializations);
     const options = {
         specialization: {
             field: "Specializations",
@@ -36,7 +34,7 @@ const DoctorTableOperations = () => {
     }
     return (
         <TableOperations>
-            <SortBy type="checkbox" filterField='discount' options={options} />
+            <SortBy type="checkbox" filterField='discount' options={options}/>
         </TableOperations>
     );
 };

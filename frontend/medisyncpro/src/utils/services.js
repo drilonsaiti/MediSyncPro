@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookies from "universal-cookie";
 import {useGetRole} from "../services/useGetRole.js";
+import {useFindByEmailOrContactNumber} from "../features/Patient/useFindByEmailOrContactNumber.js";
 
 export const BASE_URL = "http://localhost:9091/api";
 
@@ -35,13 +36,12 @@ export const apiRequest = async (method, url, data = null, params = null) => {
     }
 };
 
-export function Roles(){
-    const {roles,isLoading} = useGetRole();
-    console.log("ROLES FUNC")
-    console.log(roles);
-    if(!isLoading)
+export function Roles() {
+    const {roles, isLoading} = useGetRole();
+    if (!isLoading)
         return roles;
 }
+
 
 
 export const getInitialRoute = () => {

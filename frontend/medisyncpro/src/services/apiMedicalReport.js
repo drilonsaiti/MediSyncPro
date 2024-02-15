@@ -2,10 +2,10 @@ import {apiRequest} from "../utils/services.js";
 import error from "eslint-plugin-react/lib/util/error.js";
 
 
-export async function getMedicalReports({page,nameOrEmail,byDate}) {
+export async function getMedicalReports({page, nameOrEmail, byDate}) {
     try {
-        const response = await apiRequest('GET', 'medicalReports',null,{
-            page:page !== 0 ? page : 1,
+        const response = await apiRequest('GET', 'medicalReports', null, {
+            page: page !== 0 ? page : 1,
             nameOrEmail: nameOrEmail,
             byDate: byDate
         });
@@ -18,8 +18,8 @@ export async function getMedicalReports({page,nameOrEmail,byDate}) {
 
 export async function getMyMedicalReports({page}) {
     try {
-        const response = await apiRequest('GET', 'medicalReports/myReports',null,{
-            page:page !== 0 ? page : 1,
+        const response = await apiRequest('GET', 'medicalReports/myReports', null, {
+            page: page !== 0 ? page : 1,
         });
         return response.data;
     } catch (e) {

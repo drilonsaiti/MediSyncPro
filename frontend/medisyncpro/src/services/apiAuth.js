@@ -1,4 +1,3 @@
-
 /*
 export async function login() {
     let {}
@@ -8,12 +7,12 @@ import axios from "axios";
 import {apiRequest, BASE_URL} from "../utils/services.js";
 import Cookies from 'universal-cookie';
 import supabase from "./supabase.js";
-export async function signUp(data){
 
-    console.log("DATA signup",data);
+export async function signUp(data) {
+
 
     try {
-        const response = await apiRequest('POST',`auth/register`,data)
+        const response = await apiRequest('POST', `auth/register`, data)
         const cookies = new Cookies();
 
         cookies.set('accessToken', response.data.token, {
@@ -26,7 +25,7 @@ export async function signUp(data){
             path: '/',
             sameSite: 'strict',  // Adjust as needed
             secure: true,
-            maxAge:2592000
+            maxAge: 2592000
         });
         return response.data;
     } catch (error) {
@@ -35,11 +34,10 @@ export async function signUp(data){
     }
 }
 
-export async function logIn(data){
+export async function logIn(data) {
     let response;
-    console.log("LOGIN DATA");
     try {
-         response = await apiRequest('POST',`auth/login`,data)
+        response = await apiRequest('POST', `auth/login`, data)
 
         //document.cookie = `accessToken=${response.data.token}`
         const cookies = new Cookies();
@@ -53,7 +51,7 @@ export async function logIn(data){
             path: '/',
             sameSite: 'strict',  // Adjust as needed
             secure: true,
-            maxAge:2592000
+            maxAge: 2592000
         });
 
         return response.data;
@@ -63,15 +61,14 @@ export async function logIn(data){
     }
 }
 
-export async function logout(){
+export async function logout() {
     try {
         const cookies = new Cookies();
         const data = {
             'accessToken': cookies.get("accessToken"),
             'refreshToken': cookies.get("refreshToken")
         }
-        console.log("DATA",data)
-        const response = await apiRequest('POST',`auth/logout`,data)
+        const response = await apiRequest('POST', `auth/logout`, data)
 
         cookies.remove("accessToken");
         cookies.remove("refreshToken");
@@ -82,55 +79,50 @@ export async function logout(){
     }
 }
 
-export async function profile(){
-    try{
+export async function profile() {
+    try {
         const cookies = new Cookies();
         const data = {
             'token': cookies.get("accessToken") ?? cookies.get("refreshToken")
         };
-        let response = await apiRequest('POST','auth/extract-username', data);
-        console.log("===PROFILE===")
-        console.log(response.data)
-        if (response.status === 200){
-            response = await apiRequest('GET','users/profile',null,{
-                'email':response.data
+        let response = await apiRequest('POST', 'auth/extract-username', data);
+        if (response.status === 200) {
+            response = await apiRequest('GET', 'users/profile', null, {
+                'email': response.data
             })
         }
-        console.log(response.data)
         return response.data;
 
-    }catch (error) {
+    } catch (error) {
         console.error(error);
         throw new Error(`Can't update full name right now`);
     }
 }
 
-export async function updateCurrentFullName({fullName, password}){
+export async function updateCurrentFullName(userData) {
+    console.log("UPDATE",userData);
     try {
         const cookies = new Cookies();
 
         const data = {
             'token': cookies.get('accessToken').toString(),
-            'fullName': fullName,
-            'password': password
+            ...userData
         }
 
-        console.log("UPDATE",data)
 
-          const response = await apiRequest('POST', `auth/change-fullname`,data )
+        const response = await apiRequest('POST', `auth/change-fullname`, data)
 
         return response.data;
 
-    }catch (error) {
+    } catch (error) {
         console.error(error);
         throw new Error(`Can't update full name right now`);
     }
 }
 
-export async function updateCurrentAvatar({avatar,user}){
+export async function updateCurrentAvatar({avatar, user}) {
     try {
         const cookies = new Cookies();
-        console.log("UPDATE AVATAR:" ,user)
 
         const fileName = `avatar-${user}-${Math.random()}`
 
@@ -146,20 +138,19 @@ export async function updateCurrentAvatar({avatar,user}){
 
         const data = {
             'token': cookies.get('accessToken').toString(),
-            'avatar': `https://tfuqnepvvdeiwssgclxl.supabase.co/storage/v1/object/public/avatars/${fileName}`,
+            'avatar': `https://undmawolyisfwazvaslt.supabase.co/storage/v1/object/public/avatars/${fileName}`,
         }
-        console.log("UPDATE",data)
-        const response = await apiRequest('POST', `auth/change-avatar`,data )
+        const response = await apiRequest('POST', `auth/change-avatar`, data)
 
         return response.data;
 
-    }catch (error) {
+    } catch (error) {
         console.error(error);
         throw new Error(`Can't update full name right now`);
     }
 }
 
-export async function updatePassword({oldPassword,password,confirmPassword}){
+export async function updatePassword({oldPassword, password, confirmPassword}) {
     try {
         const cookies = new Cookies();
 
@@ -170,21 +161,20 @@ export async function updatePassword({oldPassword,password,confirmPassword}){
             'repeatedPassword': confirmPassword
         }
 
-        const response = await apiRequest('POST', `auth/change-password`,data )
+        const response = await apiRequest('POST', `auth/change-password`, data)
 
         return response.data;
 
-    }catch (error) {
+    } catch (error) {
         console.error(error);
         throw new Error(`Can't update full name right now`);
     }
 }
 
 
-export async function getRoles(){
+export async function getRoles() {
     try {
-        const response = await apiRequest('GET',`auth/getRoles`)
-        console.log("ROLES", response.data)
+        const response = await apiRequest('GET', `auth/getRoles`)
         return response.data;
     } catch (error) {
         console.error(error);

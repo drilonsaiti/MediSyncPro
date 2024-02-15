@@ -10,6 +10,7 @@ import ReceptionistTable from "../Receptionist/ReceptionistTable.jsx";
 import styled from "styled-components";
 import {useState} from "react";
 import {useAddReceptionistToClinic} from "../Receptionist/useAddReceptonistToClinic.js";
+
 const animatedComponents = makeAnimated();
 const Title = styled.div`
   font-size: 1.6rem;
@@ -26,14 +27,14 @@ const Card = styled.div`
     padding: 2.4rem 4rem;
 `
 const AccountReceptionistSettings = () => {
-    const {isLoading:isLoadingSearch,receptionistsOptions} = useReceptionistSearch();
-    const {isLoading,receptionists} = useReceptionistByClinicId();
+    const {isLoading: isLoadingSearch, receptionistsOptions} = useReceptionistSearch();
+    const {isLoading, receptionists} = useReceptionistByClinicId();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedReceptionists, setSelectedReceptionists] = useState([]);
     const [selectedOptionsText, setSelectedOptionsText] = useState([]);
-    const {isCreating,addReceptionist} = useAddReceptionistToClinic();
+    const {isCreating, addReceptionist} = useAddReceptionistToClinic();
 
-    if (isLoading || isLoadingSearch) return <Spinner />;
+    if (isLoading || isLoadingSearch) return <Spinner/>;
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
@@ -51,14 +52,14 @@ const AccountReceptionistSettings = () => {
     };
 
     const handlerBlurSelect = () => {
-        const data = selectedReceptionists.map(receptionist =>{
+        const data = selectedReceptionists.map(receptionist => {
             return {
                 email: receptionist
             }
         })
 
         if (selectedReceptionists.length > 0)
-            addReceptionist(data,{
+            addReceptionist(data, {
                 onSuccess: () => {
                     setSelectedReceptionists([]);
                     setSelectedOptionsText([]);
@@ -71,14 +72,14 @@ const AccountReceptionistSettings = () => {
             <Card onClick={toggleAccordion}>
                 <Row type="horizontal">
                     <Title>Add/Remove receptionists</Title>
-                    {isOpen ? <HiChevronDown /> : <HiChevronRight />}
+                    {isOpen ? <HiChevronDown/> : <HiChevronRight/>}
                 </Row>
             </Card>
 
             {isOpen && (
                 <Row>
                     <Form>
-                        <FormRow label="Add receptionist to your clinic" style={{ position: 'relative' }}>
+                        <FormRow label="Add receptionist to your clinic" style={{position: 'relative'}}>
                             <Select
                                 closeMenuOnSelect={false}
                                 components={animatedComponents}
@@ -89,15 +90,23 @@ const AccountReceptionistSettings = () => {
                                 onBlur={handlerBlurSelect}
                                 closeOnSelect={false}
                                 menuPortalTarget={document.body}
-                                styles={{menuPortal: base => ({...base, zIndex: 9999}),
+                                styles={{
+                                    menuPortal: base => ({...base, zIndex: 9999}),
                                     control: (baseStyles, state) => ({
                                         ...baseStyles,
                                         border: '1px solid var(--color-grey-300)',
                                         borderRadius: 'var(--border-radius-sm)',
-                                        padding:'0.2rem .2rem',
+                                        padding: '0.2rem .2rem',
                                         boxShadow: 'var(--shadow-sm)',
                                         backgroundColor: 'var(--color-grey-0)',
-                                        color: 'var(--color-grey-600)'
+                                        color: 'var(--color-grey-600)',
+                                        width: '150%'
+                                    }),
+                                    multiValue: (base) => ({
+                                        ...base,
+                                        border: '1px solid var(--color-grey-100)',
+                                        backgroundColor: 'transparent',
+                                        borderRadius: '9px',
                                     }),
                                     option: (base, state) => ({
                                         ...base,
@@ -115,11 +124,12 @@ const AccountReceptionistSettings = () => {
                                         neutral0: 'var(--color-grey-0)', // Background color
                                         neutral80: 'var(--color-grey-600)', // Text color
                                     },
-                                })}                            value={selectedOptionsText} // Pass the selectedOptionsText state to control the selected text
+                                })}
+                                value={selectedOptionsText} // Pass the selectedOptionsText state to control the selected text
                             />
                         </FormRow>
                     </Form>
-                    <ReceptionistTable receptionistsByClinic={receptionists} forClinic />
+                    <ReceptionistTable receptionistsByClinic={receptionists} forClinic/>
                 </Row>
             )}
         </Row>

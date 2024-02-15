@@ -5,13 +5,12 @@ import SpecializationsRow from "./SpecializationsRow.jsx";
 import {useSpecializations} from "./useSpecializations.js";
 import Spinner from "../../ui/Spinner.jsx";
 
-const SpecializationsTable = () => {
+const SpecializationsTable = ({specializationData,forClinic}) => {
     const {isLoading, specializations} = useSpecializations();
 
 
     if (isLoading) return <Spinner/>
 
-    console.log(specializations);
     return (
         <Menus>
             <Table columns={'0.6fr 3fr 1fr'}>
@@ -21,7 +20,7 @@ const SpecializationsTable = () => {
                     <div></div>
 
                 </Table.Header>
-                <Table.Body data={specializations} render={
+                <Table.Body data={forClinic ? specializationData : specializations} render={
                     spc => <SpecializationsRow specialization={spc} key={spc.specializationId}/>
                 }/>
 

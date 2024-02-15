@@ -5,13 +5,12 @@ import ReceptionistRow from "./ReceptionistRow.jsx";
 import {useReceptionist} from "./useReceptionist.js";
 import Spinner from "../../ui/Spinner.jsx";
 
-const ReceptionistTable = ({receptionistsByClinic,forClinic}) => {
+const ReceptionistTable = ({receptionistsByClinic, forClinic}) => {
     const {isLoading, receptionist} = useReceptionist();
 
 
     if (isLoading) return <Spinner/>
 
-    console.log(receptionist);
     return (
         <Menus>
             <Table columns={'0.6fr 3fr 1.5fr repeat(2,1fr)'}>

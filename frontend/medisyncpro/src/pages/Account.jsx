@@ -5,21 +5,21 @@ import UpdatePasswordForm from "../features/authentication/UpdatePasswordForm.js
 
 
 function Account() {
-  return (
-    <>
-      <Heading as="h1">Update your account</Heading>
+    return (
+        <>
+            <Heading as="h1">Update your account</Heading>
 
-      <Row>
-        <Heading as="h3">Update user data</Heading>
-        <UpdateUserDataForm />
-      </Row>
+            <Row>
+                <Heading as="h3">Update user data</Heading>
+                <UpdateUserDataForm/>
+            </Row>
 
-      <Row style={{marginTop: '2rem'}}>
-        <Heading as="h3">Update password</Heading>
-        <UpdatePasswordForm/>
-      </Row>
-    </>
-  );
+            <Row style={{marginTop: '2rem'}}>
+                <Heading as="h3">Update password</Heading>
+                <UpdatePasswordForm/>
+            </Row>
+        </>
+    );
 }
 
 export default Account;

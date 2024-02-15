@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import {HiUser} from "react-icons/hi2";
 import Heading from "./Heading.jsx";
 import {FaHouseMedical, FaUserDoctor, FaUserPen} from "react-icons/fa6";
 import {FaHospitalUser} from "react-icons/fa";
@@ -9,7 +8,7 @@ const Container = styled.div`
     flex-direction: column;
 `
 const Card = styled.div`
-    background-color: #fff;
+    background-color: var(--color-grey-0);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 2rem;
@@ -19,11 +18,16 @@ const Card = styled.div`
     align-items: center;
     width: 100%;
     gap: 0.5rem;
-    
+    cursor: pointer;
+
     p {
-        color: #666;
+        color: var(--color-grey-1000);
         line-height: 1.6;
         width: 100%;
+    }
+
+    &:hover {
+        outline: 2px solid var(--color-grey-100);
     }
 `;
 
@@ -82,27 +86,35 @@ const RadioButton = styled.span`
         background-color: var(--color-brand-700);
         opacity: 0;
         transition: opacity 0.2s;
+
+        ${Card}:hover & {
+            opacity: 1;
+        }
+
     }
 
     ${RadioInput}:checked ~ ${RadioLabel} &::after {
         opacity: 1;
     }
+
+
+
 `;
 
 const UserTypeCard = ({onUserTypeChange}) => {
     const handleUserTypeSelection = (selectedUserType) => {
-        console.log('Selected User Type in Child:', selectedUserType);
         onUserTypeChange(selectedUserType);
     };
     return (
         <Container>
             <Heading type="h1">Choose Your Role
             </Heading>
-            <Card>
+            <Card onClick={() => handleUserTypeSelection("clinic")}>
                 <div>
-                    <RadioInput type="radio" name="size" id="clinic" onChange={() => handleUserTypeSelection("clinic")}/>
+                    <RadioInput type="radio" name="size" id="clinic"
+                                onChange={() => handleUserTypeSelection("clinic")}/>
                     <RadioLabel htmlFor="clinic">
-                        <RadioButton />
+                        <RadioButton/>
                     </RadioLabel>
                 </div>
                 <Info>
@@ -113,11 +125,12 @@ const UserTypeCard = ({onUserTypeChange}) => {
                     <p>Welcome to our clinic portal. Manage appointments, access medical records, and more.</p>
                 </Info>
             </Card>
-            <Card>
+            <Card onClick={() => handleUserTypeSelection("doctor")}>
                 <div>
-                    <RadioInput type="radio" name="size" id="doctor" onChange={() => handleUserTypeSelection("doctor")}/>
+                    <RadioInput type="radio" name="size" id="doctor"
+                                onChange={() => handleUserTypeSelection("doctor")}/>
                     <RadioLabel htmlFor="doctor">
-                        <RadioButton />
+                        <RadioButton/>
                     </RadioLabel>
                 </div>
                 <Info>
@@ -125,15 +138,17 @@ const UserTypeCard = ({onUserTypeChange}) => {
                         <FaUserDoctor/>
                     </Icon>
                     <Heading type="h2">Doctor</Heading>
-                    <p>Enhance patient care and streamline practice management. Manage appointments, access patient records.</p>
+                    <p>Enhance patient care and streamline practice management. Manage appointments, access patient
+                        records.</p>
                 </Info>
             </Card>
 
-            <Card>
+            <Card onClick={() => handleUserTypeSelection("patient")}>
                 <div>
-                    <RadioInput type="radio" name="size" id="patient" onChange={() => handleUserTypeSelection("patient")}/>
+                    <RadioInput type="radio" name="size" id="patient"
+                                onChange={() => handleUserTypeSelection("patient")}/>
                     <RadioLabel htmlFor="patient">
-                        <RadioButton />
+                        <RadioButton/>
                     </RadioLabel>
                 </div>
                 <Info>
@@ -144,11 +159,12 @@ const UserTypeCard = ({onUserTypeChange}) => {
                     <p>Take control of your healthcare. Schedule appointments, track medical history, and connect with
                         doctors.</p></Info>
             </Card>
-            <Card>
+            <Card onClick={() => handleUserTypeSelection("receptionist")}>
                 <div>
-                    <RadioInput type="radio" name="size" id="receptionist" onChange={() => handleUserTypeSelection("receptionist")}/>
+                    <RadioInput type="radio" name="size" id="receptionist"
+                                onChange={() => handleUserTypeSelection("receptionist")}/>
                     <RadioLabel htmlFor="receptionist">
-                        <RadioButton />
+                        <RadioButton/>
                     </RadioLabel>
                 </div>
                 <Info>

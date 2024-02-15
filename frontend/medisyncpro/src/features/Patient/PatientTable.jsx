@@ -7,12 +7,11 @@ import Spinner from "../../ui/Spinner.jsx";
 import Pagination from "../../ui/Pagination.jsx";
 
 const PatientTable = () => {
-    const {isLoading, patients,totalElements} = usePatients();
+    const {isLoading, patients, totalElements} = usePatients();
 
 
     if (isLoading) return <Spinner/>
 
-    console.log(patients);
     return (
         <Menus>
             <Table columns={'0.6fr 2fr 2fr 1.5fr repeat(4,1fr)'}>
@@ -33,7 +32,7 @@ const PatientTable = () => {
                 }/>
 
                 <Table.Footer>
-                    <Pagination count={totalElements} />
+                    <Pagination count={totalElements}/>
                 </Table.Footer>
 
             </Table>

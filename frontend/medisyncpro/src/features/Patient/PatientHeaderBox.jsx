@@ -5,7 +5,6 @@ import Heading from "../../ui/Heading.jsx";
 import {FaCalendarCheck, FaClipboardList, FaEnvelope} from "react-icons/fa";
 import {FaCakeCandles, FaMarsAndVenus} from "react-icons/fa6";
 import {useNextAppointment} from "../Appointment/useNextAppointment.js";
-import Spinner from "../../ui/Spinner.jsx";
 import AppointmentReminderCard from "../Appointment/AppointmentReminderCard.jsx";
 
 
@@ -110,74 +109,74 @@ const Title = styled.div`
 
 const PatientHeaderBox = ({patient}) => {
     const {patientId, patientName: name, gender, address, contactNumber, email, birthDay} = patient;
-    const {nextAppointments,isLoading} = useNextAppointment(patientId);
+    const {nextAppointments, isLoading} = useNextAppointment(patientId);
 
 
     return (
         <>
             {nextAppointments && (
                 <StyledBox style={{marginBottom: '2rem'}}>
-                    <AppointmentReminderCard nextAppointments={nextAppointments} />
+                    <AppointmentReminderCard nextAppointments={nextAppointments}/>
                 </StyledBox>
             )}
 
 
-        <StyledBox>
+            <StyledBox>
 
-            <HeaderProfile>
-                <Heading type="h1">{name} #{patientId}</Heading>
-                <Title>User</Title>
-            </HeaderProfile>
-            <Container>
-                <ContactInfo>
-                    <Heading type="h2">Contact info</Heading>
-                    <ContactItem>
-                        <HiPhone/>
-                        <p>{contactNumber}</p>
-                    </ContactItem>
-                    <ContactItem>
-                        <HiAtSymbol/>
-                        <p>{email}</p>
-                    </ContactItem>
-                    <ContactItem>
-                        <HiLocationMarker/>
-                        <p>{address}</p>
-                    </ContactItem>
-                </ContactInfo>
+                <HeaderProfile>
+                    <Heading type="h1">{name} #{patientId}</Heading>
+                    <Title>User</Title>
+                </HeaderProfile>
+                <Container>
+                    <ContactInfo>
+                        <Heading type="h2">Contact info</Heading>
+                        <ContactItem>
+                            <HiPhone/>
+                            <p>{contactNumber}</p>
+                        </ContactItem>
+                        <ContactItem>
+                            <HiAtSymbol/>
+                            <p>{email}</p>
+                        </ContactItem>
+                        <ContactItem>
+                            <HiLocationMarker/>
+                            <p>{address}</p>
+                        </ContactItem>
+                    </ContactInfo>
 
-                <ContactInfo>
-                    <Heading type="h2">Info</Heading>
-                    <ContactItem type="lg">
-                        <FaCakeCandles/>
+                    <ContactInfo>
+                        <Heading type="h2">Info</Heading>
+                        <ContactItem type="lg">
+                            <FaCakeCandles/>
 
-                        <p>{birthDay}</p>
-                    </ContactItem>
-                    <ContactItem type="lg">
-                        <FaMarsAndVenus/>
-                        <p>{gender?.toString()?.toLowerCase()?.at(0)?.toUpperCase() ?? '' + gender?.toString()?.slice(1)?.toLowerCase() ?? ''}</p>
-                    </ContactItem>
-                    <ContactItem type="lg">
-                        <FaClipboardList/>
-                        <p>14</p>
-                    </ContactItem>
-                </ContactInfo>
+                            <p>{birthDay}</p>
+                        </ContactItem>
+                        <ContactItem type="lg">
+                            <FaMarsAndVenus/>
+                            <p>{gender?.toString()?.toLowerCase()?.at(0)?.toUpperCase() ?? '' + gender?.toString()?.slice(1)?.toLowerCase() ?? ''}</p>
+                        </ContactItem>
+                        <ContactItem type="lg">
+                            <FaClipboardList/>
+                            <p>14</p>
+                        </ContactItem>
+                    </ContactInfo>
 
-                <QuickActions>
-                    <Heading type="h3">Quick actions</Heading>
-                    <QuickActionsButton>
-                        <FaClipboardList/> Medical Records
-                    </QuickActionsButton>
-                    <QuickActionsButton>
-                        <FaEnvelope/>
-                        Send Message
-                    </QuickActionsButton>
-                    <QuickActionsButton>
-                        <FaCalendarCheck/>
-                        Appointment
-                    </QuickActionsButton>
-                </QuickActions>
-            </Container>
-        </StyledBox>
+                    <QuickActions>
+                        <Heading type="h3">Quick actions</Heading>
+                        <QuickActionsButton>
+                            <FaClipboardList/> Medical Records
+                        </QuickActionsButton>
+                        <QuickActionsButton>
+                            <FaEnvelope/>
+                            Send Message
+                        </QuickActionsButton>
+                        <QuickActionsButton>
+                            <FaCalendarCheck/>
+                            Appointment
+                        </QuickActionsButton>
+                    </QuickActions>
+                </Container>
+            </StyledBox>
         </>
     );
 };

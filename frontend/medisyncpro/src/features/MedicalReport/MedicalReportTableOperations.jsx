@@ -116,7 +116,6 @@ const DatePickerWrapperStyles = createGlobalStyle`
     }
 `;
 
-import { debounce } from "lodash";
 const MedicalReportTableOperations = () => {
     const [startDate, setStartDate] = useState();
     const [searchParams, setSearchParams] = useSearchParams();

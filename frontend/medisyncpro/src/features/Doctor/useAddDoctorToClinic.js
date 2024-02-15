@@ -1,5 +1,5 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {addDoctorToClinic, createEditDoctor} from "../../services/apiDoctors.js";
+import {addDoctorToClinic} from "../../services/apiDoctors.js";
 import toast from "react-hot-toast";
 
 export function useAddDoctorToClinic() {

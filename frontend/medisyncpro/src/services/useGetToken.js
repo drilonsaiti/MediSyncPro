@@ -10,32 +10,24 @@ async function checkToken() {
     let refreshToken = cookies?.get('refreshToken');
 
     let isExpired = true;
-    if (accessToken){
+    if (accessToken) {
 
-        const token = {token:accessToken};
+        const token = {token: accessToken};
         HEADERS["Authorization"] = `Bearer ${accessToken}`
-        console.log("HEADERS",HEADERS);
-        const response = await axios.post(BASE_URL+"/users/token/expired",token,{
-            headers:HEADERS
+        const response = await axios.post(BASE_URL + "/users/token/expired", token, {
+            headers: HEADERS
         });
         isExpired = response.data;
-        console.log(isExpired);
         if (accessToken && !isExpired) return false;
     }
-    console.log("AFTER accestoken")
-    if (!accessToken || !isExpired){
-        console.log("!accessToken || !isExpired")
-        if(!refreshToken){
-            console.log("!refreshToken")
+    if (!accessToken || !isExpired) {
+        if (!refreshToken) {
             return true;
-        }else{
-            console.log("else !refreshToken")
+        } else {
             HEADERS["Authorization"] = `Bearer ${refreshToken}`
-            console.log(HEADERS);
-            const response = await apiRequest('GET',"users/token/refresh");
+            const response = await apiRequest('GET', "users/token/refresh");
 
-            if (!response.data.startsWith("Refresh") && !response.data.startsWith("No auth")){
-                console.log("!response.data.startsWith(\"Refresh\") && !response.data.startsWith(\"No auth\")")
+            if (!response.data.startsWith("Refresh") && !response.data.startsWith("No auth")) {
                 cookies.set('accessToken', response.data, {
                     path: '/',
                     sameSite: 'strict',  // Adjust as needed
@@ -44,20 +36,18 @@ async function checkToken() {
                 });
                 return false;
             }
-            console.log("else !refreshToken - FALSE")
             return true;
         }
     }
-    console.log("isExpired last",isExpired);
     return isExpired;
 
 }
 
 export function useGetToken() {
-    const {data:goToLogin,isLoading} = useQuery({
-        queryFn:checkToken,
+    const {data: goToLogin, isLoading} = useQuery({
+        queryFn: checkToken,
         queryKey: ["user"]
     })
 
-    return {goToLogin,isLoading};
+    return {goToLogin, isLoading};
 }

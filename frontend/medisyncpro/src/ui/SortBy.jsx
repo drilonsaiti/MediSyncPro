@@ -7,7 +7,6 @@ const SortBy = ({options, type, types}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const currentFilter = searchParams.get("sortBy") || "";
     const handleChange = (e) => {
-        console.log(e.target.value);
         searchParams.set("sortBy", e.target.value);
         setSearchParams(searchParams);
     }

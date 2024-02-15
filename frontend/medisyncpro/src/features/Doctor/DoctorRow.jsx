@@ -2,12 +2,10 @@ import Menus from "../../ui/Menus.jsx";
 import Table from "../../ui/Table.jsx";
 import Modal from "../../ui/Modal.jsx";
 import ButtonGroup from "../../ui/ButtonGroup.jsx";
-import {HiPencil, HiTrash} from "react-icons/hi";
+import {HiTrash} from "react-icons/hi";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import styled from "styled-components";
-import CreateDoctorForm from "./CreateDoctorForm.jsx";
 import {useCreateDoctor} from "./useCreateDoctor.js";
-import {useDeleteDoctor} from "./useDeleteDoctor.js";
 import {Link} from "react-router-dom";
 import {FaEye} from "react-icons/fa6";
 import ButtonIcon from "../../ui/ButtonIcon.jsx";
@@ -20,11 +18,10 @@ const Title = styled.div`
   font-family: "Sono",sans-serif;
 `;
 const DoctorRow = ({doctor}) => {
-    const {doctorId, doctorName: name, specialization, workingDays,clinic} = doctor;
+    const {doctorId, doctorName: name, specialization, workingDays, clinic} = doctor;
     const {isCreating, createDoctor} = useCreateDoctor();
     const {isDeleting, deleteMutate} = useDeleteDoctorFromClinic();
 
-    console.log("CLINIC",clinic);
     return (
         <Table.Row role="row">
             <Title>{doctorId}</Title>
@@ -55,7 +52,7 @@ const DoctorRow = ({doctor}) => {
 
                 <Modal.Window name="delete">
                     <ConfirmDelete resource={`doctor from clinic`} disabled={isDeleting}
-                                   onConfirm={() => deleteMutate({doctorId,clinicId:clinic.clinicId})}/>
+                                   onConfirm={() => deleteMutate({doctorId, clinicId: clinic.clinicId})}/>
                 </Modal.Window>
 
             </Modal>

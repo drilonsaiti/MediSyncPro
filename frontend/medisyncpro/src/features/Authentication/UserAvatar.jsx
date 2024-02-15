@@ -21,8 +21,7 @@ const Avatar = styled.img`
 `;
 
 
-const UserAvatar = ({src,alt}) => {
-    console.log("AVATAR: " ,src)
+const UserAvatar = ({src, alt}) => {
     return (
         <StyledUserAvatar>
             <Avatar src={src} alt={alt}/>

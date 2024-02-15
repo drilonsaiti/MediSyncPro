@@ -11,14 +11,16 @@ import makeAnimated from 'react-select/animated';
 import Spinner from "../../ui/Spinner.jsx";
 import {useClinicServicesById} from "./useClinic.js";
 import {useEffect, useState} from "react";
+
 const animatedComponents = makeAnimated();
 
-const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
+const CreateClinicForm = ({clinicToEdit = {}, onCloseModal,forSettings,refreshClinic}) => {
+    console.log(clinicToEdit);
     const {clinicId, ...editValues} = clinicToEdit;
     const {isLoading, specializations} = useSpecializations();
     const {isLoading: isLoadingServices, clinicServices} = useClinicServicesById(clinicId);
     const isEditSession = Boolean(clinicId);
-    const {register, handleSubmit, reset, getValues,setValue, formState} = useForm({
+    const {register, handleSubmit, reset, getValues, setValue, formState} = useForm({
         defaultValues: isEditSession ? editValues : {}
     });
     const {errors} = formState;
@@ -34,8 +36,8 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
     });
     const selectedServicesValues = editValues?.serviceDto?.map(service => {
         return {
-            value:  service.services,
-            label:  service.services
+            value: service.services,
+            label: service.services
         };
     });
     const optionsServices = clinicServices
@@ -64,7 +66,7 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
         }, []);
     const [selectedSpecializations, setSelectedSpecializations] = useState(selectedValues);
     const [optionsService, setOptionsService] = useState(optionsServices);
-    const [selectedService,setSelectedService] = useState(selectedServicesValues);
+    const [selectedService, setSelectedService] = useState(selectedServicesValues);
     const isWorking = isCreating || isEditing || isLoading || isLoadingServices || !selectedService;
 
     useEffect(() => {
@@ -72,7 +74,6 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
             ?.sort((a, b) => a.serviceId - b.serviceId)
             ?.reduce((groupedOptions, service) => {
                 const label = specializations?.find(spec => spec.specializationId === service.specializations.specializationId).specializationName;
-                console.log(selectedSpecializations);
                 if (selectedSpecializations?.find(spec => spec.value === service.specializations.specializationId)) {
                     const existingGroup = groupedOptions.find(group => group.label === label);
 
@@ -95,7 +96,7 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
                 return groupedOptions;
             }, []);
 
-        const list = updatedSelectedOptionsServices?.filter((item,index) =>  item.options?.flatMap(i => selectedService.filter(s => s.value === i.value)));
+        const list = updatedSelectedOptionsServices?.filter((item, index) => item.options?.flatMap(i => selectedService.filter(s => s.value === i.value)));
 
         setSelectedService(list?.flatMap(option => option.options));
         setOptionsService(updatedSelectedOptionsServices);
@@ -133,20 +134,26 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
                 }, id: clinicId
             }, {
                 onSuccess: () => {
+                    setSelectedSpecializations(selectedSpecializations);
+                    setSelectedService(selectedServices);
                     reset();
+                    forSettings && refreshClinic();
                     onCloseModal?.();
                 },
 
             })
-        }else createClinic({...data,
+        } else createClinic({
+            ...data,
             specializations: selectedSpecializations,
-            serviceDto: selectedServices}, {
+            serviceDto: selectedServices
+        }, {
             onSuccess: () => {
                 reset();
                 onCloseModal?.();
             }
         });
     }
+
     const optionsSpecializations = specializations?.sort((a, b) => a.specializationId - b.specializationId)?.map(spec => {
         return {
             value: spec.specializationId,
@@ -156,6 +163,7 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
 
     return (
         <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
+            {forSettings !== true && ( <>
             <FormRow label="Clinic name" error={errors?.clinicName?.message}>
                 <Input type="text" disabled={isWorking}
                        id="clinicName" {...register("clinicName", {required: "This field is required"})}/>
@@ -165,6 +173,7 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
                 <Input type="text" disabled={isWorking}
                        id="address" {...register("address", {required: "This field is required"})}/>
             </FormRow>
+            </>)}
             <FormRow label="Specializations">
                 <Select
                     closeMenuOnSelect={false}
@@ -179,15 +188,22 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
                     }}
                     closeOnSelect={false}
                     menuPortalTarget={document.body}
-                    styles={{menuPortal: base => ({...base, zIndex: 9999}),
+                    styles={{
+                        menuPortal: base => ({...base, zIndex: 9999}),
                         control: (baseStyles, state) => ({
                             ...baseStyles,
                             border: '1px solid var(--color-grey-300)',
                             borderRadius: 'var(--border-radius-sm)',
-                            padding:'0.2rem .2rem',
+                            padding: '0.2rem .2rem',
                             boxShadow: 'var(--shadow-sm)',
                             backgroundColor: 'var(--color-grey-0)',
                             color: 'var(--color-grey-600)'
+                        }),
+                        multiValue: (base) => ({
+                            ...base,
+                            border: '1px solid var(--color-grey-100)',
+                            backgroundColor: 'transparent',
+                            borderRadius: '9px',
                         }),
                         option: (base, state) => ({
                             ...base,
@@ -224,15 +240,22 @@ const CreateClinicForm = ({clinicToEdit = {}, onCloseModal}) => {
                     }}
                     closeOnSelect={false}
                     menuPortalTarget={document.body}
-                    styles={{menuPortal: base => ({...base, zIndex: 9999}),
+                    styles={{
+                        menuPortal: base => ({...base, zIndex: 9999}),
                         control: (baseStyles, state) => ({
                             ...baseStyles,
                             border: '1px solid var(--color-grey-300)',
                             borderRadius: 'var(--border-radius-sm)',
-                            padding:'0.2rem .2rem',
+                            padding: '0.2rem .2rem',
                             boxShadow: 'var(--shadow-sm)',
                             backgroundColor: 'var(--color-grey-0)',
                             color: 'var(--color-grey-600)'
+                        }),
+                        multiValue: (base) => ({
+                            ...base,
+                            border: '1px solid var(--color-grey-100)',
+                            backgroundColor: 'transparent',
+                            borderRadius: '9px',
                         }),
                         option: (base, state) => ({
                             ...base,

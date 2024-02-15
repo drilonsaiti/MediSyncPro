@@ -29,24 +29,24 @@ const CardText = styled.p`
 
 
 // Component
-const AppointmentReminderCard = ({ nextAppointments}) => {
+const AppointmentReminderCard = ({nextAppointments}) => {
 
 
     return (
         nextAppointments ?
-        <CardContainer>
-            <CardHeader>Next Appointment Reminder</CardHeader>
-            <CardBody>
-                <CardText>
+            <CardContainer>
+                <CardHeader>Next Appointment Reminder</CardHeader>
+                <CardBody>
+                    <CardText>
 
-                    You have an upcoming appointment
-                    with <strong>{nextAppointments.doctorName} </strong> at <strong>{nextAppointments.clinicName}</strong> on
-                    <strong> {formatDateMonth(nextAppointments.appointmentDate)}</strong>.
-                    Please make sure to attend it on time.
-                </CardText>
-            </CardBody>
-        </CardContainer>
-                : null
+                        You have an upcoming appointment
+                        with <strong>{nextAppointments.doctorName} </strong> at <strong>{nextAppointments.clinicName}</strong> on
+                        <strong> {formatDateMonth(nextAppointments.appointmentDate)}</strong>.
+                        Please make sure to attend it on time.
+                    </CardText>
+                </CardBody>
+            </CardContainer>
+            : null
 
     );
 };

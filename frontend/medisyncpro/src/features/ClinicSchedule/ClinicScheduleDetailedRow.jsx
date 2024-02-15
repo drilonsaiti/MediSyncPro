@@ -2,13 +2,12 @@ import Menus from "../../ui/Menus.jsx";
 import Table from "../../ui/Table.jsx";
 import Modal from "../../ui/Modal.jsx";
 import ButtonGroup from "../../ui/ButtonGroup.jsx";
-import {HiPencil, HiTrash} from "react-icons/hi";
+import {HiTrash} from "react-icons/hi";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import styled from "styled-components";
 import {useCreateClinicSchedule} from "./useCreateClinicSchedule.js";
 import {useDeleteClinicSchedule} from "./useDeleteClinicSchedule.js";
-import CreateClinicServiceForm from "../ClinicServices/CreateClinicServiceForm.jsx";
-import {formatDate, formatDateMonth, formatDateMonthWithoutHour} from "../../utils/helpers.js";
+import {formatDateMonthWithoutHour} from "../../utils/helpers.js";
 
 const Title = styled.div`
   font-size: 1.6rem;
@@ -23,7 +22,6 @@ const Price = styled.div`
 `;
 
 const ClinicScheduleDetailedRow = ({clinicSchedule}) => {
-    console.log(clinicSchedule);
     const {id, date, doctorName, timeSlot, isBooked} = clinicSchedule;
     const {isCreating, createClinicSchedule} = useCreateClinicSchedule();
     const {isDeleting, deleteMutate} = useDeleteClinicSchedule();
@@ -52,7 +50,8 @@ const ClinicScheduleDetailedRow = ({clinicSchedule}) => {
 
 
                 <Modal.Window name="delete">
-                    <ConfirmDelete resource={`schedule#${id}`} disabled={isDeleting} onConfirm={() => deleteMutate(id)}/>
+                    <ConfirmDelete resource={`schedule#${id}`} disabled={isDeleting}
+                                   onConfirm={() => deleteMutate(id)}/>
                 </Modal.Window>
 
             </Modal>

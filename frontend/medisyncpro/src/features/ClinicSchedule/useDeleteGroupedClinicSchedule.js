@@ -7,9 +7,8 @@ export function useDeleteGroupedClinicSchedule() {
     const queryClient = useQueryClient();
 
     const {isPending: isDeleting, mutate: deleteMutate} = useMutation({
-        mutationFn:({clinicId, date}) => {
-            console.log("MUTATE DATE",date);
-            return deleteClinicScheduleGrouped(clinicId,date)
+        mutationFn: ({clinicId, date}) => {
+            return deleteClinicScheduleGrouped(clinicId, date)
         },
         onSuccess: () => {
             toast.success("Clinic schedule successfully deleted")

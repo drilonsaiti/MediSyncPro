@@ -73,7 +73,7 @@ export const formatDateMonthWithoutHour = (dateString) => {
 export const isAnyDayFullyBooked = (dates) => {
     // Loop through each date
     for (let date of dates) {
-        const allTimesForDay = Array.from({ length: 13 }, (_, i) => {
+        const allTimesForDay = Array.from({length: 13}, (_, i) => {
             const hour = i + 7;
             return setHours(setMinutes(new Date(date.startDate), 0), hour);
         });

@@ -3,35 +3,35 @@ import styled, {css} from "styled-components";
 
 const Heading = styled.h1`
     ${(props) =>
-            props.type === "h1" &&
-            css`
+    props.type === "h1" &&
+    css`
         font-size: 3rem;
         font-weight: 600;
       `}
 
     ${(props) =>
-            props.type === "h2" &&
-            css`
+    props.type === "h2" &&
+    css`
         font-size: 2rem;
         font-weight: 600;
       `}
 
     ${(props) =>
-            props.type === "h3" &&
-            css`
+    props.type === "h3" &&
+    css`
         font-size: 2rem;
         font-weight: 500;
       `}
     ${(props) =>
-            props.type === "h4" &&
-            css`
+    props.type === "h4" &&
+    css`
         font-size: 1.5rem;
         font-weight: 500;
       `}
 
     ${(props) =>
-            props.type === "login" &&
-            css`
+    props.type === "login" &&
+    css`
         font-size: 3rem;
         font-weight: 600;
               text-align: center;

@@ -5,7 +5,7 @@ export function useAppointmentDates(clinicId) {
 
     const {isLoading, data: dates} = useQuery({
         queryFn: () => getAppointmentDates(clinicId),
-        queryKey: ["appointmentDates",clinicId],
+        queryKey: ["appointmentDates", clinicId],
     })
 
     return {isLoading, dates};

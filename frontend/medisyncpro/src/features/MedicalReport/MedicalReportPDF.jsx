@@ -8,8 +8,8 @@ Font.register({
     family: 'Arial, sans-serif',
 
     fonts: [
-        { src: 'http://localhost:5173/arial.ttf', fontWeight: 'normal' },
-        { src: 'http://localhost:5173/arial_bold.ttf', fontWeight: 'bold' },
+        {src: 'http://localhost:5173/arial.ttf', fontWeight: 'normal'},
+        {src: 'http://localhost:5173/arial_bold.ttf', fontWeight: 'bold'},
         // Add more font weights or styles as needed
     ],
 });
@@ -128,13 +128,11 @@ const styles = StyleSheet.create({
     },
 });
 
-const PdfRender =  ({data}) => {
-    console.log("pdf render is called");
-    console.log(data);
+const PdfRender = ({data}) => {
     return (
 
         <Document title={`MedicalReport_${data?.reportId}_${data?.patientName}.pdf`}>
-            <Page size="A4" style={[styles.body,styles.container]}>
+            <Page size="A4" style={[styles.body, styles.container]}>
 
                 <View style={styles.header}>
                     <Image style={styles.logo} src="http://localhost:5173/logo.png"/>
@@ -244,7 +242,8 @@ const PdfRender =  ({data}) => {
                             </View>
                         </View>
                         {data.services.map(service => (
-                            <View key={service.name} style={[styles.tableRow, {justifyContent: 'space-between', gap: 0, padding: 8}]}>
+                            <View key={service.name}
+                                  style={[styles.tableRow, {justifyContent: 'space-between', gap: 0, padding: 8}]}>
 
 
                                 <View style={styles.tableCell}>
@@ -266,7 +265,8 @@ const PdfRender =  ({data}) => {
                         </View>
                     </View>
 
-                    <Text style={[styles.infoText, {marginBottom: 30}]}>Report generated on: {formatDate(data.reportDate)}</Text>
+                    <Text style={[styles.infoText, {marginBottom: 30}]}>Report generated
+                        on: {formatDate(data.reportDate)}</Text>
 
                     <View style={styles.footer}>
                         <Text style={styles.infoText}>Thank you for choosing our service.</Text>
@@ -286,20 +286,19 @@ const PDFLink = () => {
 
     return (
         <PDFViewer style={styles.body}>
-            <PdfRender data={data} />
+            <PdfRender data={data}/>
         </PDFViewer>
     );
 };
 
 const PDFDownload = ({data}) => {
     return (
-        <PdfRender data={data} />
+        <PdfRender data={data}/>
     );
 };
 
 // Define the MedicalReportPDF component
 const MedicalReportPDF = ({data, isDownload}) => {
-    console.log(data);
     return (
         !isDownload ? <PDFLink/> : <PDFDownload data={data}/>
     );

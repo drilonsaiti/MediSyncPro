@@ -7,12 +7,11 @@ import {useClinicServices} from "./useClinicService.js";
 import Pagination from "../../ui/Pagination.jsx";
 
 const ClinicServiceTable = () => {
-    const {isLoading, clinicServices,totalElements} = useClinicServices();
+    const {isLoading, clinicServices, totalElements} = useClinicServices();
 
 
     if (isLoading) return <Spinner/>
 
-    console.log(clinicServices);
     return (
         <Menus>
             <Table columns={'0.6fr 3fr repeat(4,1fr)'}>

@@ -11,7 +11,7 @@ export function useDeleteDoctor() {
         onSuccess: () => {
             toast.success("Doctor successfully deleted")
             queryClient.invalidateQueries({
-                queryKey: ['doctors','doctorsClinic'],
+                queryKey: ['doctors', 'doctorsClinic'],
             })
         },
         onError: (error) => toast.error(error.message)

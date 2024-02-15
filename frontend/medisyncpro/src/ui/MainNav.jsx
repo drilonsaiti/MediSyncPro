@@ -13,8 +13,8 @@ const NavList = styled.ul`
     gap: 0.8rem;
 
     ${(props) =>
-            props.user &&
-            css`
+    props.user &&
+    css`
         flex-direction: row;
         
       `}
@@ -85,12 +85,7 @@ function MainNav() {
                         <span>Schedule</span>
                     </StyledNavLink>
                 </li>
-                <li>
-                    <StyledNavLink to="/clinicService">
-                        <FaGear/>
-                        <span>Services</span>
-                    </StyledNavLink>
-                </li>
+
                 <li>
                     <StyledNavLink to="/doctors">
                         <FaUserDoctor/>
@@ -124,16 +119,23 @@ function MainNav() {
                         <span>Profile</span>
                     </StyledNavLink>
                 </li>
-
                 {role.includes("OWNER") &&
+                    <li>
+                        <StyledNavLink to="/clinicSettings">
+                            <HiOutlineCog6Tooth/>
+                            <span>Settings</span>
+                        </StyledNavLink>
+                    </li>
+                }
+                {role.includes("RECEPTIONIST") &&
                     <li>
                         <StyledNavLink to="/settings">
                             <HiOutlineCog6Tooth/>
                             <span>Settings of Clinic</span>
                         </StyledNavLink>
                     </li>
-                }
 
+                }
                 <li>
                     <StyledNavLink to="/settingsProfile">
                         <HiOutlineCog6Tooth/>
@@ -156,7 +158,7 @@ function MainNav() {
 
                 <li>
                     <StyledNavLink to="/myAppointment">
-                        <TbCalendarUser />
+                        <TbCalendarUser/>
                         <span>My appointments</span>
                     </StyledNavLink>
                 </li>
@@ -174,6 +176,7 @@ function MainNav() {
                     </StyledNavLink>
                 </li>
 
+
                 <li>
                     <StyledNavLink to="/settingsProfile">
                         <HiOutlineCog6Tooth/>
@@ -186,7 +189,7 @@ function MainNav() {
         )
     }
 
-    if (ROLE_ADMIN){
+    if (ROLE_ADMIN) {
         nav = (
             <>
                 <li>
@@ -199,6 +202,12 @@ function MainNav() {
                     <StyledNavLink to="/specializations">
                         <FaAtom/>
                         <span>Specializations</span>
+                    </StyledNavLink>
+                </li>
+                <li>
+                    <StyledNavLink to="/clinicService">
+                        <FaGear/>
+                        <span>Services</span>
                     </StyledNavLink>
                 </li>
             </>

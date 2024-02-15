@@ -230,7 +230,6 @@ const DoctorAppointmentBox = ({doctorId}) => {
     const highlightedDates = appointments?.map(app => {
         const appointmentDate = startOfDay(new Date(app.date));
         const dayDifference = differenceInDays(startOfDay(startDate), appointmentDate);
-        console.log(dayDifference);
         const adjustedDate = dayDifference <= 0 ? addDays(startDate, Math.abs(dayDifference)) : undefined;
         return adjustedDate;
     });

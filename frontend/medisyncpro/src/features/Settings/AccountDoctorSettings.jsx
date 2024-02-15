@@ -10,13 +10,14 @@ import DoctorTable from "../Doctor/DoctorTable.jsx";
 import FormRow from "../../ui/FormRow.jsx";
 import makeAnimated from 'react-select/animated';
 import {useAddDoctorToClinic} from "../Doctor/useAddDoctorToClinic.js";
+
 const animatedComponents = makeAnimated();
 
 const Title = styled.div`
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: var(--color-grey-600);
-  font-family: "Sono",sans-serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-grey-600);
+    font-family: "Sono", sans-serif;
 `;
 
 
@@ -27,14 +28,14 @@ const Card = styled.div`
     padding: 2.4rem 4rem;
 `
 const AccountDoctorSettings = () => {
-    const { isLoading, doctors, totalElements } = useDoctorsByClinicId();
-    const { isLoading: isLoadingDoctorsSearch, doctorsOptions } = useDoctorSearch();
+    const {isLoading, doctors, totalElements} = useDoctorsByClinicId();
+    const {isLoading: isLoadingDoctorsSearch, doctorsOptions} = useDoctorSearch();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedDoctors, setSelectedDoctors] = useState([]);
     const [selectedOptionsText, setSelectedOptionsText] = useState([]);
     const {isCreating, addDoctor} = useAddDoctorToClinic();
 
-    if (isLoading || isLoadingDoctorsSearch) return <Spinner />;
+    if (isLoading || isLoadingDoctorsSearch) return <Spinner/>;
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
@@ -53,20 +54,19 @@ const AccountDoctorSettings = () => {
 
     const handlerBlurSelect = () => {
 
-        const data = selectedDoctors.map(doctor =>{
+        const data = selectedDoctors.map(doctor => {
             return {
                 doctorEmail: doctor
             }
         })
 
         if (selectedDoctors.length > 0)
-        addDoctor(data,{
-            onSuccess: () => {
-                setSelectedDoctors([]);
-                setSelectedOptionsText([]);
-            },
-        })
-        console.log("DATA ",data);
+            addDoctor(data, {
+                onSuccess: () => {
+                    setSelectedDoctors([]);
+                    setSelectedOptionsText([]);
+                },
+            })
     };
 
     return (
@@ -74,14 +74,14 @@ const AccountDoctorSettings = () => {
             <Card onClick={toggleAccordion}>
                 <Row type="horizontal">
                     <Title>Add/Remove doctors</Title>
-                    {isOpen ? <HiChevronDown /> : <HiChevronRight />}
+                    {isOpen ? <HiChevronDown/> : <HiChevronRight/>}
                 </Row>
             </Card>
 
             {isOpen && (
                 <Row>
                     <Form>
-                        <FormRow label="Add doctor to your clinic" style={{ position: 'relative' }}>
+                        <FormRow label="Add doctor to your clinic" style={{position: 'relative'}}>
                             <Select
                                 closeMenuOnSelect={false}
                                 components={animatedComponents}
@@ -93,15 +93,23 @@ const AccountDoctorSettings = () => {
                                 onBlur={handlerBlurSelect}
                                 closeOnSelect={false}
                                 menuPortalTarget={document.body}
-                                styles={{menuPortal: base => ({...base, zIndex: 9999}),
+                                styles={{
+                                    menuPortal: base => ({...base, zIndex: 9999}),
                                     control: (baseStyles, state) => ({
                                         ...baseStyles,
                                         border: '1px solid var(--color-grey-300)',
                                         borderRadius: 'var(--border-radius-sm)',
-                                        padding:'0.2rem .2rem',
+                                        padding: '0.2rem .2rem',
                                         boxShadow: 'var(--shadow-sm)',
                                         backgroundColor: 'var(--color-grey-0)',
-                                        color: 'var(--color-grey-600)'
+                                        color: 'var(--color-grey-600)',
+                                        width: '100%'
+                                    }),
+                                    multiValue: (base) => ({
+                                        ...base,
+                                        border: '1px solid var(--color-grey-100)',
+                                        backgroundColor: 'transparent',
+                                        borderRadius: '9px',
                                     }),
                                     option: (base, state) => ({
                                         ...base,
@@ -124,7 +132,7 @@ const AccountDoctorSettings = () => {
                             />
                         </FormRow>
                     </Form>
-                    <DoctorTable doctorsByClinic={doctors} forClinic />
+                    <DoctorTable doctorsByClinic={doctors} forClinic/>
                 </Row>
             )}
         </Row>

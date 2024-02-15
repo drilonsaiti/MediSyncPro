@@ -7,12 +7,11 @@ import Spinner from "../../ui/Spinner.jsx";
 import Pagination from "../../ui/Pagination.jsx";
 
 const ClinicTable = () => {
-    const {isLoading, clinics,totalElements} = useClinics();
+    const {isLoading, clinics, totalElements} = useClinics();
 
 
     if (isLoading) return <Spinner/>
 
-    console.log(clinics);
     return (
         <Menus>
             <Table columns={'0.6fr 3fr 1fr 1fr'}>
@@ -23,7 +22,7 @@ const ClinicTable = () => {
                     <div></div>
 
                 </Table.Header>
-                <Table.Body data={clinics?.sort((a,b) => a.clinicId - b.clinicId)} render={
+                <Table.Body data={clinics?.sort((a, b) => a.clinicId - b.clinicId)} render={
                     spc => <ClinicRow clinic={spc} key={spc.clinicId}/>
                 }/>
 

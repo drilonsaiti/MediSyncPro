@@ -2,11 +2,11 @@ import {apiRequest} from "../utils/services.js";
 import error from "eslint-plugin-react/lib/util/error.js";
 
 
-export async function getClinicSchedules({page,sort}) {
+export async function getClinicSchedules({page, sort}) {
     try {
-        const response = await apiRequest('GET', 'clinicSchedules/grouped',null,{
-            page:page,
-            sort:sort
+        const response = await apiRequest('GET', 'clinicSchedules/grouped', null, {
+            page: page,
+            sort: sort
         });
         return response.data;
     } catch (e) {
@@ -18,10 +18,9 @@ export async function getClinicSchedules({page,sort}) {
 
 export async function getClinicSchedulesByDoctorId(doctorId) {
 
-    if(doctorId) {
+    if (doctorId) {
         try {
             const response = await apiRequest('GET', `clinicSchedules/doctor/${doctorId}`,);
-            console.log("DOCTOR BY ID",response.data);
             return response.data;
         } catch (e) {
             throw new Error(e);
@@ -57,7 +56,7 @@ export async function deleteClinicSchedule(id) {
     }
 }
 
-export async function deleteClinicScheduleGrouped(id,date) {
+export async function deleteClinicScheduleGrouped(id, date) {
     try {
         const response = await apiRequest('DELETE', `clinicSchedules/grouped/${id}/${date}`);
         return response.data;

@@ -14,7 +14,14 @@ height: 100lvh;
     justify-content: center;
 `
 
-const ProtectedRoute = ({children,adminOnly, ownerOnly, receptionistOnly = false, doctorOnly = false,patientOnly=false}) => {
+const ProtectedRoute = ({
+                            children,
+                            adminOnly,
+                            ownerOnly,
+                            receptionistOnly = false,
+                            doctorOnly = false,
+                            patientOnly = false
+                        }) => {
     const {goToLogin, isLoading, token} = useGetToken();
     const navigate = useNavigate();
 

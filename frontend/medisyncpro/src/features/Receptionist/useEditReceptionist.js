@@ -10,7 +10,7 @@ export function useEditReceptionist() {
         onSuccess: () => {
             toast.success("Receptionist successfully edited");
             queryClient.invalidateQueries({
-                queryKey: ['receptionist'],
+                queryKey: ['receptionist','profile'],
             });
         },
         onError: (err) => toast.error(err.message)

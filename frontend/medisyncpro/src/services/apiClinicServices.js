@@ -2,12 +2,12 @@ import {apiRequest} from "../utils/services.js";
 import error from "eslint-plugin-react/lib/util/error.js";
 
 
-export async function getClinicServices({page,specializations,sort}) {
+export async function getClinicServices({page, specializations, sort}) {
     try {
-        const response = await apiRequest('GET', 'clinic-services',null,{
-            page:page !== 0 ? page : 1,
+        const response = await apiRequest('GET', 'clinic-services', null, {
+            page: page !== 0 ? page : 1,
             specializations: specializations,
-            sort:sort
+            sort: sort
         });
         return response.data;
     } catch (e) {

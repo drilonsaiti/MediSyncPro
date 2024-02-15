@@ -1,7 +1,7 @@
-import styled, {createGlobalStyle} from "styled-components";
+import styled from "styled-components";
 import {StyledBox} from "./PatientHeaderBox.jsx";
 import {FaFilePdf} from "react-icons/fa";
-import {HiEye, HiPencil, HiTrash} from "react-icons/hi";
+import {HiPencil, HiTrash} from "react-icons/hi";
 import Heading from "../../ui/Heading.jsx";
 import {useState} from "react";
 import DatePicker from "react-datepicker";
@@ -18,7 +18,6 @@ import CreateAppointmentForm from "../Appointment/CreateAppointmentForm.jsx";
 import PatientDetailsTableOperations from "./PatientDetailsTableOperations.jsx";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import {useDeleteAppointment} from "../Appointment/useDeleteAppointment.js";
-import AppointmentTable from "../Appointment/AppointmentTable.jsx";
 import AppointmentPatientTable from "../Appointment/AppontmentPatientTable.jsx";
 
 const CustomStyledDatePicker = styled.div`
@@ -170,7 +169,7 @@ const Avatar = styled.img`
 const PatientAppointmentBox = ({patientId}) => {
     const [startDate, setStartDate] = useState(new Date());
     const {isLoading, appointments} = useAppointmentsByPatient(patientId);
-    const {deleteMutate,isDeleting} = useDeleteAppointment();
+    const {deleteMutate, isDeleting} = useDeleteAppointment();
     const [searchParams] = useSearchParams();
 
     const types = searchParams.get('types') ?? 'calendar';
@@ -188,80 +187,82 @@ const PatientAppointmentBox = ({patientId}) => {
             <PatientDetailsTableOperations/>
 
             {types === 'calendar' ?
-            <Container>
-                <Appointments>
-                    {filteredAppointments?.map(app => {
-                        return (
-                            <AppointmentsItem key={app.appointmentId}>
+                <Container>
+                    <Appointments>
+                        {filteredAppointments?.map(app => {
+                            return (
+                                <AppointmentsItem key={app.appointmentId}>
 
-                                <Heading type="h2" style={{marginTop: '2rem'}}>{app.serviceName}</Heading>
+                                    <Heading type="h2" style={{marginTop: '2rem'}}>{app.serviceName}</Heading>
 
-                                <Icons>
-                                    {app?.report !== null &&
-                                        <><ButtonIcon type="icon"><Link to={`/medicalReports/${app.reportId}`} target="_blank"><FaFilePdf /></Link></ButtonIcon>
-                                    <ButtonIcon type="icon">
-                                        <DownloadButton  medicalReport={app.report} isDownload/>
+                                    <Icons>
+                                        {app?.report !== null &&
+                                            <><ButtonIcon type="icon"><Link to={`/medicalReports/${app.reportId}`}
+                                                                            target="_blank"><FaFilePdf/></Link></ButtonIcon>
+                                                <ButtonIcon type="icon">
+                                                    <DownloadButton medicalReport={app.report} isDownload/>
 
-                                    </ButtonIcon>
-                                        </>
-                                    }
+                                                </ButtonIcon>
+                                            </>
+                                        }
 
-                                    {app?.report === null &&
-                                    <Modal>
-                                        <Modal.Open opens="edit">
-                                            <ButtonIcon type="icon"><HiPencil/></ButtonIcon>
-                                        </Modal.Open>
-                                        <Modal.Open opens="delete">
-                                            <ButtonIcon type="icon"><HiTrash/></ButtonIcon>
+                                        {app?.report === null &&
+                                            <Modal>
+                                                <Modal.Open opens="edit">
+                                                    <ButtonIcon type="icon"><HiPencil/></ButtonIcon>
+                                                </Modal.Open>
+                                                <Modal.Open opens="delete">
+                                                    <ButtonIcon type="icon"><HiTrash/></ButtonIcon>
 
-                                        </Modal.Open>
+                                                </Modal.Open>
 
-                                        <Modal.Window name="edit">
-                                            <CreateAppointmentForm appointmentToEdit={app} clinicId={app.clinicId} />
-                                        </Modal.Window>
+                                                <Modal.Window name="edit">
+                                                    <CreateAppointmentForm appointmentToEdit={app}
+                                                                           clinicId={app.clinicId}/>
+                                                </Modal.Window>
 
-                                        <Modal.Window name="delete">
-                                            <ConfirmDelete resource="appointment" disabled={isDeleting}
-                                                           onConfirm={() => deleteMutate({appointmentId:app.appointmentId})}/>
-                                        </Modal.Window>
-                                    </Modal>
-                                    }
+                                                <Modal.Window name="delete">
+                                                    <ConfirmDelete resource="appointment" disabled={isDeleting}
+                                                                   onConfirm={() => deleteMutate({appointmentId: app.appointmentId})}/>
+                                                </Modal.Window>
+                                            </Modal>
+                                        }
 
-                                </Icons>
-
-
-                                <Heading type="h3">{formatDateMonth(app.date)}</Heading>
-                                <Doctor>
-                                    <Avatar src="http://localhost:5173/default-user.jpg"/>
-                                    <Stacked>
-                                        <Title>{app.doctorName}</Title>
-                                        <span>{app.doctorSpecializations}</span>
-                                    </Stacked>
-                                </Doctor>
-                            </AppointmentsItem>
-                        )
-                    })}
-
-                </Appointments>
-
-                <Calendar>
-                    <Heading type="h2" style={{color: 'white'}}>Select date</Heading>
-
-                    <CustomStyledDatePicker>
-                        <DatePicker
-                            selected={startDate}
-                            onChange={(date) => setStartDate(date)}
-                            inline
-                            peekNextMonth
-                            showMonthDropdown
-                            showYearDropdown
-                        />
-                    </CustomStyledDatePicker>
+                                    </Icons>
 
 
-                </Calendar>
-            </Container> :
-                <AppointmentPatientTable appointment={appointments.sort((a,b) => b.appointmentId - a.appointmentId)} />
+                                    <Heading type="h3">{formatDateMonth(app.date)}</Heading>
+                                    <Doctor>
+                                        <Avatar src="http://localhost:5173/default-user.jpg"/>
+                                        <Stacked>
+                                            <Title>{app.doctorName}</Title>
+                                            <span>{app.doctorSpecializations}</span>
+                                        </Stacked>
+                                    </Doctor>
+                                </AppointmentsItem>
+                            )
+                        })}
+
+                    </Appointments>
+
+                    <Calendar>
+                        <Heading type="h2" style={{color: 'white'}}>Select date</Heading>
+
+                        <CustomStyledDatePicker>
+                            <DatePicker
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)}
+                                inline
+                                peekNextMonth
+                                showMonthDropdown
+                                showYearDropdown
+                            />
+                        </CustomStyledDatePicker>
+
+
+                    </Calendar>
+                </Container> :
+                <AppointmentPatientTable appointment={appointments.sort((a, b) => b.appointmentId - a.appointmentId)}/>
             }
         </StyledBox>
     );

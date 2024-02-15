@@ -14,8 +14,7 @@ const StyledModal = styled.div`
     box-shadow: var(--shadow-lg);
     padding: 3.2rem 4rem;
     transition: all 0.5s;
-    overflow-y: auto;
-`;
+    overflow-y: ${({ overFlowVisible }) => (overFlowVisible ? 'visible' : 'auto')};`;
 
 const Overlay = styled.div`
     position: fixed;
@@ -56,7 +55,7 @@ const Button = styled.button`
 
 const ModalContext = createContext();
 
-const Modal = ({children}) => {
+const Modal = ({children,overFlowVisibile}) => {
     const [openName, setOpenName] = useState('');
 
     const close = useCallback(() => setOpenName(''), []);
@@ -73,20 +72,18 @@ const Open = ({children, opens: opensWindowName}) => {
 }
 
 
-const Window = ({children, name}) => {
-    const {openName, close} = useContext(ModalContext);
-
+const Window = ({ children, name, overFlowVisible }) => {
+    const { openName, close } = useContext(ModalContext);
     const ref = useOutsideClick(close);
-
 
     if (name !== openName) return null;
 
     return createPortal(
         <Overlay>
-            <StyledModal ref={ref} onClick={(e) => e.stopPropagation()}>
-                <Button onClick={close}><HiXMark/></Button>
+            <StyledModal ref={ref} onClick={(e) => e.stopPropagation()} overFlowVisible={overFlowVisible}>
+                <Button onClick={close}><HiXMark /></Button>
                 <div>
-                    {cloneElement(children, {onCloseModal: close})}
+                    {cloneElement(children, { onCloseModal: close })}
                 </div>
             </StyledModal>
         </Overlay>,

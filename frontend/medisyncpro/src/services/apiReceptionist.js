@@ -35,7 +35,7 @@ export async function getReceptionistSearch() {
 export async function addReceptionistToClinic(data) {
 
     try {
-        const response = await apiRequest('POST', 'receptionists/addReceptionistToClinic/1', data);
+        const response = await apiRequest('POST', 'receptionists/addReceptionistToClinic', data);
 
         return response.data;
     } catch (e) {

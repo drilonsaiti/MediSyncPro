@@ -8,19 +8,18 @@ import Pagination from "../../ui/Pagination.jsx";
 import {useMedicalReports} from "./useMedicalReport.js";
 
 const MedicalReportTable = () => {
-    const {isLoading, medicalReports,totalElements} = useMedicalReports();
-    const user = "doctor";
+    const {isLoading, medicalReports, totalElements} = useMedicalReports();
 
     if (isLoading) return <Spinner/>
 
-    console.log(medicalReports);
     return (
         <Menus>
-            <Table columns={'0.6fr 2fr 2fr 1.5fr 1fr'}>
+            <Table columns={'0.6fr 2fr 2fr 1.5fr 1fr 1fr'}>
                 <Table.Header>
                     <div>Id</div>
                     <div>Patient</div>
-                    <div>{user !== "doctor" ? 'Doctor' : 'Service'}</div>
+                    <div>Doctor</div>
+                    <div>Service</div>
                     <div>Appointment date</div>
                     <div></div>
 
@@ -30,7 +29,7 @@ const MedicalReportTable = () => {
                 }/>
 
                 <Table.Footer>
-                    <Pagination count={totalElements} />
+                    <Pagination count={totalElements}/>
                 </Table.Footer>
 
             </Table>

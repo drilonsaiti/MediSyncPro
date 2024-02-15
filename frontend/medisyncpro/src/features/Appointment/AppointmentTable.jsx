@@ -6,13 +6,12 @@ import Spinner from "../../ui/Spinner.jsx";
 import Pagination from "../../ui/Pagination.jsx";
 import AppointmentForPatientRow from "./AppointmentForPatientRow.jsx";
 
-const AppointmentTable = ({searchInput,appointment,forPatient}) => {
-    const {isLoading, appointments,totalElements} = useAppointments();
+const AppointmentTable = ({searchInput, appointment, forPatient}) => {
+    const {isLoading, appointments, totalElements} = useAppointments();
 
 
     if (isLoading) return <Spinner/>
 
-    console.log("FOR PATIENTTTT",forPatient)
     return (
         <Menus>
             <Table columns={'0.6fr 2fr repeat(5,1fr)'}>
@@ -27,12 +26,12 @@ const AppointmentTable = ({searchInput,appointment,forPatient}) => {
 
                 </Table.Header>
                 <Table.Body data={forPatient ? appointment : appointments} render={
-                    spc => forPatient ? <AppointmentForPatientRow appointment={spc} key={spc.appointmentId} /> :
+                    spc => forPatient ? <AppointmentForPatientRow appointment={spc} key={spc.appointmentId}/> :
                         <AppointmentRow appointment={spc} key={spc.appointmentId}/>
                 }/>
 
                 <Table.Footer>
-                    <Pagination count={ totalElements}/>
+                    <Pagination count={totalElements}/>
                 </Table.Footer>
 
             </Table>

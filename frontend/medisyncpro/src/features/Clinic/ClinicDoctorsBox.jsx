@@ -112,7 +112,6 @@ const ClinicDoctorsBox = ({value}) => {
         doctor.doctorName.toLowerCase().includes(value.toLowerCase())
     ).filter(doctor => doctor.clinic !== null);
 
-    console.log("FILTERED DOCTROS",filteredDoctors);
 
     return (
         <StyledBoxDoctors>
@@ -120,7 +119,8 @@ const ClinicDoctorsBox = ({value}) => {
                 {
                     filteredDoctors?.map(doctor => (
                         <ProfileCard key={doctor.doctorId}>
-                            <Button variation="secondary" size="small" onClick={() => navigate(`/doctors/${doctor.doctorId}`)}
+                            <Button variation="secondary" size="small"
+                                    onClick={() => navigate(`/doctors/${doctor.doctorId}`)}
                                     style={{alignSelf: "self-end", marginTop: "1rem"}}>view profile</Button>
                             <Avatar>
                                 <AvatarImg src="http://localhost:5173/michele.jpg"/>
@@ -133,16 +133,18 @@ const ClinicDoctorsBox = ({value}) => {
 
                             </FlexGroup>
                             {doctor.clinic &&
-                            <Modal>
+                                <Modal>
 
-                                <Modal.Open opens="appointment">
-                                    <Button size="medium">Make Appointment</Button>
-                                </Modal.Open>
+                                    <Modal.Open opens="appointment">
+                                        <Button size="medium">Make Appointment</Button>
+                                    </Modal.Open>
 
-                                <Modal.Window name="appointment">
-                                    <CreateAppointmentForm clinicId={doctor.clinic?.clinicId ?? ''} doctorId={doctor.doctorId} doctorName={doctor.doctorName} clinicName={doctor.clinic?.clinicName}/>
-                                </Modal.Window>
-                            </Modal>
+                                    <Modal.Window name="appointment">
+                                        <CreateAppointmentForm clinicId={doctor.clinic?.clinicId ?? ''}
+                                                               doctorId={doctor.doctorId} doctorName={doctor.doctorName}
+                                                               clinicName={doctor.clinic?.clinicName}/>
+                                    </Modal.Window>
+                                </Modal>
                             }
                         </ProfileCard>
                     ))

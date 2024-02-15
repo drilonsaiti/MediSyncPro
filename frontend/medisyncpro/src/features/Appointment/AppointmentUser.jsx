@@ -220,8 +220,8 @@ const AppointmentUser = () => {
             <Row type="horizontal" change="yes">
                 <Heading as="h1">Search and make appointment</Heading>
                 <Row type="horizontal" style={{gap: '3rem'}}>
-                <SearchInput value={searchInput} onChange={handleSearchInputChange}/>
-                <AppointmentUserTableOperations types={types}/>
+                    <SearchInput value={searchInput} onChange={handleSearchInputChange}/>
+                    <AppointmentUserTableOperations types={types}/>
                 </Row>
             </Row>
 
@@ -237,7 +237,9 @@ const AppointmentUser = () => {
                                 </Avatar>
                                 <Heading type="h3">{clinic.clinicName}</Heading>
                                 <ButtonWrapper>
-                                    <Button variation="secondary" size="small" onClick={() => navigate(`/clinics/${clinic.clinicId}`)}>View Profile</Button>
+                                    <Button variation="secondary" size="small"
+                                            onClick={() => navigate(`/clinics/${clinic.clinicId}`)}>View
+                                        Profile</Button>
                                 </ButtonWrapper>
                             </Header>
                             <FlexGroup>
@@ -258,12 +260,12 @@ const AppointmentUser = () => {
                                     ))}
                                 </div>
                             </FlexGroup>
-                            <Modal>
+                            <Modal >
                                 <Modal.Open opens="appointment">
                                     <Button size="medium">Make Appointment</Button>
                                 </Modal.Open>
 
-                                <Modal.Window name="appointment">
+                                <Modal.Window name="appointment" overFlowVisible={true}>
                                     <CreateAppointmentForm clinicId={clinic.clinicId}/>
                                 </Modal.Window>
                             </Modal>

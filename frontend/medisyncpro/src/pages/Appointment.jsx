@@ -10,12 +10,12 @@ import {useSearchParams} from "react-router-dom";
 
 const Appointment = () => {
     const [searchInput, setSearchInput] = useState('');
-    const [searchParams,setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const handleSearchInputChange = (event) => {
         const newSearchParam = new URLSearchParams(searchParams);
         event === '' ? setSearchInput('') :
             setSearchInput(event.target.value);
-        newSearchParam.set('nameOrEmail',event.target.value)
+        newSearchParam.set('nameOrEmail', event.target.value)
         setSearchParams(newSearchParam);
     };
 
@@ -24,8 +24,8 @@ const Appointment = () => {
             <Row type="horizontal" change="yes">
                 <Heading as="h1">All appointments</Heading>
                 <Row type="horizontal" style={{gap: '3rem'}}>
-                <SearchInput value={searchInput} onChange={handleSearchInputChange}/>
-                <AppointmentTableOperations/>
+                    <SearchInput value={searchInput} onChange={handleSearchInputChange}/>
+                    <AppointmentTableOperations/>
                 </Row>
 
             </Row>

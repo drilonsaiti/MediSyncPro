@@ -7,9 +7,9 @@ import SpinnerMini from "../../ui/SpinnerMini.jsx";
 
 const ServiceTableOperations = () => {
     const {isLoading, specializations} = useSpecializations();
-    
+
     if (isLoading) return <SpinnerMini/>
-    
+
     const allSpecializations = Array.isArray(specializations) ? specializations?.sort((a, b) => a.specializationId - b.specializationId) : [];
 
     const optionsSpecializations = allSpecializations?.map(spec => {
@@ -40,8 +40,8 @@ const ServiceTableOperations = () => {
         </TableOperations>
 
 
-)
-    ;
+    )
+        ;
 };
 
 export default ServiceTableOperations;

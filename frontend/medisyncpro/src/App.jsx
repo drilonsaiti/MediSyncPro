@@ -30,7 +30,7 @@ import Profile from "./pages/Profile.jsx";
 import Settings from "./pages/Settings.jsx";
 import MyMedicalReport from "./pages/MyMedicalReport.jsx";
 import MyAppointment from "./pages/MyAppointment.jsx";
-
+import {Helmet, HelmetProvider} from 'react-helmet-async';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -44,9 +44,9 @@ const queryClient = new QueryClient({
 function App() {
 
     return (
+
         <DarkModeProvider>
             <QueryClientProvider client={queryClient}>
-                <ReactQueryDevtools initialIsOpen={false}/>
 
                 <GlobalStyles/>
 

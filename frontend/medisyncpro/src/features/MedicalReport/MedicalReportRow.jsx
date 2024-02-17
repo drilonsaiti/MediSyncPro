@@ -47,7 +47,7 @@ const MedicalReportRow = ({medicalReport}) => {
             <Modal>
                 <ButtonGroup>
 
-                    (<> <ButtonIcon>
+                    <> <ButtonIcon>
                     <Link to={`/medicalReports/${reportId}`} target="_blank"><FaFilePdf/></Link>
                 </ButtonIcon>
                     <ButtonIcon>

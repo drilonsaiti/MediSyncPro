@@ -425,6 +425,12 @@ const CreateAppointmentForm = ({appointmentToEdit = {}, onCloseModal, clinicId, 
                             backgroundColor: 'var(--color-grey-0)',
                             color: 'var(--color-grey-600)'
                         }),
+                        multiValue: (base) => ({
+                            ...base,
+                            border: '1px solid var(--color-grey-100)',
+                            backgroundColor: 'transparent',
+                            borderRadius: '9px',
+                        }),
                         option: (base, state) => ({
                             ...base,
                             color: state.isFocused || state.isSelected ? 'white' : 'var(--color-grey-600)',

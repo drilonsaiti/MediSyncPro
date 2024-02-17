@@ -12,6 +12,7 @@ const AppointmentTable = ({searchInput, appointment, forPatient}) => {
 
     if (isLoading) return <Spinner/>
 
+
     return (
         <Menus>
             <Table columns={'0.6fr 2fr repeat(5,1fr)'}>

@@ -62,6 +62,7 @@ export async function getMyClinicProfile() {
 }
 
 export async function createEditClinic(newClinic, id) {
+    console.log(newClinic);
     try {
         let response = {}
         if (id) {

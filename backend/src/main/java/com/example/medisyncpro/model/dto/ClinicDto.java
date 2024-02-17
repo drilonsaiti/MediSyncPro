@@ -14,8 +14,9 @@ public class ClinicDto {
     private Long clinicId;
 
     private String clinicName;
-
+    private String email;
     private String address;
+    private String imageUrl;
 
     private Set<Specializations> specializations;
     private List<ServiceBySpecializationIdDto> serviceDto;

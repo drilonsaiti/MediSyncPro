@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import Heading from "./Heading.jsx";
 import {FaHouseMedical, FaUserDoctor, FaUserPen} from "react-icons/fa6";
 import {FaHospitalUser} from "react-icons/fa";
+import {P} from "./Pagination.jsx";
+import {Link} from "react-router-dom";
 
 const Container = styled.div`
     display: flex;
@@ -27,7 +29,7 @@ const Card = styled.div`
     }
 
     &:hover {
-        outline: 2px solid var(--color-grey-100);
+        outline: 2px solid var(--color-brand-700);
     }
 `;
 
@@ -175,6 +177,8 @@ const UserTypeCard = ({onUserTypeChange}) => {
                     <p>Efficiently manage clinic operations. Schedule appointments, assist patients, and support
                         healthcare providers.</p></Info>
             </Card>
+            <P style={{textAlign: "center", marginTop: "2rem"}}>Already have an account? <Link
+                style={{color: "var(--color-brand-600)", fontSize: "2rem"}} replace to="/login">Log in</Link></P>
         </Container>
     );
 };

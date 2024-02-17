@@ -33,6 +33,9 @@ public class Patient {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "doctor_imageUrl")
+    private String imageUrl;
+
     @Column(name = "birthDay")
     private LocalDate birthDay;
 

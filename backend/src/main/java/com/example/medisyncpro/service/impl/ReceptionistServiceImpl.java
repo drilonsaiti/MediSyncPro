@@ -44,9 +44,10 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     }
 
     @Override
-    public List<Receptionist> getAll() {
+    public List<Receptionist> getAll(String authHeader) throws Exception {
+        Long clinicId = authHeaderService.getClinicId(authHeader);
         try {
-            return receptionistRepository.findAll();
+            return receptionistRepository.findAllByClinicId(clinicId);
         } catch (Exception e) {
             throw new ReceptionistException("Error retrieving all receptionists,try again");
         }
@@ -142,26 +143,33 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 
 
     @Override
-    public void addReceptionistToClinic(List<AddReceptionistToClinicDto> dto, Long clinicId, String authHeader) throws Exception {
+    public void addReceptionistToClinic(List<AddReceptionistToClinicDto> dto, String authHeader) throws Exception {
         Long clinicIdAuth = this.authHeaderService.getClinicId(authHeader);
-
-        if (Objects.equals(clinicId, clinicIdAuth)) {
-            try {
-
-                for (AddReceptionistToClinicDto add : dto) {
-                    Receptionist receptionist = receptionistRepository.findByEmailAddress(add.getEmail())
-                            .orElseThrow(() -> new ReceptionistException(String.format("Doctor with email: %s not found", add.getEmail())));
-                    Clinic clinic = clinicRepository.findByClinicId(clinicId).orElseThrow(() -> new ClinicException(String.format("Clinic with id: %d not found", clinicId)));
+        try {
+            for (AddReceptionistToClinicDto add : dto) {
+                Receptionist receptionist = receptionistRepository.findByEmailAddress(add.getEmail())
+                        .orElseThrow(() -> new ReceptionistException(String.format("Doctor with email: %s not found", add.getEmail())));
+                Clinic clinic = clinicRepository.findByClinicId(clinicIdAuth).orElseThrow(() -> new ClinicException(String.format("Clinic with id: %d not found", clinicIdAuth)));
 
 
-                    receptionist.setClinicId(clinic.getClinicId());
-                    receptionistRepository.save(receptionist);
+                receptionist.setClinicId(clinic.getClinicId());
+                receptionistRepository.save(receptionist);
 
-                }
-
-            } catch (Exception e) {
-                throw new ReceptionistException("Error adding doctor to clinic: " + e.getMessage());
             }
+
+        } catch (Exception e) {
+            throw new ReceptionistException("Error adding doctor to clinic: " + e.getMessage());
         }
+    }
+
+    @Override
+    public ReceptionistDto getReceptionistProfile(String authHeader) throws Exception {
+        String email = this.authHeaderService.getEmail(authHeader);
+        Receptionist receptionist = this.receptionistRepository.findByEmailAddress(email).orElse(null);
+        Clinic clinic = clinicRepository.findByClinicId(receptionist.getClinicId()).orElse(null);
+        String clinicName = clinic != null ? clinic.getClinicName() : "Unemployed";
+
+        return receptionistMapper.getReceptionistById(receptionist, clinicName);
+
     }
 }

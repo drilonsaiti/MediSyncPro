@@ -33,6 +33,7 @@ const AppointmentRow = ({appointment}) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const {attendedMutate, isCreating} = useChangeAttended();
 
+
     const statusToTagName = {
         true: 'green',
         false: 'red',
@@ -49,6 +50,7 @@ const AppointmentRow = ({appointment}) => {
             appointmentId: appointmentId,
             attended: status === "Yes" ? false : true
         }
+        console.log(data)
         attendedMutate(data);
     };
     return (

@@ -14,13 +14,13 @@ public interface ReceptionistService {
 
     ReceptionistDto getByIdDto(Long id);
 
-    List<Receptionist> getAll();
+    List<Receptionist> getAll(String authHeader) throws Exception;
 
     List<Receptionist> getAllByClinicId(Long clinicId,String authHeader) throws Exception;
 
     List<SearchReceptionistDto> getAllReceptionistSearch(Long clinicId,String authHeader) throws Exception;
 
-    void addReceptionistToClinic(List<AddReceptionistToClinicDto> dto, Long clinicId,String authHeader) throws Exception;
+    void addReceptionistToClinic(List<AddReceptionistToClinicDto> dto,String authHeader) throws Exception;
 
     Receptionist save(CreateReceptionistDto dto);
 
@@ -29,5 +29,7 @@ public interface ReceptionistService {
     void delete(Long id,String authHeader) throws Exception;
 
     void deleteReceptionistFromClinic(Long id,String authHeader) throws Exception;
+
+    ReceptionistDto getReceptionistProfile(String authHeader) throws Exception;
 }
 

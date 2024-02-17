@@ -3,9 +3,7 @@ package com.example.medisyncpro.service.impl;
 
 
 import com.example.medisyncpro.config.JwtService;
-import com.example.medisyncpro.model.Clinic;
-import com.example.medisyncpro.model.ClinicServices;
-import com.example.medisyncpro.model.User;
+import com.example.medisyncpro.model.*;
 import com.example.medisyncpro.model.dto.*;
 import com.example.medisyncpro.model.enums.Role;
 import com.example.medisyncpro.model.excp.*;
@@ -42,6 +40,11 @@ public class UserServiceImpl implements UserService {
     private final ClinicService clinicServices;
     private final PatientService patientService;
     private final ReceptionistService receptionistService;
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    private final SpecializationRepository specializationRepository;
+    private final ClinicRepository clinicRepository;
+    private final ReceptionistRepository receptionistRepository;
    // private JavaMailSender mailSender;
 
 
@@ -108,8 +111,26 @@ public class UserServiceImpl implements UserService {
     public UserProfileDto findUserProfile(String email) {
         User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
 
-        return new UserProfileDto(user.getEmail(), user.getImageUrl(), user.getFullName());
 
+        if(user.getRole() == Role.ROLE_DOCTOR){
+            Doctor d = this.doctorRepository.findByEmail(user.getEmail()).orElse(null);
+            return new UserProfileDto(user.getEmail(), user.getImageUrl(), user.getFullName(),d.getEducation(),d.getSpecialization() != null ? d.getSpecialization().getSpecializationId() : null);
+        }
+
+        if(user.getRole() == Role.ROLE_PATIENT){
+            Patient p = this.patientRepository.findByEmail(user.getEmail());
+            return new UserProfileDto(user.getEmail(),user.getImageUrl(),user.getFullName(),p.getAddress(),p.getGender(),p.getContactNumber(),p.getBirthDay());
+        }
+
+        if(user.getRole() == Role.ROLE_OWNER){
+            Clinic c = this.clinicRepository.findByEmailAddress(user.getEmail());
+            return new UserProfileDto(user.getEmail(), user.getImageUrl(), c.getClinicName());
+        }
+
+        if(user.getRole() == Role.ROLE_RECEPTIONIST){
+            return new UserProfileDto(user.getEmail(), user.getImageUrl(), user.getFullName());
+        }
+        return null;
     }
 
 
@@ -138,7 +159,36 @@ public class UserServiceImpl implements UserService {
     public void changeFullName(ChangeFullNameDto change) {
         User u = this.userRepository.findByEmail(jwtService.extractUsername(change.getToken())).orElseThrow(() -> new UsernameNotFoundException(jwtService.extractUsername(change.getToken())));
         if (passwordEncoder.matches(change.getPassword(), u.getPassword())) {
-           u.setFullName(change.getFullName());
+
+            if(u.getRole() == Role.ROLE_DOCTOR){
+                Doctor d = this.doctorRepository.findByEmail(u.getEmail()).orElse(null);
+                u.setFullName(change.getFullName());
+                d.setDoctorName(change.getFullName());
+                d.setEducation(change.getEducation());
+                Specializations s = this.specializationRepository.findById(change.getSpecializations()).orElse(null);
+                d.setSpecialization(s);
+                doctorRepository.save(d);
+            }else if(u.getRole() == Role.ROLE_PATIENT){
+                Patient p = this.patientRepository.findByEmail(u.getEmail());
+                u.setFullName(change.getFullName());
+                p.setPatientName(change.getFullName());
+                p.setGender(change.getGender());
+                p.setAddress(change.getAddress());
+                p.setContactNumber(change.getContactNumber());
+                p.setBirthDay(change.getBirthDay());
+                this.patientRepository.save(p);
+            }else if(u.getRole() == Role.ROLE_RECEPTIONIST){
+                Receptionist r = this.receptionistRepository.findByEmailAddress(u.getEmail()).orElse(null);
+                r.setReceptionistName(change.getFullName());
+                u.setFullName(change.getFullName());
+                this.receptionistRepository.save(r);
+            }else{
+                Clinic c = clinicRepository.findByEmailAddress(u.getEmail());
+                c.setClinicName(change.getFullName());
+                c.setAddress(change.getAddress());
+                u.setFullName(change.getFullName());
+                this.clinicRepository.save(c);
+            }
         } else {
             throw new PasswordsDoNotMatchException();
 
@@ -149,6 +199,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changeAvatar(ChangeAvatarDto change) {
         User u = this.userRepository.findByEmail(jwtService.extractUsername(change.getToken())).orElseThrow(() -> new UsernameNotFoundException(jwtService.extractUsername(change.getToken())));
+
+        switch (u.getRole()){
+            case ROLE_OWNER ->{
+                Clinic c = this.clinicRepository.findByEmailAddress(u.getEmail());
+                c.setImageUrl(change.getAvatar());
+                this.clinicRepository.save(c);
+            }
+            case ROLE_DOCTOR -> {
+                Doctor d = this.doctorRepository.findByEmail(u.getEmail()).orElse(null);
+                d.setImageUrl(change.getAvatar());
+                this.doctorRepository.save(d);
+            }
+            case ROLE_PATIENT -> {
+                Patient p = this.patientRepository.findByEmail(u.getEmail());
+                p.setImageUrl(change.getAvatar());
+                this.patientRepository.save(p);
+            }
+            case ROLE_RECEPTIONIST -> {
+                Receptionist r = this.receptionistRepository.findByEmailAddress(u.getEmail()).orElse(null);
+                r.setImageUrl(change.getAvatar());
+                this.receptionistRepository.save(r);
+            }
+
+        }
         u.setImageUrl(change.getAvatar());
         this.userRepository.save(u);
     }
@@ -171,9 +245,9 @@ public class UserServiceImpl implements UserService {
         if (!dto.getNewPassword().equals(dto.getRepeatedPassword())) {
             throw new PasswordsDoNotMatchException();
         }
-        if (!u.getVerifyCode().equals(dto.getVerifyCode())) {
+        /*if (!u.getVerifyCode().equals(dto.getVerifyCode())) {
             throw new VerificationCodeDoNotMatchException();
-        }
+        }*/
 
 
         u.setPassword(passwordEncoder.encode(dto.getNewPassword()));

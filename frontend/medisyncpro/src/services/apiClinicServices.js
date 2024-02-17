@@ -43,3 +43,13 @@ export async function deleteClinicService(id) {
 
     }
 }
+
+export async function getClinicServiceForClinic() {
+    try {
+        const response = await apiRequest('GET', `clinic-services/clinic`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+
+    }
+}

@@ -75,13 +75,13 @@ const AvatarImg = styled.img`
 
 const Status = styled.div`
     position: absolute;
-    top: 27%;
+    top: 29%;
     right: 39%;
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    border: 1px solid white;
-    transform: translate(-50%, -30%);
+    border: 1px solid var(--color-grey-0);
+    transform: translate(-50%, -20%);
     background-color: var(--color-brand-700);
 `;
 
@@ -112,13 +112,13 @@ const ClinicAppointmentBox = ({doctors, forUsers}) => {
                                     onClick={() => navigate(`/doctors/${doctor.doctorId}`)}
                                     style={{alignSelf: "self-end", marginTop: "1rem"}}>view profile</Button>
                             <Avatar>
-                                <AvatarImg src="http://localhost:5173/michele.jpg"/>
+                                <AvatarImg src={doctor?.imageUrl ? doctor?.imageUrl : '/default-user.jpg'}/>
                             </Avatar>
                             <Status/>
                             <FlexGroup>
                                 <Heading type="h3">{doctor.doctorName}</Heading>
                                 <P style={{fontWeight: "bold"}}>{doctor.clinic.clinicName}</P>
-                                <P>{doctor.specialization.specializationName}</P>
+                                <P>{doctor?.specialization?.specializationName}</P>
 
                             </FlexGroup>
                             <Modal>

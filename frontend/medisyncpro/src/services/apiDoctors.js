@@ -96,3 +96,12 @@ export async function addDoctorToClinic(newDoctor) {
         throw new Error(e);
     }
 }
+
+export async function getDoctorForProfile() {
+    try {
+        const response = await apiRequest('GET', `doctors/profile`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+    }
+}

@@ -1,6 +1,7 @@
-import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {QueryClient, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useSearchParams} from "react-router-dom";
-import {getClinicServices} from "../../services/apiClinicServices.js";
+import {getClinicServiceForClinic, getClinicServices} from "../../services/apiClinicServices.js";
+import {getSettingsDto} from "../../services/apiSettings.js";
 
 export function useClinicServices() {
     const queryClient = useQueryClient();
@@ -39,3 +40,13 @@ export function useClinicServices() {
     return {isLoading, clinicServices, totalElements}
 }
 
+
+export function useClinicServiceForClinic() {
+
+    const {isLoading, error, data: servicesClinic} = useQuery({
+        queryKey: ['clinicServicesForClinic'],
+        queryFn: getClinicServiceForClinic
+    })
+
+    return {isLoading, error, servicesClinic};
+}

@@ -52,16 +52,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail, String types,String authHeader) throws ClinicAppointmentException {
-
+    public AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail, String types,String authHeader) throws Exception {
+        Long clinicId = authHeaderService.getClinicId(authHeader);
         List<AppointmentDto> appointment = appointmentRepository.findAll().stream()
-                .filter(a -> {
-                    try {
-                        return Objects.equals(authHeaderService.getClinicId(authHeader), a.getClinicId());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+                .filter(a -> Objects.equals(a.getClinicId(), clinicId))
                 .filter(a -> a.getDate().toLocalDate().isEqual(LocalDate.now()) || a.getDate().toLocalDate().isAfter(LocalDate.now()))
                 .filter(a -> {
                     Patient p = this.patientService.getById(a.getPatientId());
@@ -186,7 +180,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Appointment save(CreateAppointmentDto appointment,String authHeader) {
         try {
             if(authHeader.isEmpty()) {
-                Patient patient = this.patientRepository.findByEmail(authHeaderService.getEmail(authHeader));
+                Patient patient = this.patientRepository.findById(appointment.getPatientId()).orElse(null);
                 ClinicSchedule clinicSchedule = clinicScheduleRepository.findClinicScheduleByClinicIdAndStartTime(appointment.getClinicId(), appointment.getDate());
 
                 CreateAppointmentDto createAppointmentDto = new CreateAppointmentDto(patient.getPatientId(), clinicSchedule.getDoctorId(), appointment.getClinicId(), appointment.getDate(),
@@ -237,7 +231,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDateDto> getAppointmentDates(Long clinicId) throws ClinicAppointmentException {
+    public List<AppointmentDateDto> getAppointmentDates(String authHeader) throws Exception {
+        Long clinicId = authHeaderService.getClinicId(authHeader);
         try {
             return this.appointmentRepository.findAllByClinicId(clinicId)
                     .stream()
@@ -253,21 +248,19 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Appointment createAppointmentByReceptionist(AppointmentByReceptionistDto dto,String authHeader) throws ClinicAppointmentException {
         Receptionist r = this.receptionistRepository.findByEmailAddress(this.authHeaderService.getEmail(authHeader)).orElse(null);
 
-        if (r != null && Objects.equals(r.getClinicId(), dto.getClinicId())) {
+
             try {
                 CreatePatientDto createPatientDto = new CreatePatientDto(dto.getPatientName(), dto.getGender(), dto.getAddress(), dto.getContactNumber(), dto.getEmail(), dto.getBirthDay());
                 Patient patient = patientService.save(createPatientDto);
-                ClinicSchedule clinicSchedule = clinicScheduleRepository.findClinicScheduleByClinicIdAndStartTime(dto.getClinicId(), dto.getAppointment());
+                ClinicSchedule clinicSchedule = clinicScheduleRepository.findClinicScheduleByClinicIdAndStartTime(r.getClinicId(), dto.getAppointment());
 
-                CreateAppointmentDto createAppointmentDto = new CreateAppointmentDto(patient.getPatientId(), clinicSchedule.getDoctorId(), dto.getClinicId(), dto.getAppointment(), dto.getServiceId());
+                CreateAppointmentDto createAppointmentDto = new CreateAppointmentDto(patient.getPatientId(), clinicSchedule.getDoctorId(), r.getClinicId(), dto.getAppointment(), dto.getServiceId());
                 clinicSchedule.setIsBooked(true);
                 clinicScheduleRepository.save(clinicSchedule);
                 return this.save(createAppointmentDto, "");
             } catch (Exception e) {
                 throw new ClinicAppointmentException("Failed to create appointment", e);
             }
-        }
-        throw new ClinicAppointmentException("You don't have access!");
     }
 
     @Override
@@ -276,13 +269,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         try {
             Appointment appointment = this.appointmentRepository.findByAppointmentId(id);
-            if (r != null && Objects.equals(r.getClinicId(), appointment.getClinicId())) {
+
 
                 appointment.setAttended(attended);
                 appointmentRepository.save(appointment);
-            }else{
-                throw new ClinicAppointmentException("You don't have access for this changes");
-            }
 
         } catch (Exception e) {
             throw new ClinicAppointmentException("Failed to change attended status for appointment with ID " + id, e);

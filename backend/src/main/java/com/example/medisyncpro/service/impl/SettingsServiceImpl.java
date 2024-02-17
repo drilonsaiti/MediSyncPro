@@ -1,10 +1,12 @@
 package com.example.medisyncpro.service.impl;
 
+import com.example.medisyncpro.model.Clinic;
 import com.example.medisyncpro.model.Settings;
 import com.example.medisyncpro.model.dto.SettingsDTO;
 import com.example.medisyncpro.model.excp.ReceptionistException;
 import com.example.medisyncpro.model.excp.SettingsException;
 import com.example.medisyncpro.model.mapper.SettingsMapper;
+import com.example.medisyncpro.repository.ClinicRepository;
 import com.example.medisyncpro.repository.SettingsRepository;
 import com.example.medisyncpro.service.AuthHeaderService;
 import com.example.medisyncpro.service.SettingsService;
@@ -21,6 +23,7 @@ public class SettingsServiceImpl implements SettingsService {
     private final SettingsRepository settingsRepository;
     private final SettingsMapper settingsMapper;
     private final AuthHeaderService authHeaderService;
+    private final ClinicRepository clinicRepository;
 
     @Override
     public List<SettingsDTO> getAllSettings() {
@@ -45,35 +48,55 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
+    public SettingsDTO getSettingsByIdDto(String authHeader) throws Exception {
+        Long clinicIdAuth = this.authHeaderService.getClinicId(authHeader);
+
+        try {
+            return settingsRepository.findByClinicId(clinicIdAuth)
+                    .map(settingsMapper::toDTO)
+                    .orElseThrow(() -> new SettingsException("Settings not found with id: " + clinicIdAuth));
+        } catch (Exception e) {
+            throw new SettingsException("Error retrieving settings by id: " + clinicIdAuth, e);
+        }
+
+    }
+
+    @Override
     public Settings saveSettings(Settings settings, String authHeader) throws Exception {
         Long clinicIdAuth = this.authHeaderService.getClinicId(authHeader);
 
-        if (Objects.equals(settings.getClinicId(), clinicIdAuth)) {
+
         try {
-            return settingsRepository.save(settings);
+            Clinic clinic = this.clinicRepository.findByClinicId(clinicIdAuth).orElse(null);
+            settings.setClinicId(clinicIdAuth);
+            Settings s = settingsRepository.save(settings);
+            clinic.setSettingsId(s.getId());
+            this.clinicRepository.save(clinic);
+            return s;
         } catch (Exception e) {
             throw new SettingsException("Error saving settings", e);
         }
-        }
-        throw new ReceptionistException("You don't have access");
+
     }
 
     @Override
     public SettingsDTO updateSettings(SettingsDTO dto, String authHeader) throws Exception {
         Long clinicIdAuth = this.authHeaderService.getClinicId(authHeader);
 
-        if (Objects.equals(dto.getClinicId(), clinicIdAuth)) {
         try {
-            Settings settings = settingsRepository.findById(dto.getId())
-                    .orElseThrow(() -> new SettingsException("Settings not found with id: " + dto.getId()));
+            Settings settings = settingsRepository.findByClinicId(clinicIdAuth)
+                    .orElseThrow(() -> new SettingsException("Settings not found with id: " + clinicIdAuth));
+            System.out.println("===========dto=======");
+            System.out.println(dto);
+            System.out.println(settings);
             Settings updatedSettings = settingsMapper.updateSettings(dto, settings);
+            System.out.println(updatedSettings);
             settingsRepository.save(updatedSettings);
             return dto;
         } catch (Exception e) {
             throw new SettingsException("Error updating settings", e);
         }
-        }
-        throw new ReceptionistException("You don't have access");
+
     }
 
     @Override

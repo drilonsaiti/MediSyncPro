@@ -30,10 +30,17 @@ function UpdateUserDataForm() {
     const {roles, isLoading: isLoadingRole} = useGetRole();
 
     const selectedValues = Array.isArray(specializations) ?
-        specializations.map(spec => ({
-            value: spec.specializationId,
-            label: spec.specializationName
-        })) : [];
+        specializations.map(spec => {
+            const isSelected = spec.specializationId === profileData?.specializationId;
+            let data = {};
+            if (isSelected){
+                data = {
+                    value: spec.specializationId,
+                    label: spec.specializationName
+                }
+            }
+        return data;
+        }) : [];
     const [selectedSpecializations, setSelectedSpecializations] = useState(selectedValues);
 
     if (isLoading || isLoadingRole || isLoadingSpecilization) return <Spinner/>
@@ -65,7 +72,7 @@ function UpdateUserDataForm() {
             }
         }
 
-        if(roles.includes("CLINIC")){
+        if(roles.includes("OWNER")){
             data = {
                 fullName: fullName || profileData?.fullName,
                 address: address || profileData?.address,
@@ -122,7 +129,6 @@ function UpdateUserDataForm() {
         const gender = g.value === profileData?.gender?.toUpperCase() ? g : null;
         return {value:gender?.value,label:gender?.label};
     })
-    console.log("PROFILEDATA",profileData);
     let forms;
     if (roles.includes("DOCTOR")) {
         forms = (

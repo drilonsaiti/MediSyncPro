@@ -31,12 +31,14 @@ public class ClinicMapper {
         return new ClinicDto(
                 clinic.getClinicId(),
                 clinic.getClinicName(),
+                clinic.getEmailAddress(),
                 clinic.getAddress(),
+                clinic.getImageUrl(),
                 clinic.getSpecializations(),
                 services(clinic.getServices()),
                 clinic.getDoctors(),
-                settings != null ? settings.getMorningStartTime().toString() + "-" + settings.getMorningEndTime() : null,
-                settings != null ? settings.getAfternoonStartTime().toString() + "-" + settings.getAfternoonEndTime() : null
+                settings != null && settings.getMorningStartTime() != null ? settings.getMorningStartTime().toString() + "-" + settings.getMorningEndTime() : null,
+                settings != null && settings.getAfternoonStartTime() != null ? settings.getAfternoonStartTime().toString() + "-" + settings.getAfternoonEndTime() : null
         );
     }
 

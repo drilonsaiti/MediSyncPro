@@ -2,10 +2,11 @@ import {useQuery} from "@tanstack/react-query";
 import {
     getReceptionist,
     getReceptionistByClinicId,
-    getReceptionistById,
+    getReceptionistById, getReceptionistForProfile,
     getReceptionistSearch
 } from "../../services/apiReceptionist.js";
 import {useParams} from "react-router-dom";
+import {getPatientForProfile} from "../../services/apiPatients.js";
 
 export function useReceptionist() {
     const {data: receptionist, isLoading} = useQuery({
@@ -42,4 +43,13 @@ export function useReceptionistSearch() {
     })
 
     return {receptionistsOptions, isLoading};
+}
+
+export function useReceptionistForProfile() {
+    const {data: receptionist, isLoading} = useQuery({
+        queryFn: getReceptionistForProfile,
+        queryKey: ["profileReceptionist"]
+    })
+
+    return {receptionist, isLoading};
 }

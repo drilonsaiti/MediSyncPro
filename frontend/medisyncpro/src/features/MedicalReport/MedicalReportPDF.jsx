@@ -189,7 +189,7 @@ const PdfRender = ({data}) => {
                                     Doctor email:
                                 </Text>
                                 <Text style={styles.infoText}>
-                                    doctor@test.com
+                                    {data.doctorEmail}
                                 </Text>
                             </View>
                         </View>
@@ -218,7 +218,7 @@ const PdfRender = ({data}) => {
                                     <Text style={[styles.infoText, {width: '30%', padding: 8}]}>Next Appointment
                                         Date</Text>
                                     <Text style={[styles.tableText]}>
-                                        {formatDate(data.nextAppointment)}
+                                        {data?.nextAppointment != null ? formatDate(data.nextAppointment) : ''}
                                     </Text>
                                 </View>
                             </View>

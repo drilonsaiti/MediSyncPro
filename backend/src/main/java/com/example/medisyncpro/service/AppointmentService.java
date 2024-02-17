@@ -10,7 +10,7 @@ public interface AppointmentService {
 
     Appointment getById(Long id,String authHeader);
 
-    AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail, String types,String authHeader);
+    AppointmentResultDto getAll(PageRequest pageable, String nameOrEmail, String types,String authHeader) throws Exception;
 
     AppointmentResultDto getMyAppointment(PageRequest pageable,String authHeader);
 
@@ -25,7 +25,7 @@ public interface AppointmentService {
 
     void delete(Long id,String authHeader) throws Exception;
 
-    List<AppointmentDateDto> getAppointmentDates(Long clinicId);
+    List<AppointmentDateDto> getAppointmentDates(String authHeader) throws Exception;
 
     Appointment createAppointmentByReceptionist(AppointmentByReceptionistDto dto,String authHeader) throws Exception;
 

@@ -90,3 +90,12 @@ export async function deleteReceptionistFromClinic(receptionistId) {
 
     }
 }
+
+export async function getReceptionistForProfile() {
+    try {
+        const response = await apiRequest('GET', `receptionists/profile`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+    }
+}

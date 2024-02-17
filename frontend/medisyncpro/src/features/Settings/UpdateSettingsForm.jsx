@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
-import {useSettings} from "./useSettings.js";
+import {useSettings, useSettingsDto} from "./useSettings.js";
 import Form from "../../ui/Form";
 import Spinner from "../../ui/Spinner.jsx";
 import {useUpdateSettings} from "./useUpdateSettings.js";
@@ -10,6 +10,7 @@ import makeAnimated from "react-select/animated";
 import {HiChevronDown, HiChevronRight} from "react-icons/hi2";
 import Row from "../../ui/Row.jsx";
 import styled from "styled-components";
+import {useDoctorsByClinicId} from "../Doctor/useDoctors.js";
 
 const animatedComponents = makeAnimated();
 const Title = styled.div`
@@ -27,9 +28,9 @@ const Card = styled.div`
 `
 
 function UpdateSettingsForm() {
-    const {isLoading, settings: settingsData} = useSettings();
+    const {isLoading, settings: settingsData} = useSettingsDto();
     const {isUpdating, updatedSettings} = useUpdateSettings();
-
+    const {isLoading:isLoadingDoctors, doctors, totalElements} = useDoctorsByClinicId();
     const [selectedMorningDoctors, setSelectedMorningDoctors] = useState(null);
     const [selectedAfternoonDoctors, setSelectedAfternoonDoctors] = useState(null);
     const [isOpen, setIsOpen] = useState(false); // State to control accordion open/close
@@ -38,6 +39,7 @@ function UpdateSettingsForm() {
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
+    console.log(settingsData);
     useEffect(() => {
         setSelectedMorningDoctors(settingsData?.morningDoctors?.map(doctor => ({
             value: doctor.doctorId,
@@ -49,7 +51,7 @@ function UpdateSettingsForm() {
         })));
     }, [settingsData]);
 
-    if (isLoading) return <Spinner/>;
+    if (isLoading || isLoadingDoctors) return <Spinner/>;
 
 
     function handleUpdate(e, field, doctors, filtered) {
@@ -71,52 +73,65 @@ function UpdateSettingsForm() {
             }
         }
 
-        if (!value || typeof settingsData.id === 'undefined') return;
+        if (!value) return;
 
 
         const updatedSettingsData = {
             ...settingsData,
             ...value
         };
+
         updatedSettings(updatedSettingsData);
     }
 
     // Prepare options for the morning and afternoon doctors
-    const morningDoctorOptions = Array.isArray(settingsData?.morningDoctors) ? settingsData?.morningDoctors
-        .filter(doctor => !selectedAfternoonDoctors?.some(selected => selected.value === doctor.doctorId))
-        .map(doctor => ({value: doctor.doctorId, label: doctor.doctorName})) : [];
+    console.log(doctors);
+    const morningDoctorOptions = Array.isArray(doctors) ?
+        doctors?.filter(d =>
+            !settingsData?.morningDoctors?.some(doc => d.doctorId === doc.doctorId)
+        ).filter(doctor =>
+            !selectedAfternoonDoctors?.some(selected => selected.value === doctor.doctorId)
+        ).map(doctor => ({ value: doctor.doctorId, label: doctor.doctorName })) : [];
 
-    const afternoonDoctorOptions = Array.isArray(settingsData?.afternoonDoctors) ? settingsData?.afternoonDoctors
+
+    const afternoonDoctorOptions = Array.isArray(doctors) ?
+        doctors?.filter(d =>!settingsData?.afternoonDoctors?.some(doc => d.doctorId === doc.doctorId))
         .filter(doctor => !selectedMorningDoctors?.some(selected => selected.value === doctor.doctorId))
         .map(doctor => ({value: doctor.doctorId, label: doctor.doctorName})): [];
-    const allDoctorOptions = settingsData ? [...morningDoctorOptions, ...afternoonDoctorOptions] : [];
+
+    const allDoctorOptions = settingsData ?
+        [...morningDoctorOptions, ...afternoonDoctorOptions]
+            ?.filter((option, index, array) =>
+                array.findIndex((otherOption) => option.value === otherOption.value) === index
+            )
+        : [];
 
     // Handlers for updating selected doctors
     const handleMorningDoctorChange = (selectedOptions) => {
         // Remove the selected doctors from the afternoon slot
-        const filteredAfternoonDoctors = selectedAfternoonDoctors.filter(
+        const filteredAfternoonDoctors = Array.isArray(selectedAfternoonDoctors) ? selectedAfternoonDoctors?.filter(
             (doctor) => !selectedOptions.some((selected) => selected.value === doctor.value)
-        );
+        ) : [];
         setSelectedAfternoonDoctors(filteredAfternoonDoctors);
 
         // Update the selected morning doctors
         setSelectedMorningDoctors(selectedOptions);
 
-        handleUpdate(null, 'morningDoctors', selectedOptions)
+        handleUpdate(null, 'morningDoctors', selectedOptions,filteredAfternoonDoctors)
     };
 
     const handleAfternoonDoctorChange = (selectedOptions, filter) => {
         // Remove the selected doctors from the morning slot
 
-        const filteredMorningDoctors = selectedMorningDoctors.filter(
+        const filteredMorningDoctors = Array.isArray(selectedMorningDoctors) ? selectedMorningDoctors?.filter(
             (doctor) => !selectedOptions.some((selected) => selected.value === doctor.value)
-        );
+        ) : [];
         setSelectedMorningDoctors(filteredMorningDoctors);
 
         // Update the selected afternoon doctors
         setSelectedAfternoonDoctors(selectedOptions);
 
-        handleUpdate(null, 'afternoonDoctors', selectedOptions)
+        handleUpdate(null, 'afternoonDoctors', selectedOptions,filteredMorningDoctors)
     };
     return (
         <>
@@ -178,6 +193,12 @@ function UpdateSettingsForm() {
                                 backgroundColor: 'var(--color-grey-0)',
                                 color: 'var(--color-grey-600)'
                             }),
+                            multiValue: (base) => ({
+                                ...base,
+                                border: '1px solid var(--color-grey-100)',
+                                backgroundColor: 'transparent',
+                                borderRadius: '9px',
+                            }),
                             option: (base, state) => ({
                                 ...base,
                                 color: state.isFocused || state.isSelected ? 'white' : 'var(--color-grey-600)',
@@ -216,6 +237,12 @@ function UpdateSettingsForm() {
                                 boxShadow: 'var(--shadow-sm)',
                                 backgroundColor: 'var(--color-grey-0)',
                                 color: 'var(--color-grey-600)'
+                            }),
+                            multiValue: (base) => ({
+                                ...base,
+                                border: '1px solid var(--color-grey-100)',
+                                backgroundColor: 'transparent',
+                                borderRadius: '9px',
                             }),
                             option: (base, state) => ({
                                 ...base,

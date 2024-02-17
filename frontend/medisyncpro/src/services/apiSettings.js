@@ -10,6 +10,16 @@ export async function getSettings() {
     }
 }
 
+export async function getSettingsDto() {
+    try {
+
+        const response = await apiRequest('GET', 'settings/getSettings')
+        return response.data;
+    } catch (e) {
+        throw new Error(e);
+    }
+}
+
 export async function updateSetting(newSetting) {
 
     try {
@@ -21,7 +31,7 @@ export async function updateSetting(newSetting) {
 
         if (newSetting.id) {
 
-            response = await apiRequest('PUT', `settings/${newSetting.id}`, newSetting);
+            response = await apiRequest('PUT', `settings/update`, newSetting);
         }
         return response.data;
 

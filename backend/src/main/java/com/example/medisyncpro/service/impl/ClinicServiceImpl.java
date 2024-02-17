@@ -58,6 +58,13 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
+    public ClinicDto getByIdAuth(String authHeader) throws Exception {
+        Long clinicId = authHeaderService.getClinicId(authHeader);
+        Clinic clinic = this.getById(clinicId);
+        return clinicMapper.getClinicDto(clinic,null);
+    }
+
+    @Override
     public ClinicDto getMyProfile(String authHeader) {
         String email = this.authHeaderService.getEmail(authHeader);
         try {
@@ -127,7 +134,7 @@ public class ClinicServiceImpl implements ClinicService {
     public Clinic updateClinic(UpdateClinicDto dto, String auth) throws Exception {
         Long clinicId = this.authHeaderService.getClinicId(auth);
 
-        if (Objects.equals(clinicId, dto.getClinicId())) {
+
 
             try {
                 List<Long> serviceIds = dto.getServiceDto().stream()
@@ -146,13 +153,11 @@ public class ClinicServiceImpl implements ClinicService {
                         .filter(srv -> doctorIds.contains(srv.getDoctorId()))
                         .toList();
 
-                Clinic clinic = this.getById(dto.getClinicId());
+                Clinic clinic = this.getById(clinicId);
                 return clinicRepository.save(clinicMapper.updateClinic(clinic, dto, clinicServices, doctors));
             } catch (Exception e) {
                 throw new ClinicException("Failed to update clinic", e);
             }
-        }
-        throw new ClinicException("You don't have access");
 
     }
 
@@ -178,13 +183,13 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     public List<ClinicServices> getClinicServicesById(Long id, String auth) throws Exception {
-        Long clinicId = this.authHeaderService.getClinicId(auth);
 
-        if (Objects.equals(clinicId, id)) {
-            List<ClinicServices> services = this.getById(id).getServices();
+        Long clinicId = id != 0 ? id : this.authHeaderService.getClinicId(auth);
+
+
+            List<ClinicServices> services = this.getById(clinicId).getServices();
             return services;
-        }
-        throw new ClinicException("You don't have access");
+
 
     }
 }

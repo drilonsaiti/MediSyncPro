@@ -1,12 +1,11 @@
 package com.example.medisyncpro.web.rest;
 
 
+import com.example.medisyncpro.model.Patient;
 import com.example.medisyncpro.model.Receptionist;
-import com.example.medisyncpro.model.dto.AddDoctorToClinicDto;
-import com.example.medisyncpro.model.dto.AddReceptionistToClinicDto;
-import com.example.medisyncpro.model.dto.CreateReceptionistDto;
-import com.example.medisyncpro.model.dto.SearchReceptionistDto;
+import com.example.medisyncpro.model.dto.*;
 import com.example.medisyncpro.model.excp.DoctorException;
+import com.example.medisyncpro.model.excp.PatientException;
 import com.example.medisyncpro.model.excp.ReceptionistException;
 import com.example.medisyncpro.service.ClinicService;
 import com.example.medisyncpro.service.DoctorService;
@@ -30,8 +29,9 @@ public class ReceptionistRestController {
     private final ClinicService clinicService;
 
     @GetMapping
-    public ResponseEntity<?> listReceptionists() {
-        Iterable<Receptionist> receptionists = receptionistService.getAll();
+    public ResponseEntity<?> listReceptionists(HttpServletRequest request) throws Exception {
+            final String authHeader = request.getHeader("Authorization");
+        Iterable<Receptionist> receptionists = receptionistService.getAll(authHeader);
         return new ResponseEntity<>(receptionists, HttpStatus.OK);
     }
 
@@ -106,11 +106,11 @@ public class ReceptionistRestController {
         }
     }
 
-    @PostMapping("/clinic/{id}")
-    public ResponseEntity<?> addDoctorToClinic(@PathVariable Long id, @RequestBody List<AddReceptionistToClinicDto> dto, HttpServletRequest request) {
+    @PostMapping("/addReceptionistToClinic")
+    public ResponseEntity<?> addReceptionistToClinic(@RequestBody List<AddReceptionistToClinicDto> dto, HttpServletRequest request) {
         try {
             final String authHeader = request.getHeader("Authorization");
-            receptionistService.addReceptionistToClinic(dto, id,authHeader);
+            receptionistService.addReceptionistToClinic(dto,authHeader);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DoctorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -132,5 +132,16 @@ public class ReceptionistRestController {
         }
     }
 
-
+    @GetMapping("/profile")
+    public ResponseEntity<?> getReceptionistProfile(HttpServletRequest request) {
+        try {
+            final String authHeader = request.getHeader("Authorization");
+            ReceptionistDto patient = receptionistService.getReceptionistProfile(authHeader);
+            return new ResponseEntity<>(patient, HttpStatus.OK);
+        } catch (PatientException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

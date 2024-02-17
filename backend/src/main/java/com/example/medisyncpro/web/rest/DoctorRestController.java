@@ -2,11 +2,9 @@ package com.example.medisyncpro.web.rest;
 
 
 import com.example.medisyncpro.model.Doctor;
-import com.example.medisyncpro.model.dto.AddDoctorToClinicDto;
-import com.example.medisyncpro.model.dto.CreateDoctorDto;
-import com.example.medisyncpro.model.dto.DoctorResultDto;
-import com.example.medisyncpro.model.dto.SearchDoctorDto;
+import com.example.medisyncpro.model.dto.*;
 import com.example.medisyncpro.model.excp.DoctorException;
+import com.example.medisyncpro.model.excp.PatientException;
 import com.example.medisyncpro.service.DoctorService;
 import com.example.medisyncpro.service.SpecializationService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -138,6 +136,19 @@ public class DoctorRestController {
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (DoctorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getDoctorProfile(HttpServletRequest request) {
+        try {
+            final String authHeader = request.getHeader("Authorization");
+            Doctor doctor = doctorService.getDoctorProfile(authHeader);
+            return new ResponseEntity<>(doctor, HttpStatus.OK);
+        } catch (PatientException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

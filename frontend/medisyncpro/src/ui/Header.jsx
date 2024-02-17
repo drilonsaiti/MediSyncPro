@@ -29,7 +29,7 @@ function Header() {
             <div></div>
             <div>
                 <UserAvatar
-                    src={profileData?.profileImage !== "" ? profileData.profileImage : "http://localhost:5173/default-user.jpg"}
+                    src={profileData?.profileImage !== "" ? profileData?.profileImage : "http://localhost:5173/default-user.jpg"}
                     alt="Avatar"/>
                 <HeaderMenu/>
             </div>

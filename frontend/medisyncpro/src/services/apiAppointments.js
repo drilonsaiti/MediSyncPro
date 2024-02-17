@@ -98,6 +98,7 @@ export async function createAppointmentByReceptionist({...data}) {
 
 
 export async function changeAttended(data) {
+    console.log(data);
     try {
         const response = await apiRequest('POST', `appointments/changeAttended/${data.appointmentId}`, {
             attended: data.attended

@@ -10,6 +10,8 @@ public interface SettingsService {
 
     Settings getSettingsById(String authHeader) throws Exception;
 
+    SettingsDTO getSettingsByIdDto(String authHeader) throws Exception;
+
     Settings saveSettings(Settings settings,String authHeader) throws Exception;
 
     SettingsDTO updateSettings(SettingsDTO settings,String authHeader) throws Exception;
